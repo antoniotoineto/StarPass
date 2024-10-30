@@ -1,14 +1,46 @@
+import React, { useState} from 'react';
+import { View, Text, StyleSheet, Button, TouchableOpacity, TextComponent } from 'react-native';
+import { Picker } from '@react-native-picker/picker';
+import Entypo from '@expo/vector-icons/Entypo';
 import { Link } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 
-export default function App() {
+export default function GetEntryCode() {
+
+  const [selectedOption, setSelectedOption] = useState();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Tela de código de acesso! Gerar código</Text>
-      <Link style={styles.button} href={"/screens/insertEntryCode"}>Gerar</Link>
-      <Link style={styles.button} href={"/"}>Voltar</Link>
-      <StatusBar style="auto" />
+      <Text style={styles.logoText}>Logo</Text>
+
+      <Text style={styles.infoText}>Você precisará de uma senha de entrada</Text>
+
+      <Entypo name="login" size={50} color="black" />
+
+      <View style={styles.pickerContainer}>
+        <Text style={styles.pickerTitle}>Selecione o Guichê</Text>
+        <Picker
+          selectedValue={selectedOption}
+          onValueChange={(itemValue) => setSelectedOption(itemValue)}
+          style={styles.picker}
+          mode='dialog'
+        >
+          <Picker.Item label="Guichê 1" value="1" />
+          <Picker.Item label="Guichê 2" value="2" />
+          <Picker.Item label="Guichê 3" value="3" />
+        </Picker>
+      </View>
+
+      <TouchableOpacity 
+        style={styles.buttonContainer}
+      >
+        <Link 
+          style={styles.buttonText} 
+          href={"/screens/insertEntryCode"} 
+          onPress={() => console.log('Senha gerada para o guichê: ', selectedOption)} 
+        >
+          Gerar senha
+        </Link>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -16,14 +48,36 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    justifyContent: 'center',
+    padding: 50,
   },
-  text: {
-    fontSize: 30,
+  logoText: {
+    fontSize: 50,
+    fontWeight: 'bold',
   },
-  button: {
-    marginTop: 15,
+  infoText: {
+    fontSize: 25,
+    textAlign: 'center',
+  },
+  pickerContainer: {
+    alignItems: 'center',
+  },
+  pickerTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  picker: {
+    width: 300,
+  },
+  buttonContainer: {
+    width: 300,
+    backgroundColor: 'grey',
+    alignItems: 'center',
+    padding: 15,
+    borderRadius: 15
+  },
+  buttonText: {
+    fontSize: 25
   }
 });
