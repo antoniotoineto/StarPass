@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "app-StarPass",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -33,6 +34,9 @@
     },
     "updates": {
       "url": "https://u.expo.dev/fa415694-6423-4485-a306-551484afcdc1"
-    }
+    },
+    "plugins": [
+      "expo-router"
+    ]
   }
 }
