@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-import { View, Text, StyleSheet, Button, TouchableOpacity, TextComponent } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Entypo from '@expo/vector-icons/Entypo';
 import { Link } from 'expo-router';
@@ -12,7 +12,7 @@ export default function GetEntryCode() {
     <View style={styles.container}>
       <Text style={styles.logoText}>Logo</Text>
 
-      <Text style={styles.infoText}>Você precisará de uma senha de entrada</Text>
+      <Text style={styles.infoText}>Você precisará de uma senha de entrada.</Text>
 
       <Entypo name="login" size={50} color="black" />
 
