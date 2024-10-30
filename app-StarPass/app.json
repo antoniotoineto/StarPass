@@ -6,7 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
-    "scheme": "app-StarPass",
+    "scheme": "app-starpass",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
