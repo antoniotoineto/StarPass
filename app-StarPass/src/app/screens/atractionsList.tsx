@@ -1,15 +1,25 @@
 import { Link } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import TopBar from '../components/topBar';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Lista de brinquedos</Text>
-      <Link style={styles.button} href={"/screens/atractionDetails"}>Detalhes do brinquedos</Link>
-      <Link style={styles.button} href={"/screens/qrCode"}>QR Code</Link>
-      <Link style={styles.button} href={"/"}>Voltar</Link>
-      <StatusBar style="auto" />
+      <TopBar />
+
+      <View style={styles.listContainer}>
+        <Link href={'/screens/atractionDetails'}>Lista de brinquedos aqui</Link>
+      </View>
+
+      <View style={styles.bottomBar}>
+        <TouchableOpacity style={[styles.bottomButtons, {backgroundColor: 'red'}]}>
+          <Link href='/' style={styles.bottomButtonText}>Sair do parque</Link>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={[styles.bottomButtons, {backgroundColor: '#bdbdbd'}]}>
+          <Link href='screens/queueList'style={styles.bottomButtonText}>Consultar filas</Link>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -21,10 +31,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  text: {
-    fontSize: 30,
+  listContainer: {
+
+  }, 
+  bottomBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 35,
+    justifyContent: 'space-between',
+    bottom: 60,
+    position: 'absolute'
   },
-  button: {
-    marginTop: 15,
+  bottomButtons: {
+    padding: 10,
+    borderRadius: 10
+  },
+  bottomButtonText:{
+    fontSize: 15, 
+    fontWeight: 'bold'
   }
 });

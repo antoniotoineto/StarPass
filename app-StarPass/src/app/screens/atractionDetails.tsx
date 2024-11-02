@@ -1,13 +1,24 @@
 import { Link } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, Touchable, TouchableOpacity, View } from 'react-native';
+import TopBar from '../components/topBar';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Detalhes do brinquedo!</Text>
-      <Link style={styles.button} href={"/screens/atractionsList"}>Voltar</Link>
-      <StatusBar style="auto" />
+      <TopBar />
+
+      <View style={styles.atractionTitle}></View>
+
+      <View style={styles.imagesContainer}></View>
+
+      <View style={styles.infoContainer}></View>
+
+      <View style={styles.locContainer}></View>
+
+      <TouchableOpacity onPress={()=>console.log('Entrou na fila!')}>
+        <Text>Entrar na fila</Text>
+      </TouchableOpacity>
+
     </View>
   );
 }
@@ -19,10 +30,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  text: {
-    fontSize: 30,
+  atractionTitle: {
+
   },
-  button: {
-    marginTop: 15,
+  imagesContainer: {
+
+  },
+  infoContainer:{
+
+  },
+  locContainer:{
+
   }
 });

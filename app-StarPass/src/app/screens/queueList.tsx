@@ -1,12 +1,14 @@
 import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import TopBar from '../components/topBar';
 
 export default function App() {
   return (
     <View style={styles.container}>
+      <TopBar />
       <Text style={styles.text}>Lista de filas!</Text>
-      <Link style={styles.button} href={"/"}>Voltar</Link>
+      <Link style={styles.button} href={"/screens/atractionsList"}>Voltar</Link>
       <StatusBar style="auto" />
     </View>
   );
