@@ -11,7 +11,7 @@ interface AtractionCardProps {
 
 export default function AtractionCard({ image, title, feature, minimumHeight, avarageTime }: AtractionCardProps) {
   return (
-    <Link href={'/screens/atractionDetails'} asChild>
+    <Link href={'/components/atractionDetails'} asChild>
         <TouchableOpacity style={styles.atractionCard}>
             <Image 
                 source={{ uri: image }}

@@ -11,8 +11,9 @@ export default function App() {
 
       <View style={styles.listContainer}>
         <ScrollView>
-        {attractionsData.map((attraction) => (
+        {attractionsData.map((attraction, key) => (
           <AtractionCard
+            key={key}
             image={attraction.image}
             title={attraction.title}
             feature={attraction.feature}
