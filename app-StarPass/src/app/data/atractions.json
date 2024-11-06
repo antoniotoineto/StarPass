@@ -1,0 +1,30 @@
+[
+  {
+    "image": "https://via.placeholder.com/110",
+    "title": "Montanha Russa",
+    "feature": "Insano",
+    "minimumHeight": "1,50 m",
+    "avarageTime": "2 minutos"
+  },
+  {
+    "image": "https://via.placeholder.com/110",
+    "title": "Roda Gigante",
+    "feature": "Instigante",
+    "minimumHeight": "1,20 m",
+    "avarageTime": "5 minutos"
+  },
+  {
+    "image": "https://via.placeholder.com/110",
+    "title": "Tirolesa",
+    "feature": "Relaxante",
+    "minimumHeight": "1,20 m",
+    "avarageTime": "2 minutos"
+  },
+  {
+    "image": "https://via.placeholder.com/110",
+    "title": "Carrossel",
+    "feature": "Relaxante",
+    "minimumHeight": "N/A",
+    "avarageTime": "5 minutos"
+  }
+]

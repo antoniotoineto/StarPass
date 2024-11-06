@@ -30,17 +30,16 @@ export default function GetEntryCode() {
         </Picker>
       </View>
 
-      <TouchableOpacity 
-        style={styles.buttonContainer}
+      <Link 
+        href={"/screens/insertEntryCode"} 
+        onPress={() => console.log('Senha gerada para o guichê: ', selectedOption)} 
+        asChild
       >
-        <Link 
-          style={styles.buttonText} 
-          href={"/screens/insertEntryCode"} 
-          onPress={() => console.log('Senha gerada para o guichê: ', selectedOption)} 
-        >
-          Gerar senha
-        </Link>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonContainer}>
+          <Text style={styles.buttonText} >Gerar senha</Text>
+        </TouchableOpacity>
+      </Link>
+
     </View>
   );
 }

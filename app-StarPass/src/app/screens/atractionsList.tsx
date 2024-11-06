@@ -1,6 +1,8 @@
 import { Link } from 'expo-router';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import TopBar from '../components/topBar';
+import AtractionCard from '../components/atractionCard';
+import attractionsData from '../data/atractions.json';
 
 export default function App() {
   return (
@@ -8,17 +10,31 @@ export default function App() {
       <TopBar />
 
       <View style={styles.listContainer}>
-        <Link href={'/screens/atractionDetails'}>Lista de brinquedos aqui</Link>
+        <ScrollView>
+        {attractionsData.map((attraction) => (
+          <AtractionCard
+            image={attraction.image}
+            title={attraction.title}
+            feature={attraction.feature}
+            minimumHeight={attraction.minimumHeight}
+            avarageTime={attraction.avarageTime}
+          />
+        ))}
+        </ScrollView>
       </View>
 
       <View style={styles.bottomBar}>
-        <TouchableOpacity style={[styles.bottomButtons, {backgroundColor: 'red'}]}>
-          <Link href='/' style={styles.bottomButtonText}>Sair do parque</Link>
-        </TouchableOpacity>
+        <Link href='/' asChild>
+          <TouchableOpacity style={styles.exitButton}>
+            <Text style={styles.bottomButtonText}>Sair do parque</Text>
+          </TouchableOpacity>
+        </Link>
 
-        <TouchableOpacity style={[styles.bottomButtons, {backgroundColor: '#bdbdbd'}]}>
-          <Link href='screens/queueList'style={styles.bottomButtonText}>Consultar filas</Link>
-        </TouchableOpacity>
+        <Link href='screens/queueList' asChild>
+          <TouchableOpacity style={styles.queueButton}>
+            <Text style={styles.bottomButtonText}>Consultar filas</Text>
+          </TouchableOpacity>
+        </Link>
       </View>
     </View>
   );
@@ -32,7 +48,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   listContainer: {
-
+    width: '80%',
+    height: 500,
   }, 
   bottomBar: {
     flexDirection: 'row',
@@ -43,9 +60,15 @@ const styles = StyleSheet.create({
     bottom: 60,
     position: 'absolute'
   },
-  bottomButtons: {
+  exitButton: {
     padding: 10,
-    borderRadius: 10
+    borderRadius: 10,
+    backgroundColor: 'red'
+  },
+  queueButton: {
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: '#bdbdbd'
   },
   bottomButtonText:{
     fontSize: 15, 
