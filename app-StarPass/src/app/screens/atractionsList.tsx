@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     width: '80%',
-    height: 500,
+    height: 550,
   }, 
   bottomBar: {
     flexDirection: 'row',

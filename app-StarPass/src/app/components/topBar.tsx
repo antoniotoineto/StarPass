@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 50,
     justifyContent: 'space-between',
-    top: 50,
+    top: 20,
     position: 'absolute'
   }, 
 });

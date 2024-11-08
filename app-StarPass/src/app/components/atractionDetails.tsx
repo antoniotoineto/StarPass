@@ -1,43 +1,59 @@
 import { Link } from 'expo-router';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image, SafeAreaView } from 'react-native';
 import TopBar from './topBar';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import carouselData from '../data/atractionDetails.json';
 
-
-export default function App() {
+const Item = ({item}: {item: {image: string}}) => {
   return (
-    <View style={styles.container}>
-      <TopBar />
+    <View style={styles.slide}>
+      <Image source={{uri: item.image}} style={{width: 300, height: 300}} />
+    </View>
+  );
+};
 
-      <View style={styles.atractionTitle}>
-        <Link href="/screens/getEntryCode" style={{paddingStart: 35}}>
-          <Ionicons name="arrow-back-outline" size={30} color="black"/>
-        </Link>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Brinquedo 1</Text>
-          <Text style={styles.subtitle}>
-            Insano
-            <Ionicons name="flash" size={22} color="black" />
-          </Text>
+export default function atractionDetails() {
+  return (
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <TopBar />
+
+        <View style={styles.atractionTitle}>
+          <Link href="/screens/atractionsList" style={{paddingStart: 35}}>
+            <Ionicons name="arrow-back-outline" size={30} color="black"/>
+          </Link>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Brinquedo 1</Text>
+            <Text style={styles.subtitle}>
+              Insano
+              <Ionicons name="flash" size={22} color="black" />
+            </Text>
+            
+          </View>
+        </View>
+
+        <View style={styles.imagesContainer}>
           
         </View>
+
+        <View style={styles.infoContainer}></View>
+
+        <View style={styles.locContainer}></View>
+
+        <TouchableOpacity onPress={()=>console.log('Entrou na fila!')}>
+          <Text>Entrar na fila</Text>
+        </TouchableOpacity>
+
       </View>
-
-      <View style={styles.imagesContainer}></View>
-
-      <View style={styles.infoContainer}></View>
-
-      <View style={styles.locContainer}></View>
-
-      <TouchableOpacity onPress={()=>console.log('Entrou na fila!')}>
-        <Text>Entrar na fila</Text>
-      </TouchableOpacity>
-
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#1a1917',
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -50,7 +66,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     position: 'absolute',
-    top: 160
+    top: 130
 
   },
   titleContainer: {
@@ -68,6 +84,11 @@ const styles = StyleSheet.create({
   },  
   imagesContainer: {
 
+  },
+  slide: {
+    backgroundColor: 'floralwhite',
+    borderRadius: 5,
+    height: 250,
   },
   infoContainer:{
 
