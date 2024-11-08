@@ -1,8 +1,8 @@
 import { Link } from 'expo-router';
-import { StyleSheet, Text, TouchableOpacity, View, Image, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image, SafeAreaView  } from 'react-native';
 import TopBar from './topBar';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import carouselData from '../data/atractionDetails.json';
+import ImagesCarousel from './imagesCarousel';
 
 const Item = ({item}: {item: {image: string}}) => {
   return (
@@ -13,6 +13,7 @@ const Item = ({item}: {item: {image: string}}) => {
 };
 
 export default function atractionDetails() {
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -32,15 +33,15 @@ export default function atractionDetails() {
           </View>
         </View>
 
-        <View style={styles.imagesContainer}>
-          
+        <View style={[styles.imagesContainer]}>
+          <ImagesCarousel />
         </View>
 
         <View style={styles.infoContainer}></View>
 
         <View style={styles.locContainer}></View>
 
-        <TouchableOpacity onPress={()=>console.log('Entrou na fila!')}>
+        <TouchableOpacity onPress={()=>console.log('Entrou na fila!')} style={styles.entryQueueButton}>
           <Text>Entrar na fila</Text>
         </TouchableOpacity>
 
@@ -48,6 +49,7 @@ export default function atractionDetails() {
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -67,7 +69,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     position: 'absolute',
     top: 130
-
   },
   titleContainer: {
     alignItems: 'center',
@@ -83,7 +84,10 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },  
   imagesContainer: {
-
+    width: '100%',
+    height: 200,
+    position: 'absolute',
+    top: 200
   },
   slide: {
     backgroundColor: 'floralwhite',
@@ -95,5 +99,9 @@ const styles = StyleSheet.create({
   },
   locContainer:{
 
+  },
+  entryQueueButton: {
+    position: 'absolute',
+    bottom: 130
   }
 });
