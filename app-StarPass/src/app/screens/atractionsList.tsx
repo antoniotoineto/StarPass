@@ -1,15 +1,42 @@
 import { Link } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import TopBar from '../components/topBar';
+import AtractionCard from '../components/atractionCard';
+import attractionsData from '../data/atractions.json';
 
-export default function App() {
+export default function atractionsList() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Lista de brinquedos</Text>
-      <Link style={styles.button} href={"/screens/atractionDetails"}>Detalhes do brinquedos</Link>
-      <Link style={styles.button} href={"/screens/qrCode"}>QR Code</Link>
-      <Link style={styles.button} href={"/"}>Voltar</Link>
-      <StatusBar style="auto" />
+      <TopBar />
+
+      <View style={styles.listContainer}>
+        <ScrollView>
+        {attractionsData.map((attraction, key) => (
+          <AtractionCard
+            key={key}
+            image={attraction.image}
+            title={attraction.title}
+            feature={attraction.feature}
+            minimumHeight={attraction.minimumHeight}
+            avarageTime={attraction.avarageTime}
+          />
+        ))}
+        </ScrollView>
+      </View>
+
+      <View style={styles.bottomBar}>
+        <Link href='/' asChild>
+          <TouchableOpacity style={styles.exitButton}>
+            <Text style={styles.bottomButtonText}>Sair do parque</Text>
+          </TouchableOpacity>
+        </Link>
+
+        <Link href='screens/queueList' asChild>
+          <TouchableOpacity style={styles.queueButton}>
+            <Text style={styles.bottomButtonText}>Consultar filas</Text>
+          </TouchableOpacity>
+        </Link>
+      </View>
     </View>
   );
 }
@@ -20,11 +47,32 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 10
   },
-  text: {
-    fontSize: 30,
+  listContainer: {
+    width: '80%',
+    height: 600,
+  }, 
+  bottomBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 35,
+    justifyContent: 'space-between',
+    marginTop: 10
   },
-  button: {
-    marginTop: 15,
+  exitButton: {
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: 'red'
+  },
+  queueButton: {
+    padding: 10,
+    borderRadius: 10,
+    backgroundColor: '#bdbdbd'
+  },
+  bottomButtonText:{
+    fontSize: 15, 
+    fontWeight: 'bold'
   }
 });

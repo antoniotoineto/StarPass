@@ -37,17 +37,16 @@ export default function GetEntryCode() {
           />
         </View>
 
-        <TouchableOpacity 
-          style={styles.buttonContainer}
+        <Link 
+          href={"/screens/atractionsList"} 
+          onPress={() => console.log('Senha confirmada: ', pin)} 
+          asChild
         >
-          <Link 
-            style={styles.buttonText} 
-            href={"/screens/atractionsList"} 
-            onPress={() => console.log('Senha confirmada: ', pin)} 
-          >
-            Confirmar
-          </Link>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonContainer}>
+            <Text style={styles.buttonText}>Confirmar</Text>
+          </TouchableOpacity>
+        </Link>
+
       </ScrollView>
     </KeyboardAvoidingView>
   );
