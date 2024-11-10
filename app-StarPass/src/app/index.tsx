@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   button: {
+    fontSize: 50,
     marginTop: 15,
   }
 });

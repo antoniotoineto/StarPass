@@ -11,7 +11,7 @@ interface AtractionCardProps {
 
 export default function AtractionCard({ image, title, feature, minimumHeight, avarageTime }: AtractionCardProps) {
   return (
-    <Link href={'/components/atractionDetails'} asChild>
+    <Link href={'/screens/atractionDetails'} asChild>
         <TouchableOpacity style={styles.atractionCard}>
             <Image 
                 source={{ uri: image }}
@@ -20,7 +20,7 @@ export default function AtractionCard({ image, title, feature, minimumHeight, av
             <View style={styles.textContainer}>
                 <Text style={styles.title} numberOfLines={1} adjustsFontSizeToFit={true}>{title}</Text>
                 
-                <Text style={styles.description}>
+                <Text>
                     <Text style={{fontWeight: 'bold'}}>Característica:</Text> {feature}{"\n"}
                     <Text style={{fontWeight: 'bold'}}>Altura mínima:</Text> {minimumHeight}{"\n"}
                     <Text style={{fontWeight: 'bold'}}>Tempo médio:</Text> {avarageTime}{"\n"}
@@ -51,8 +51,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 5
-  },
-  description: {
   },
   image: {
     width: 110,

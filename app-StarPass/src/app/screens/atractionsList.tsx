@@ -4,7 +4,7 @@ import TopBar from '../components/topBar';
 import AtractionCard from '../components/atractionCard';
 import attractionsData from '../data/atractions.json';
 
-export default function App() {
+export default function atractionsList() {
   return (
     <View style={styles.container}>
       <TopBar />
@@ -47,10 +47,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 10
   },
   listContainer: {
     width: '80%',
-    height: 550,
+    height: 600,
   }, 
   bottomBar: {
     flexDirection: 'row',
@@ -58,8 +59,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingHorizontal: 35,
     justifyContent: 'space-between',
-    bottom: 60,
-    position: 'absolute'
+    marginTop: 10
   },
   exitButton: {
     padding: 10,

@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '80%',
-    height: 180,
+    height: 300,
     justifyContent: 'center',
     borderRadius: 10,
     resizeMode: 'cover',
