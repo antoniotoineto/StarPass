@@ -2,7 +2,7 @@ import { Link } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View, Image, SafeAreaView  } from 'react-native';
 import TopBar from './topBar';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import ImagesCarousel from './imagesCarousel';
+import ImagesCarousel from './imagesCarousel/imagesCarousel';
 
 const Item = ({item}: {item: {image: string}}) => {
   return (

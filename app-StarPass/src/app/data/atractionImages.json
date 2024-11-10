@@ -1,14 +1,18 @@
 [
     {
+      "id": "1",
       "image": "https://via.placeholder.com/110"
     },
     {
+      "id": "2", 
       "image": "https://via.placeholder.com/110"
     },
     {
+      "id": "3",
       "image": "https://via.placeholder.com/110"
     },
     {
+      "id": "4",
       "image": "https://via.placeholder.com/110"
     }
 ]
