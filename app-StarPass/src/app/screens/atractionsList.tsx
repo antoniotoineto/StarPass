@@ -1,7 +1,7 @@
 import { Link } from 'expo-router';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import TopBar from '../components/topBar';
-import AtractionCard from '../components/atractionCard';
+import AttractionCard from '../components/atractionCard';
 import attractionsData from '../data/atractions.json';
 
 export default function atractionsList() {
@@ -12,13 +12,17 @@ export default function atractionsList() {
       <View style={styles.listContainer}>
         <ScrollView>
         {attractionsData.map((attraction, key) => (
-          <AtractionCard
+          <AttractionCard
             key={key}
+            id={attraction.id}
             image={attraction.image}
             title={attraction.title}
-            feature={attraction.feature}
+            subtitle={attraction.subtitle}
+            description={attraction.description}
             minimumHeight={attraction.minimumHeight}
             avarageTime={attraction.avarageTime}
+            location={attraction.location}
+            carouselImages={attraction.carouselImages}
           />
         ))}
         </ScrollView>

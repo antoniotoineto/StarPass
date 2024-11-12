@@ -1,28 +1,19 @@
-import { Link } from 'expo-router';
+import { Link, useLocalSearchParams } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View, Image, SafeAreaView, ScrollView  } from 'react-native';
 import TopBar from '../components/topBar';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ImagesCarousel from '../components/imagesCarousel/imagesCarousel';
 
-interface AtractionDetailsProps {
-  title: string;
-  subtitle: string;
-  images: string[],
-  description: string,
-  minimumHeight: string;
-  avarageTime: string;
-  location: string;
-}
-
-export default function atractionDetails({
-  title, 
-  subtitle, 
-  images, 
-  description, 
-  minimumHeight, 
-  avarageTime, 
-  location}: AtractionDetailsProps) {
-
+export default function atractionDetails() {
+  
+  const { id, title, subtitle, description, minimumHeight, avarageTime, location, carouselImages } = useLocalSearchParams();
+  const locationString = String(location);
+  const parsedImages = carouselImages ? JSON.parse(carouselImages as string) : [];
+  const iconName = subtitle === 'Insano' ? 'flash' :
+                 subtitle === 'Relaxante' ? 'cafe' :
+                 subtitle === 'Instigante' ? 'flashlight-sharp' :
+                 'help-circle';
+                 
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -32,30 +23,29 @@ export default function atractionDetails({
 
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.atractionTitle}>
-            <Link href="/screens/atractionsList" style={{paddingStart: 35}}>
+            <Link href="/screens/atractionsList" style={{ position: 'absolute', left: 15 }}>
               <Ionicons name="arrow-back-outline" size={30} color="black"/>
             </Link>
             <View style={styles.titleContainer}>
-              <Text style={styles.title} numberOfLines={1} adjustsFontSizeToFit={true}>Brinquedo 1</Text>
-              <Text style={styles.subtitle}>
-                Insano
-                <Ionicons name="flash" size={22} color="black" />
-              </Text>
-              
+              <Text style={styles.title} numberOfLines={1} adjustsFontSizeToFit={true}>{title}</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text style={styles.subtitle}>{subtitle}</Text>
+                <Ionicons name={iconName} size={22} color="black" style={{marginLeft: 5}}/>
+              </View>
             </View>
           </View>
 
           <View style={[styles.imagesContainer]}>
-            <ImagesCarousel />
+            <ImagesCarousel images={parsedImages}/>
           </View>
 
           <View>
             <Text style={{fontSize: 30}}>Informações</Text>
             <View style={styles.infoContainer}>
               <Text>
-                <Text style={{fontWeight: 'bold'}}>Descrição:</Text> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius, consequatur{"\n"}
-                <Text style={{fontWeight: 'bold'}}>Altura mínima:</Text> 1.42m{"\n"}
-                <Text style={{fontWeight: 'bold'}}>Tempo médio:</Text> 20seg
+                <Text style={{fontWeight: 'bold'}}>Descrição:</Text>{description}{"\n"}
+                <Text style={{fontWeight: 'bold'}}>Altura mínima:</Text>{minimumHeight}{"\n"}
+                <Text style={{fontWeight: 'bold'}}>Tempo médio:</Text> {avarageTime}
               </Text>
             </View>
           </View>
@@ -63,11 +53,11 @@ export default function atractionDetails({
           <View style={{marginTop: 35}}>
             <Text style={{fontSize: 30}}>Localização</Text>
             <View style={styles.locContainer}>
-              <Image source={{uri: 'https://via.placeholder.com/110'}} style={styles.image}/>
+              <Image source={{uri: locationString}} style={styles.image}/>
             </View>
           </View>
 
-          <TouchableOpacity onPress={()=>console.log('Entrou na fila!')} style={styles.entryQueueButton}>
+          <TouchableOpacity onPress={()=>console.log('Entrou na fila do Brinquedo/ID: ', {title, id})} style={styles.entryQueueButton}>
             <Text style={{fontSize:25}}>Entrar na fila</Text>
           </TouchableOpacity>
         </ScrollView>
@@ -99,20 +89,22 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    paddingVertical: 10,
   },
   titleContainer: {
     alignItems: 'center',
     marginTop: 10,
-    marginEnd: '24%'
+    maxWidth: '80%',
   },
   title: {
     fontSize: 33,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    textAlign: 'center'
   },
   subtitle: {
     fontSize: 28,
-    alignItems: 'center'
+    alignItems: 'center',
   },  
   imagesContainer: {
     width: '100%',
