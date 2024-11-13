@@ -1,10 +1,10 @@
 import { Link } from 'expo-router';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import TopBar from '../components/topBar';
-import AttractionCard from '../components/atractionCard';
-import attractionsData from '../data/atractions.json';
+import AttractionCard from '../components/attractionCard';
+import attractionsData from '../data/attractions.json';
 
-export default function atractionsList() {
+export default function AttractionsList() {
   return (
     <View style={styles.container}>
       <TopBar />

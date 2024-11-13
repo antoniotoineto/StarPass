@@ -16,7 +16,7 @@ interface AttractionCardProps {
 export default function AttractionCard({ id, image, title, subtitle, description, minimumHeight, avarageTime, location, carouselImages }: AttractionCardProps) {
   return (
     <Link href={{
-      pathname: '/screens/atractionDetails',
+      pathname: '/screens/attractionDetails',
       params: {
         id,
         title,
@@ -28,7 +28,7 @@ export default function AttractionCard({ id, image, title, subtitle, description
         carouselImages: JSON.stringify(carouselImages)
       }
       }} asChild>
-        <TouchableOpacity style={styles.atractionCard}>
+        <TouchableOpacity style={styles.attractionCard}>
             <Image 
                 source={{ uri: image }}
                 style={styles.image}
@@ -50,7 +50,7 @@ export default function AttractionCard({ id, image, title, subtitle, description
 
 
 const styles = StyleSheet.create({
-  atractionCard: {
+  attractionCard: {
     width: '100%',
     height: 150,
     backgroundColor: '#dcdcdc',

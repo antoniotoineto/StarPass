@@ -3,12 +3,12 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import TopBar from '../components/topBar';
 
-export default function App() {
+export default function QueueListScreen() {
   return (
     <View style={styles.container}>
       <TopBar />
       <Text style={styles.text}>Lista de filas!</Text>
-      <Link style={styles.button} href={"/screens/atractionsList"}>Voltar</Link>
+      <Link style={styles.button} href={"/screens/attractionsList"}>Voltar</Link>
       <StatusBar style="auto" />
     </View>
   );

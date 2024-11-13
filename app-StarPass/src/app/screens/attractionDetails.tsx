@@ -4,7 +4,7 @@ import TopBar from '../components/topBar';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ImagesCarousel from '../components/imagesCarousel/imagesCarousel';
 
-export default function atractionDetails() {
+export default function AttractionDetailsScreen() {
   
   const { id, title, subtitle, description, minimumHeight, avarageTime, location, carouselImages } = useLocalSearchParams();
   const locationString = String(location);
@@ -22,8 +22,8 @@ export default function atractionDetails() {
         </View>
 
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.atractionTitle}>
-            <Link href="/screens/atractionsList" style={{ position: 'absolute', left: 15 }}>
+          <View style={styles.attractionTitle}>
+            <Link href="/screens/attractionsList" style={{ position: 'absolute', left: 15 }}>
               <Ionicons name="arrow-back-outline" size={30} color="black"/>
             </Link>
             <View style={styles.titleContainer}>
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     paddingBottom: 50,
     alignItems: 'center',
   },
-  atractionTitle: {
+  attractionTitle: {
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',

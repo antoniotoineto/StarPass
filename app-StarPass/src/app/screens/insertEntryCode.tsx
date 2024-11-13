@@ -38,7 +38,7 @@ export default function GetEntryCode() {
         </View>
 
         <Link 
-          href={"/screens/atractionsList"} 
+          href={"/screens/attractionsList"} 
           onPress={() => console.log('Senha confirmada: ', pin)} 
           asChild
         >
