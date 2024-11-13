@@ -3,10 +3,17 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingVi
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Link } from 'expo-router';
+import { usePin } from '../context/pinCodeContext';
 
 export default function GetEntryCode() {
 
-  const [pin, setPin] = useState('');
+  const [boardPin, setBoardPin] = useState('');
+  const { setPin } = usePin();
+
+  const handleConfirmPin = () => {
+    console.log('Senha confirmada: ', boardPin)
+    setPin(boardPin);
+  };
 
   return (
     <KeyboardAvoidingView
@@ -29,8 +36,8 @@ export default function GetEntryCode() {
           <Text style={styles.pickerTitle}>Insira a senha</Text>
           <TextInput
             style={styles.passwordInput}
-            value={pin}
-            onChangeText={setPin}
+            value={boardPin}
+            onChangeText={setBoardPin}
             placeholder="4 dígitos"
             maxLength={4} 
             keyboardType="numeric"
@@ -39,7 +46,7 @@ export default function GetEntryCode() {
 
         <Link 
           href={"/screens/attractionsList"} 
-          onPress={() => console.log('Senha confirmada: ', pin)} 
+          onPress={handleConfirmPin} 
           asChild
         >
           <TouchableOpacity style={styles.buttonContainer}>

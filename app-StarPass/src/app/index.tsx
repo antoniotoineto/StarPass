@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { Link } from 'expo-router';
 
-export default function App() {
+export default function Home() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Tela pós splash-screen!</Text>
