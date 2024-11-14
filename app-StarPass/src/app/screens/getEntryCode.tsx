@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     padding: 50,
+    backgroundColor: '#fff',
   },
   logoText: {
     fontSize: 50,

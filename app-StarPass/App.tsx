@@ -1,10 +1,7 @@
-import { PinProvider } from './src/app/context/pinCodeContext';
-import Home from './src/app';
+import RootLayout from './src/app/_layout';
 
 export default function App() {
   return (
-    <PinProvider>
-      <Home />
-    </PinProvider>
+    <RootLayout />
   );
 }

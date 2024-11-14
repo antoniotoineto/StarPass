@@ -1,14 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { Link } from 'expo-router';
+import { PinProvider } from './context/pinCodeContext';
 
 export default function Home() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Tela pós splash-screen!</Text>
-      <Link style={styles.button} href={"/screens/getEntryCode"}>Get Started!</Link>
-      <StatusBar style="auto" />
-    </View>
+    <PinProvider>
+      <View style={styles.container}>
+        <Text style={styles.text}>Tela pós splash-screen!</Text>
+        <Link style={styles.button} href={"/screens/getEntryCode"}>Get Started!</Link>
+        <StatusBar style="auto" />
+      </View>
+    </PinProvider>
   );
 }
 

@@ -21,10 +21,14 @@ export default function QrCodeScreen() {
         </Link>
       </View>
 
+      <Text style={{fontSize: 25, textAlign: 'center'}}>Apresente na entrada para a diversão!</Text>
+      
       <View style={styles.qrCodeContainer}>
         {pin ? (
-          //<QRCode value={pin} size={150} />
-          <Text>QR Code não disponível. Peça suporte à algum funcionário do parque.</Text>
+          
+          <View style={styles.qrCode}>
+            <QRCode value={pin} size={250} />
+          </View>
         ) : (
           <Text>QR Code não disponível. Peça suporte à algum funcionário do parque.</Text>
         )}
@@ -54,8 +58,17 @@ const styles = StyleSheet.create({
   },
   qrCodeContainer :{
     width: '85%',
+    height: 475,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 95
+  },
+  qrCode: {
     backgroundColor: '#e6e6e6',
-    height: 565,
-    borderRadius: 15
-  }
+    borderRadius: 15,
+    padding: 30,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+
 });
