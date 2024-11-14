@@ -4,15 +4,28 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Link } from 'expo-router';
 import { usePin } from '../context/pinCodeContext';
+import { useRouter } from 'expo-router';
+
 
 export default function GetEntryCode() {
 
   const [boardPin, setBoardPin] = useState('');
+  const [showWarning, setShowWarning] = useState(false);
   const { setPin } = usePin();
+  const router = useRouter();
+
 
   const handleConfirmPin = () => {
-    console.log('Senha confirmada: ', boardPin)
-    setPin(boardPin);
+    if(boardPin === null || boardPin === '' || boardPin.length != 4){
+      console.log("Código no formato inválido. Usuário não pode seguir.") 
+      setShowWarning(true);
+    } else {
+      console.log('Senha confirmada: ', boardPin)
+      setPin(boardPin);
+      setShowWarning(false);
+      router.push("/screens/attractionsList");
+    }
+    
   };
 
   return (
@@ -44,15 +57,13 @@ export default function GetEntryCode() {
           />
         </View>
 
-        <Link 
-          href={"/screens/attractionsList"} 
-          onPress={handleConfirmPin} 
-          asChild
-        >
-          <TouchableOpacity style={styles.buttonContainer}>
-            <Text style={styles.buttonText}>Confirmar</Text>
-          </TouchableOpacity>
-        </Link>
+        {showWarning && (
+        <Text style={styles.warningText}>Código inválido</Text>
+      )}
+
+        <TouchableOpacity style={styles.buttonContainer} onPress={handleConfirmPin}>
+          <Text style={styles.buttonText}>Confirmar</Text>
+        </TouchableOpacity>
 
       </ScrollView>
     </KeyboardAvoidingView>
@@ -98,6 +109,11 @@ const styles = StyleSheet.create({
   },
   picker: {
     width: 300,
+  },
+  warningText: {
+    color: 'red',
+    fontSize: 16,
+    textAlign: 'center',
   },
   buttonContainer: {
     width: 300,

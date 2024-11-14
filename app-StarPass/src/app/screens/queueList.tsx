@@ -7,7 +7,7 @@ export default function QueueListScreen() {
   return (
     <View style={styles.container}>
       <TopBar />
-      <Text style={styles.text}>Lista de filas!</Text>
+      <Text style={styles.text}>Lista de filas! tmjj</Text>
       <Link style={styles.button} href={"/screens/attractionsList"}>Voltar</Link>
       <StatusBar style="auto" />
     </View>

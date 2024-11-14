@@ -2,11 +2,25 @@ import React, { useState} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Entypo from '@expo/vector-icons/Entypo';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
+
 
 export default function GetEntryCode() {
 
   const [selectedOption, setSelectedOption] = useState();
+  const [showWarning, setShowWarning] = useState(false);
+  const router = useRouter();
+
+  const handleGeneratePassword = () => {
+    if (selectedOption === "0" || selectedOption === undefined) {
+      console.log("Nenhum guichê selecionado. Usuário não pode seguir.") 
+      setShowWarning(true);
+    } else {
+      setShowWarning(false);
+      console.log('Senha gerada para o guichê:', selectedOption);
+      router.push("/screens/insertEntryCode");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -24,21 +38,20 @@ export default function GetEntryCode() {
           style={styles.picker}
           mode='dialog'
         >
-          <Picker.Item label="Guichê 1" value="1" />
+          <Picker.Item label="Selecione abaixo" value="0" />
+          <Picker.Item label="Guichê 1" value="1"/>
           <Picker.Item label="Guichê 2" value="2" />
           <Picker.Item label="Guichê 3" value="3" />
         </Picker>
       </View>
 
-      <Link 
-        href={"/screens/insertEntryCode"} 
-        onPress={() => console.log('Senha gerada para o guichê: ', selectedOption)} 
-        asChild
-      >
-        <TouchableOpacity style={styles.buttonContainer}>
-          <Text style={styles.buttonText} >Gerar senha</Text>
-        </TouchableOpacity>
-      </Link>
+      {showWarning && (
+        <Text style={styles.warningText}>Selecione um dos guichês</Text>
+      )}
+
+      <TouchableOpacity style={styles.buttonContainer} onPress={handleGeneratePassword} >
+        <Text style={styles.buttonText} >Gerar senha</Text>
+      </TouchableOpacity>
 
     </View>
   );
@@ -69,6 +82,11 @@ const styles = StyleSheet.create({
   },
   picker: {
     width: 300,
+  },
+  warningText: {
+    color: 'red',
+    fontSize: 16,
+    textAlign: 'center',
   },
   buttonContainer: {
     width: 300,

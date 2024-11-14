@@ -30,7 +30,9 @@ export default function QrCodeScreen() {
             <QRCode value={pin} size={250} />
           </View>
         ) : (
-          <Text>QR Code não disponível. Peça suporte à algum funcionário do parque.</Text>
+          <View style={styles.qrCode}>
+            <Text style={{textAlign: 'center'}}>QR Code não disponível. Peça suporte à algum funcionário do parque.</Text>
+          </View>
         )}
       </View>
       <StatusBar style="auto" />
