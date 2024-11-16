@@ -1,5 +1,5 @@
 import { Link, useLocalSearchParams } from 'expo-router';
-import { StyleSheet, Text, TouchableOpacity, View, Image, SafeAreaView, ScrollView  } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image, SafeAreaView, ScrollView, Alert  } from 'react-native';
 import TopBar from '../components/topBar';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ImagesCarousel from '../components/imagesCarousel/imagesCarousel';
@@ -14,6 +14,26 @@ export default function AttractionDetailsScreen() {
                  subtitle === 'Relaxante' ? 'cafe' :
                  subtitle === 'Instigante' ? 'flashlight-sharp' :
                  'help-circle';
+
+  const handleConfirm = () => {
+    Alert.alert(
+      "Entrar na fila",
+      "Deseja entrar na fila para esse brinquedo?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Entrar",
+          onPress: () => {
+            console.log('Envia request para fila do Brinquedo/ID: ', {title, id})
+          },
+        },
+      ]
+    );
+
+  }
                  
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -58,7 +78,7 @@ export default function AttractionDetailsScreen() {
             </View>
           </View>
 
-          <TouchableOpacity onPress={()=>console.log('Entrou na fila do Brinquedo/ID: ', {title, id})} style={styles.entryQueueButton}>
+          <TouchableOpacity onPress={()=>handleConfirm()} style={styles.entryQueueButton}>
             <Text style={{fontSize:25}}>Entrar na fila</Text>
           </TouchableOpacity>
         </ScrollView>

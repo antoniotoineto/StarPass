@@ -1,45 +1,88 @@
-import { Link } from 'expo-router';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+
 
 interface QueueCardProps {
+    number: number
     id: string,
     title: string;
     queuePosition: string;
     estimatedTime: string;
   }
 
-export default function QueueCard({ id, title, queuePosition, estimatedTime }: QueueCardProps) {
+export default function QueueCard({ number, id, title, queuePosition, estimatedTime }: QueueCardProps) {
+
+  const handleDeleteQueue = (excludedId: any) => {
+    Alert.alert(
+      "Sair da fila",
+      "Tem certeza que deseja sair dessa fila?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Sair",
+          onPress: () => {
+            console.log("Envia request para excluir a fila: ", {excludedId, title})
+          },
+        },
+      ]
+    );
+
+  };
+
   return (
-    <View>
-        <Text>Card da fila!</Text>
+    <View style={styles.mainContainer}>
+      <Text style={styles.number}>{number}</Text>
+      <View style={styles.cardContainer}>
+        <View style={{width: '60%'}}>
+          <Text 
+            numberOfLines={1} 
+            adjustsFontSizeToFit={true} 
+            style={{fontSize: 18, fontWeight: 'bold'}}
+          >
+            {title}
+          </Text>
+        </View>
+        <View style={styles.leftInfos}>
+          <Text style={{fontSize: 15}}>{queuePosition} |</Text>
+          <Text style={{fontSize: 15, color: 'red'}}>{estimatedTime}</Text>
+        </View>
+      </View>
+      <TouchableOpacity onPress={() => handleDeleteQueue(id)}>
+        <Ionicons name="trash-outline" size={23} color="black" style={{marginLeft: 5}}/>
+      </TouchableOpacity>
+
     </View>
   );
 }
 
 
 const styles = StyleSheet.create({
-  attractionCard: {
-    width: '100%',
-    height: 150,
-    backgroundColor: '#dcdcdc',
+  mainContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 13,
-    gap: 8,
-    borderRadius: 15,
-    marginTop: 8
-  }, 
-  textContainer :{
-    width: '60%',
+    height: 60,
+    width: '100%',
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 5
+  number: {
+    fontSize: 20, 
+    fontWeight: 'bold', 
   },
-  image: {
-    width: 110,
-    height: 110,
-    borderRadius: 8,
+  cardContainer:{
+    width: '70%',
+    backgroundColor: '#e6e6e6',
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderRadius: 10,
+    padding: 10,
+    flexDirection: 'row',
+    marginLeft: 10,
   },
+  leftInfos: {
+    flexDirection: 'row',
+    gap: 5
+  }
 });

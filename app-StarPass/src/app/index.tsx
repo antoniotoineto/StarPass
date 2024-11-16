@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <PinProvider>
       <View style={styles.container}>
-        <Text style={styles.text}>Tela pós splash-screen!</Text>
+        <Text style={styles.text}>Star Pass</Text>
         <Link style={styles.button} href={"/screens/getEntryCode"}>Get Started!</Link>
         <StatusBar style="auto" />
       </View>
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    fontSize: 30,
+    fontSize: 50,
   },
   button: {
     fontSize: 50,

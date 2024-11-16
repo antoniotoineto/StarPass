@@ -1,9 +1,9 @@
 [
     {
-      "id": "1",
-      "title": "Montanha Russa",
-      "queuePosition": "1º",
-      "estimatedTime": "1 min"
+        "id": "1",
+        "title": "Montanha Russa",
+        "queuePosition": "1º",
+        "estimatedTime": "1 min"
     },
     {
         "id": "2",
@@ -19,7 +19,7 @@
     },
     {
         "id": "4",
-        "title": "Montanha Russa",
+        "title": "Super Mega",
         "queuePosition": "10º",
         "estimatedTime": "25 min"
     }
