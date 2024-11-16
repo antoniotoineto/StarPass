@@ -1,12 +1,14 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, FlatList, useWindowDimensions, Animated, ViewToken, ViewabilityConfig } from 'react-native';
-import carouselData from '../../data/atractionImages.json';
 import CarouselItem from './carouselItem';
 import { useRef, useState } from 'react';
 import CarouselPaginator from './carouselPaginator';
 
+interface CarouselImagesProps {
+  images: string[]
+}
 
-export default function ImagesCarousel() {
+export default function ImagesCarousel({images}: CarouselImagesProps) {
     const {width} = useWindowDimensions();
     const [currentIndex, setCurrentIndex] = useState(0);
     const scrollX = useRef(new Animated.Value(0)).current;
@@ -27,13 +29,13 @@ export default function ImagesCarousel() {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <FlatList 
-        data={carouselData}
-        renderItem={({item})=> <CarouselItem item={item}/>} 
+        data={images}
+        renderItem={({item})=> <CarouselItem item={{ image: item }}/>} 
         horizontal
         showsHorizontalScrollIndicator
         pagingEnabled
         style={{width}}
-        keyExtractor={(item)=>item.id}
+        keyExtractor={(item, index) => index.toString()}
         onScroll={Animated.event([{nativeEvent: {contentOffset: {x: scrollX}}}],{
           useNativeDriver: false,
         })}
@@ -43,7 +45,7 @@ export default function ImagesCarousel() {
         ref={slidesRef}
         />
       
-      <CarouselPaginator data={carouselData} scrollX={scrollX} />
+      <CarouselPaginator data={images} scrollX={scrollX} />
     </View>
   );
 }

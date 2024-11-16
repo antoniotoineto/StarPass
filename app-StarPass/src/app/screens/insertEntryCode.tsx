@@ -3,10 +3,33 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingVi
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Link } from 'expo-router';
+import { usePin } from '../context/pinCodeContext';
+import { useRouter } from 'expo-router';
+
 
 export default function GetEntryCode() {
 
-  const [pin, setPin] = useState('');
+  const [boardPin, setBoardPin] = useState('');
+  const [showWarning, setShowWarning] = useState(false);
+  const { setPin } = usePin();
+  const router = useRouter();
+
+
+  const handleConfirmPin = () => {
+    if(boardPin === null || 
+      boardPin === '' || 
+      boardPin.length !== 4 || 
+      !/^\d+$/.test(boardPin) ){
+      console.log("Código no formato inválido. Usuário não pode seguir.") 
+      setShowWarning(true);
+    } else {
+      console.log('Senha confirmada: ', boardPin)
+      setPin(boardPin);
+      setShowWarning(false);
+      router.push("/screens/attractionsList");
+    }
+    
+  };
 
   return (
     <KeyboardAvoidingView
@@ -29,23 +52,21 @@ export default function GetEntryCode() {
           <Text style={styles.pickerTitle}>Insira a senha</Text>
           <TextInput
             style={styles.passwordInput}
-            value={pin}
-            onChangeText={setPin}
+            value={boardPin}
+            onChangeText={setBoardPin}
             placeholder="4 dígitos"
             maxLength={4} 
             keyboardType="numeric"
           />
         </View>
 
-        <Link 
-          href={"/screens/atractionsList"} 
-          onPress={() => console.log('Senha confirmada: ', pin)} 
-          asChild
-        >
-          <TouchableOpacity style={styles.buttonContainer}>
-            <Text style={styles.buttonText}>Confirmar</Text>
-          </TouchableOpacity>
-        </Link>
+        {showWarning && (
+        <Text style={styles.warningText}>Código inválido</Text>
+      )}
+
+        <TouchableOpacity style={styles.buttonContainer} onPress={handleConfirmPin}>
+          <Text style={styles.buttonText}>Confirmar</Text>
+        </TouchableOpacity>
 
       </ScrollView>
     </KeyboardAvoidingView>
@@ -57,6 +78,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around',
     alignItems: 'center',
+    backgroundColor: '#fff',
   },
   scrollContainer: {
     flexGrow: 1,
@@ -90,6 +112,11 @@ const styles = StyleSheet.create({
   },
   picker: {
     width: 300,
+  },
+  warningText: {
+    color: 'red',
+    fontSize: 16,
+    textAlign: 'center',
   },
   buttonContainer: {
     width: 300,

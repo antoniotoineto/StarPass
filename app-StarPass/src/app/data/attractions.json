@@ -1,0 +1,62 @@
+[
+  {
+    "id": "1",
+    "image": "https://via.placeholder.com/110",
+    "title": "Montanha Russa",
+    "subtitle": "Insano",
+    "description": "Uma experiência inesquecível ao arrepiar cada fio de cabelo! Mais de 35 metros de altitude com direito a descida de menos de 5 segundos!",
+    "minimumHeight": "1,50 m",
+    "avarageTime": "2 minutos",
+    "location": "https://via.placeholder.com/110",
+    "carouselImages": [
+      "https://via.placeholder.com/60",
+      "https://via.placeholder.com/50",
+      "https://via.placeholder.com/110"
+    ]
+  },
+  {
+    "id": "2",
+    "image": "https://via.placeholder.com/110",
+    "title": "Roda Gigante",
+    "subtitle": "Instigante",
+    "description": "Curta uma vista deslumbrante de todos o parque e da linda paisagem em volta. Ideal para pares românticos ou família.",
+    "minimumHeight": "1,20 m",
+    "avarageTime": "5 minutos",
+    "location": "https://via.placeholder.com/60",
+    "carouselImages": [
+      "https://via.placeholder.com/100",
+      "https://via.placeholder.com/90",
+      "https://via.placeholder.com/80"
+    ]
+  },
+  {
+    "id": "3",
+    "image": "https://via.placeholder.com/110",
+    "title": "Tirolesa",
+    "subtitle": "Relaxante",
+    "description": "Realize uma descida de tirar o fôlego, cruzando todo o parque e com direito à aceno para os visitantes.",
+    "minimumHeight": "1,20 m",
+    "avarageTime": "3 minutos",
+    "location": "https://via.placeholder.com/110",
+    "carouselImages": [
+      "https://via.placeholder.com/110",
+      "https://via.placeholder.com/110",
+      "https://via.placeholder.com/110"
+    ]
+  },
+  {
+    "id": "4",
+    "image": "https://via.placeholder.com/110",
+    "title": "Carrossel",
+    "subtitle": "Relaxante",
+    "description": "Ideal para crianças e bebês de colo. Mas também serve para você que adora um munda mágico com direito à princesas e criaturas da floresta!",
+    "minimumHeight": "N/A",
+    "avarageTime": "5 minutos",
+    "location": "https://via.placeholder.com/60",
+    "carouselImages": [
+      "https://via.placeholder.com/110",
+      "https://via.placeholder.com/110",
+      "https://via.placeholder.com/110"
+    ]
+  }
+]

@@ -1,16 +1,41 @@
 import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import TopBar from '../components/topBar';
+import QueueCard from '../components/queueCard';
+import queuesData from '../data/queues.json';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function App() {
+export default function QueueListScreen() {
   return (
-    <View style={styles.container}>
-      <TopBar />
-      <Text style={styles.text}>Lista de filas!</Text>
-      <Link style={styles.button} href={"/screens/atractionsList"}>Voltar</Link>
+    <SafeAreaView style={styles.container}>
+      <View style={{marginTop: 14}}>
+        <TopBar />
+      </View>
+      <View style={styles.titleContainer}>
+        <Link href="/screens/attractionsList" style={{ position: 'absolute', left: 15 }}>
+          <Ionicons name="arrow-back-outline" size={30} color="black"/>
+        </Link>
+        <Text numberOfLines={2} style={{fontSize: 40, textAlign: 'center'}}>Sua fila para a diversão!</Text>
+      </View>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.listContainer}>
+          {queuesData.map((queue, key) => (
+            <QueueCard 
+              key={key}
+              number={key+1}
+              id={queue.id}
+              title={queue.title}
+              queuePosition={queue.queuePosition}
+              estimatedTime={queue.estimatedTime}
+            />
+          ))}
+        </View>
+      </ScrollView>
+
       <StatusBar style="auto" />
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -20,11 +45,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 30
   },
-  text: {
-    fontSize: 30,
+  scrollContainer: {
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 15,
+    borderColor: '#a3a3a2',
+    padding: 15
   },
-  button: {
-    marginTop: 15,
+  listContainer: {
+    width: '100%',
+    alignItems: 'flex-start',
+    height: 360
+  },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    justifyContent: 'center',
   }
 });

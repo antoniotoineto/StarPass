@@ -1,18 +1,34 @@
 import { Link } from 'expo-router';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 
-interface AtractionCardProps {
+interface AttractionCardProps {
+    id: string,
     image: string,
     title: string;
-    feature: string;
+    subtitle: string;
+    description: string;
     minimumHeight: string;
     avarageTime: string;
+    location: string;
+    carouselImages: string[];
   }
 
-export default function AtractionCard({ image, title, feature, minimumHeight, avarageTime }: AtractionCardProps) {
+export default function AttractionCard({ id, image, title, subtitle, description, minimumHeight, avarageTime, location, carouselImages }: AttractionCardProps) {
   return (
-    <Link href={'/screens/atractionDetails'} asChild>
-        <TouchableOpacity style={styles.atractionCard}>
+    <Link href={{
+      pathname: '/screens/attractionDetails',
+      params: {
+        id,
+        title,
+        subtitle,
+        description,
+        minimumHeight,
+        avarageTime,
+        location,
+        carouselImages: JSON.stringify(carouselImages)
+      }
+      }} asChild>
+        <TouchableOpacity style={styles.attractionCard}>
             <Image 
                 source={{ uri: image }}
                 style={styles.image}
@@ -21,7 +37,7 @@ export default function AtractionCard({ image, title, feature, minimumHeight, av
                 <Text style={styles.title} numberOfLines={1} adjustsFontSizeToFit={true}>{title}</Text>
                 
                 <Text>
-                    <Text style={{fontWeight: 'bold'}}>Característica:</Text> {feature}{"\n"}
+                    <Text style={{fontWeight: 'bold'}}>Característica:</Text> {subtitle}{"\n"}
                     <Text style={{fontWeight: 'bold'}}>Altura mínima:</Text> {minimumHeight}{"\n"}
                     <Text style={{fontWeight: 'bold'}}>Tempo médio:</Text> {avarageTime}{"\n"}
                 </Text>
@@ -32,8 +48,9 @@ export default function AtractionCard({ image, title, feature, minimumHeight, av
   );
 }
 
+
 const styles = StyleSheet.create({
-  atractionCard: {
+  attractionCard: {
     width: '100%',
     height: 150,
     backgroundColor: '#dcdcdc',
