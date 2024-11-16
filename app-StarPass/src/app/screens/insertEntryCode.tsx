@@ -16,7 +16,10 @@ export default function GetEntryCode() {
 
 
   const handleConfirmPin = () => {
-    if(boardPin === null || boardPin === '' || boardPin.length != 4){
+    if(boardPin === null || 
+      boardPin === '' || 
+      boardPin.length !== 4 || 
+      !/^\d+$/.test(boardPin) ){
       console.log("Código no formato inválido. Usuário não pode seguir.") 
       setShowWarning(true);
     } else {

@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View, Image, SafeAreaView, ScrollVi
 import TopBar from '../components/topBar';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ImagesCarousel from '../components/imagesCarousel/imagesCarousel';
+import { StatusBar } from 'expo-status-bar';
 
 export default function AttractionDetailsScreen() {
   
@@ -17,7 +18,7 @@ export default function AttractionDetailsScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <View style={{marginTop: 20}}>
+        <View style={{marginTop: 14}}>
           <TopBar />
         </View>
 
@@ -63,6 +64,7 @@ export default function AttractionDetailsScreen() {
         </ScrollView>
 
       </View>
+      <StatusBar style="auto" backgroundColor='white'/>
     </SafeAreaView>
   );
 }
@@ -71,7 +73,7 @@ export default function AttractionDetailsScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#1a1917',
+    backgroundColor: '#fff',
   },
   container: {
     flex: 1,

@@ -1,0 +1,27 @@
+[
+    {
+      "id": "1",
+      "title": "Montanha Russa",
+      "queuePosition": "1º",
+      "estimatedTime": "1 min"
+    },
+    {
+        "id": "2",
+        "title": "Tirolesa",
+        "queuePosition": "3º",
+        "estimatedTime": "5 min"
+    },
+    {
+        "id": "3",
+        "title": "Carrossel",
+        "queuePosition": "6º",
+        "estimatedTime": "15 min"
+    },
+    {
+        "id": "4",
+        "title": "Montanha Russa",
+        "queuePosition": "10º",
+        "estimatedTime": "25 min"
+    }
+  ]
+  
