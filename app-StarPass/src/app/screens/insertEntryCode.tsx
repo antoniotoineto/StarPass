@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: 300,
-    backgroundColor: 'grey',
+    backgroundColor: '#b0b0b0',
     alignItems: 'center',
     padding: 15,
     borderRadius: 15
