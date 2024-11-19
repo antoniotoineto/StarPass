@@ -38,7 +38,7 @@ export default function GetEntryCode() {
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.logoContainer}>
-          <Link href="/screens/getEntryCode" style={styles.backButton}>
+          <Link href="/screens/getEntryCode" style={{ position: 'absolute', left: 0 }}>
             <Ionicons name="arrow-back-outline" size={30} color="black"/>
           </Link>
           <Text style={styles.logoText}>Logo</Text>
@@ -89,15 +89,12 @@ const styles = StyleSheet.create({
   logoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     width: '100%',
-  },
-  backButton: {
-    paddingStart: 5
   },
   logoText: {
     fontSize: 50,
     fontWeight: 'bold',
-    marginStart: '19%'
   },
   infoText: {
     fontSize: 25,

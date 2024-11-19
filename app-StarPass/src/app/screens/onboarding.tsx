@@ -3,6 +3,7 @@ import React, { useState} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 export default function OnboardingScreen() {
@@ -29,15 +30,26 @@ export default function OnboardingScreen() {
         useNativeDriver: true,
       }).start();
 
+      console.log("Step atual: ", currentStep)
+
       setCurrentStep(currentStep + 1);
+
+      console.log("Novo Step: ", currentStep)
+      console.log("Visible steps: ", visibleSteps)
     } else {
-      router.push('/screens/attractionsList');
+      console.log("Step para pular: ", currentStep)
+      router.push('/screens/getEntryCode');
     }
   };
 
   return (
     <View style={styles.container}>
-        <Text style={styles.text}>Logo</Text>
+        <View style={styles.topBar}>
+            <Link href="/" style={{ position: 'absolute', left: 10 }}>
+                <Ionicons name="arrow-back-outline" size={30} color="black"/>
+            </Link>
+            <Text style={styles.text}>Logo</Text>
+        </View>
         <View style={styles.infoContainer}>
             {steps.map((step, index) => (
                 <Animated.View
@@ -76,6 +88,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 35,
   },
+  topBar: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    width: '100%',
+  },
   text: {
     fontSize: 60,
   },
@@ -89,7 +107,6 @@ const styles = StyleSheet.create({
     borderRadius: 15
   },
   stepContainer: {
-    position: 'absolute',
     width: '100%',
     alignItems: 'center',
     paddingHorizontal: 20,
