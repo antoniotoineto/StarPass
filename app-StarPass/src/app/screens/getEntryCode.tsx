@@ -2,7 +2,9 @@ import React, { useState} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Entypo from '@expo/vector-icons/Entypo';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
+import { Link } from 'expo-router';
 
 
 export default function GetEntryCode() {
@@ -53,6 +55,13 @@ export default function GetEntryCode() {
         <Text style={styles.buttonText} >Gerar senha</Text>
       </TouchableOpacity>
 
+      <Link href="/screens/onboarding" asChild>
+        <TouchableOpacity style={styles.help}>
+          <Text style={{fontSize: 25}}>Ajuda</Text>
+          <Ionicons name="help-circle-outline" size={30} color="black"/>
+        </TouchableOpacity>
+      </Link>
+
     </View>
   );
 }
@@ -90,12 +99,17 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: 300,
-    backgroundColor: 'grey',
+    backgroundColor: '#b0b0b0',
     alignItems: 'center',
     padding: 15,
     borderRadius: 15
   },
   buttonText: {
     fontSize: 25
+  },
+  help: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
