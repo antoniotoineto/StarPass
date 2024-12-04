@@ -5,22 +5,42 @@ import Entypo from '@expo/vector-icons/Entypo';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useRouter } from 'expo-router';
 import { Link } from 'expo-router';
+import api from '../data/api';
 
 
 export default function GetEntryCode() {
 
-  const [selectedOption, setSelectedOption] = useState();
+  const [selectedOption, setSelectedOption] = useState("");
   const [showWarning, setShowWarning] = useState(false);
+  const [response, setResponse] = useState(null);
   const router = useRouter();
 
-  const handleGeneratePassword = () => {
+  const handleGeneratePassword = async (selectedOption: string) => {
+    console.log(api.defaults.baseURL);
+    console.log({ selectedOption });
+
     if (selectedOption === "0" || selectedOption === undefined) {
       console.log("Nenhum guichê selecionado. Usuário não pode seguir.") 
       setShowWarning(true);
     } else {
       setShowWarning(false);
       console.log('Senha gerada para o guichê:', selectedOption);
-      router.push("/screens/insertEntryCode");
+      console.log(JSON.stringify({ selectedOption }, null, 2)); // Verifique se é um JSON válido
+
+
+      try {
+        const res = await api.post('/codigo-entrada', {selectedOption});
+        setResponse(res.data);
+        console.log(response);
+        router.push("/screens/insertEntryCode");
+      } catch (error: any) {
+        if (error.response) {
+          console.error('Erro no servidor:', error.response.data);
+        } else {
+          console.error('Erro inesperado:', error.message);
+        }
+      }
+      
     }
   };
 
@@ -51,7 +71,7 @@ export default function GetEntryCode() {
         <Text style={styles.warningText}>Selecione um dos guichês</Text>
       )}
 
-      <TouchableOpacity style={styles.buttonContainer} onPress={handleGeneratePassword} >
+      <TouchableOpacity style={styles.buttonContainer} onPress={() => handleGeneratePassword(selectedOption)} >
         <Text style={styles.buttonText} >Gerar senha</Text>
       </TouchableOpacity>
 
