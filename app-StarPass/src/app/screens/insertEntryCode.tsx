@@ -4,18 +4,21 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Link } from 'expo-router';
 import { usePin } from '../context/pinCodeContext';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
+import api from '../data/api';
 
 
 export default function GetEntryCode() {
 
   const [boardPin, setBoardPin] = useState('');
   const [showWarning, setShowWarning] = useState(false);
+  const [response, setResponse] = useState(null);
   const { setPin } = usePin();
   const router = useRouter();
+  const { gate } = useLocalSearchParams();
 
 
-  const handleConfirmPin = () => {
+  const handleConfirmPin = async (code: string) => {
     if(boardPin === null || 
       boardPin === '' || 
       boardPin.length !== 4 || 
@@ -26,7 +29,19 @@ export default function GetEntryCode() {
       console.log('Senha confirmada: ', boardPin)
       setPin(boardPin);
       setShowWarning(false);
-      router.push("/screens/attractionsList");
+
+      try {
+        const res = await api.post('/validar-codigo',  {gate: gate, code: code});
+        setResponse(res.data);
+        console.log(response);
+        router.push("/screens/attractionsList");
+      } catch (error: any) {
+        if (error.response) {
+          console.error('Erro no servidor:', error.response.data);
+        } else {
+          console.error('Erro inesperado:', error.message);
+        }
+      }
     }
     
   };
@@ -64,7 +79,7 @@ export default function GetEntryCode() {
         <Text style={styles.warningText}>Código inválido</Text>
       )}
 
-        <TouchableOpacity style={styles.buttonContainer} onPress={handleConfirmPin}>
+        <TouchableOpacity style={styles.buttonContainer} onPress={() => handleConfirmPin(boardPin)}>
           <Text style={styles.buttonText}>Confirmar</Text>
         </TouchableOpacity>
 

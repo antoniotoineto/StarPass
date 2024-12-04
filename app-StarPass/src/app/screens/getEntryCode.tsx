@@ -15,24 +15,20 @@ export default function GetEntryCode() {
   const [response, setResponse] = useState(null);
   const router = useRouter();
 
-  const handleGeneratePassword = async (selectedOption: string) => {
-    console.log(api.defaults.baseURL);
-    console.log({ selectedOption });
+  const handleGeneratePassword = async (gate: string) => {
 
-    if (selectedOption === "0" || selectedOption === undefined) {
+    if (gate === "0" || gate === undefined) {
       console.log("Nenhum guichê selecionado. Usuário não pode seguir.") 
       setShowWarning(true);
     } else {
       setShowWarning(false);
-      console.log('Senha gerada para o guichê:', selectedOption);
-      console.log(JSON.stringify({ selectedOption }, null, 2)); // Verifique se é um JSON válido
-
+      console.log('Senha gerada para o guichê:', gate);
 
       try {
-        const res = await api.post('/codigo-entrada', {selectedOption});
+        const res = await api.post('/codigo-entrada', {gate});
         setResponse(res.data);
         console.log(response);
-        router.push("/screens/insertEntryCode");
+        router.push({ pathname: "/screens/insertEntryCode", params: { gate } });
       } catch (error: any) {
         if (error.response) {
           console.error('Erro no servidor:', error.response.data);
