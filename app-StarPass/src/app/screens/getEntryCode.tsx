@@ -10,14 +10,13 @@ import api from '../data/api';
 
 export default function GetEntryCode() {
 
-  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedOption, setSelectedOption] = useState("0");
   const [showWarning, setShowWarning] = useState(false);
-  const [response, setResponse] = useState(null);
   const router = useRouter();
 
   const handleGeneratePassword = async (gate: string) => {
 
-    if (gate === "0" || gate === undefined) {
+    if (gate === "0" || gate === undefined || gate === null) {
       console.log("Nenhum guichê selecionado. Usuário não pode seguir.") 
       setShowWarning(true);
     } else {
@@ -26,8 +25,6 @@ export default function GetEntryCode() {
 
       try {
         const res = await api.post('/codigo-entrada', {gate});
-        setResponse(res.data);
-        console.log(response);
         router.push({ pathname: "/screens/insertEntryCode", params: { gate } });
       } catch (error: any) {
         if (error.response) {

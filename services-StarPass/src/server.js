@@ -84,7 +84,7 @@ app.post('/validar-codigo', (req, res) => {
         console.log(`Código ${code} validado no portão ${gate}.`);
         return res.status(200).json({ valid: true, message: "Código válido!" });
     } else {
-        return res.status(400).json({ valid: false, message: "Código inválido ou já utilizado." });
+        return res.status(401).json({ valid: false, message: "Código inválido ou já utilizado." });
     }
 });
 
