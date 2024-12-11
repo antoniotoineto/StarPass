@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import path from "path";
 
 const app = express();
 app.use(express.json());
@@ -110,6 +111,14 @@ app.post('/retirar-usuario', (req, res) => {
     return res.status(200).json({ message: `Usuário '${removedUser.code}' removido com sucesso.` });
 });
 
-app.listen(3000, () => {
-    console.log("Servidor rodando na porta 3000");
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get("/*", (req, res) => {
+    res.sendFile(path.join(__dirname, "build", "index.html"));
+})
+
+
+app.listen(8081, () => {
+    console.log("Servidor rodando na porta 8081");
 });
