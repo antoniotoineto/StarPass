@@ -89,6 +89,29 @@ app.post('/validar-codigo', (req, res) => {
     }
 });
 
+app.get('/codigos-guiche/:gate', (req, res) => {
+    const { gate } = req.params;
+
+    let codes;
+
+    switch (gate) {
+        case "1":
+            codes = gate1Codes;
+            break;
+        case "2":
+            codes = gate2Codes;
+            break;
+        case "3":
+            codes = gate3Codes;
+            break;
+        default:
+            return res.status(400).json({ error: "Portão inválido. Escolha 1, 2 ou 3." });
+    }
+
+    return res.status(200).json({ gate, codes });
+});
+
+
 app.get('/usuarios-ativos', (req, res) => {
     return res.status(200).json(activeUsers);
 });
