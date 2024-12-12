@@ -142,6 +142,6 @@ app.get("/*", (req, res) => {
 })
 
 
-app.listen(8081, () => {
-    console.log("Servidor rodando na porta 8081");
+app.listen(5000, () => {
+    console.log("Servidor rodando na porta 5000");
 });

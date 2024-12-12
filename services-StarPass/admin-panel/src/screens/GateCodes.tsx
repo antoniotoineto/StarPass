@@ -2,55 +2,67 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { IoMdArrowBack } from "react-icons/io";
+import { useNavigate } from 'react-router-dom';
+
 
 
 const GateCodes: React.FC = () => {
     const { gate } = useParams<{ gate: string }>();
     const [codes, setCodes] = useState<string[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const navigate = useNavigate();
 
-    useEffect(() => {
-        const fetchCodes = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8081/codigos-guiche/${gate}`);
+    const handleBack = () => {
+        navigate(`/`);
+    }
+
+useEffect(() => {
+    const fetchCodes = async () => {
+        try {
+            const response = await axios.get(`http://localhost:5000/codigos-guiche/${gate}`);
+            if (response.data && Array.isArray(response.data.codes)) {
                 setCodes(response.data.codes);
-            } catch (err) {
-                setError("Erro ao buscar os códigos.");
+            } else {
+                setCodes([]);
+                setError("Nenhum código encontrado para este portão.");
             }
-        };
+        } catch (err) {
+            setError("Erro ao buscar os códigos.");
+        }
+    };
 
-        fetchCodes();
+    fetchCodes();
 
-        const intervalId = setInterval(fetchCodes, 5000);
+    const intervalId = setInterval(fetchCodes, 5000);
 
-        return () => clearInterval(intervalId);
-    }, [gate]);
+    return () => clearInterval(intervalId);
+}, [gate]);
 
-    return (
-        <div style={styles.container}>
-            <div style={styles.card}>
-                <div style={styles.topBar}>
-                    <IoMdArrowBack size={50} style={styles.icon} />
-                    <h1 style={styles.logo}>Logo</h1>
-                </div>
-                <h1>Guichê {gate}</h1>
-                {error && <p style={{ color: "red" }}>{error}</p>}
-                {codes.length > 0 ? (
-                    <div style={styles.scrollContainer}>
-                        <ul style={styles.codeList}>
-                            {codes.map((code, index) => (
-                                <li key={index} style={index === 0 ? styles.firstCodeItem : styles.codeItem}>
-                                    {code}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                ) : (
-                    <p style={styles.emptyMessage}>Nenhum código encontrado para este portão.</p>
-                )}
+return (
+    <div style={styles.container}>
+        <div style={styles.card} >
+            <div style={styles.topBar}>
+                <IoMdArrowBack size={35} style={styles.icon} onClick={()=> handleBack()}/>
+                <h1 style={styles.logo}>Logo</h1>
             </div>
+            <h1>Guichê {gate}</h1>
+            {error && <p style={{ color: "red" }}>{error}</p>}
+            {codes.length > 0 ? (
+                <div style={styles.scrollContainer}>
+                    <ul style={styles.codeList}>
+                        {codes.map((code, index) => (
+                            <li key={index} style={index === 0 ? styles.firstCodeItem : styles.codeItem}>
+                                {code}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            ) : (
+                <p style={styles.emptyMessage}>Nenhum código encontrado para este portão.</p>
+            )}
         </div>
-    );
+    </div>
+);
 };
 
 const styles = {
@@ -65,15 +77,17 @@ const styles = {
     },
     topBar: {
         display: "flex",
-        flexDirection: "row" as "row", 
+        flexDirection: "row" as "row",
         width: "100%",
         height: 50,
         alignItems: "center",
-        justifyContent: "space-between",
-        padding: "0 20px", 
+        justifyContent: "center",
+        position: "relative" as "relative",
     },
     icon: {
-        cursor: "pointer", 
+        position: "absolute" as "absolute",
+        left: 20,
+        cursor: "pointer",
     },
     card: {
         display: "flex",
@@ -83,7 +97,9 @@ const styles = {
         gap: "20px",
         padding: "20px",
         backgroundColor: "white",
-        borderRadius: 18
+        borderRadius: 18,
+        width: "40%",
+        minWidth: "250px"
     },
     logo: {
         fontSize: "2rem",
@@ -116,8 +132,7 @@ const styles = {
         fontSize: "2rem",
         fontWeight: "bold" as "bold",
         textAlign: "center" as "center",
-        minWidth: "50px",
-        width: 300,
+        width: "80%",
     },
     codeItem: {
         backgroundColor: "#e3e3e3",
@@ -125,8 +140,7 @@ const styles = {
         padding: "10px",
         fontSize: "1.5rem",
         textAlign: "center" as "center",
-        minWidth: "50px",
-        width: 250
+        width: "70%"
     },
     emptyMessage: {
         color: 'red'

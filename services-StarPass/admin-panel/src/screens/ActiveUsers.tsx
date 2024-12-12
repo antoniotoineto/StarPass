@@ -8,7 +8,7 @@ const ActiveUsers: React.FC = () => {
   useEffect(() => {
     const fetchCodes = async () => {
       try {
-        const response = await axios.get('http://localhost:8081/usuarios-ativos');
+        const response = await axios.get('http://localhost:5000/usuarios-ativos');
         console.log(response.data);  // Verifique a estrutura dos dados
         setCodes(response.data);
       } catch (err) {
