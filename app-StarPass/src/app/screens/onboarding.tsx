@@ -39,14 +39,6 @@ export default function OnboardingScreen() {
         }
     };
 
-    React.useEffect(() => {
-        console.log("Estado atual de visibleSteps:", visibleSteps);
-    }, [visibleSteps]);
-
-    React.useEffect(() => {
-        console.log("Estado atual de currentStep:", currentStep);
-    }, [currentStep]);
-
     return (
         <View style={styles.container}>
             <View style={styles.topBar}>
