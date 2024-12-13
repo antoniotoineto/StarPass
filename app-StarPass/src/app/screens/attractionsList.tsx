@@ -5,13 +5,14 @@ import AttractionCard from '../components/attractionCard';
 import attractionsData from '../data/attractions.json';
 import { usePin } from '../context/pinCodeContext';
 import { useRouter } from 'expo-router';
+import api from '../data/api';
 
 
 export default function AttractionsList() {
   const { pin } = usePin();
   const router = useRouter();
 
-  const handleExit = () => {
+  const handleExit = async () => {
     Alert.alert(
       "Sair do parque",
       "Tem certeza que deseja sair do parque?",
@@ -22,9 +23,41 @@ export default function AttractionsList() {
         },
         {
           text: "Sair",
-          onPress: () => {
-            console.log("Envia request para tirar o usuário do parque: ", {pin})
-            router.push("/");
+          onPress: async () => {
+            try {
+              const res = await api.post('/retirar-usuario', { code: pin });
+      
+              /*if (res.status === 200) {
+                setModalType("success");
+      
+                setTimeout(() => {
+                  setModalType(null);
+                  router.push("/screens/attractionsList");
+                }, 1500);
+      
+              }*/
+
+              console.log(res.data)
+
+              router.push("/");
+              
+            } catch (error: any) {
+      
+              if (error.response) {
+                console.error('Erro no servidor:', error.response.data);
+                /*if (error.response.status === 400 || error.response.status === 401) {
+                  setModalType("fail");
+            
+                  setTimeout(() => {
+                    setModalType(null);
+                  }, 2500);
+                }*/
+                console.log("Erro: ", error.response.status)
+              } else {
+                console.error('Erro inesperado:', error.message);
+              }  
+            }
+            
 
           },
         },

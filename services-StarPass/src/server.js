@@ -92,6 +92,24 @@ app.get('/usuarios-ativos', (req, res) => {
     return res.status(200).json(activeUsers);
 });
 
+app.post('/retirar-usuario', (req, res) => {
+    const { code } = req.body;
+
+    if (!code) {
+        return res.status(400).json({ message: "O código de entrada do usuário é obrigatório." });
+    }
+
+    const codeIndex = activeUsers.findIndex(object => object.code === code);
+
+    if (codeIndex === -1) {
+        return res.status(404).json({ message: `Usuário '${code}' não encontrado.` });
+    }
+
+    const removedUser = activeUsers.splice(codeIndex, 1)[0];
+
+    return res.status(200).json({ message: `Usuário '${removedUser.code}' removido com sucesso.` });
+});
+
 app.listen(3000, () => {
     console.log("Servidor rodando na porta 3000");
 });

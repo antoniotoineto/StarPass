@@ -9,7 +9,6 @@ import QRCode from 'react-native-qrcode-svg';
 
 export default function QrCodeScreen() {
   const { pin } = usePin();
-  console.log("PIN: ", pin);
 
   return (
     <View style={styles.container}>
