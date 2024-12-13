@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -11,29 +11,40 @@ import api from '../data/api';
 export default function GetEntryCode() {
 
   const [selectedOption, setSelectedOption] = useState("0");
-  const [showWarning, setShowWarning] = useState(false);
+  const [showWarning, setShowWarning] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
   const router = useRouter();
 
   const handleGeneratePassword = async (gate: string) => {
 
     if (gate === "0" || gate === undefined || gate === null) {
-      console.log("Nenhum guichê selecionado. Usuário não pode seguir.") 
-      setShowWarning(true);
+      console.log("Nenhum guichê selecionado. Usuário não pode seguir.")
+      setShowWarning("É necessário selecionar um dos guichês");
     } else {
-      setShowWarning(false);
-      console.log('Senha gerada para o guichê:', gate);
+      if (isGenerating) {
+        setShowWarning("Aguarde")
+      } else {
+        setIsGenerating(true);
+        setShowWarning("");
+        console.log('Senha enviada para o guichê:', gate);
 
-      try {
-        const res = await api.post('/codigo-entrada', {gate});
-        router.push({ pathname: "/screens/insertEntryCode", params: { gate } });
-      } catch (error: any) {
-        if (error.response) {
-          console.error('Erro no servidor:', error.response.data);
-        } else {
-          console.error('Erro inesperado:', error.message);
+        try {
+          const res = await api.post('/codigo-entrada', { gate });
+          router.push({ pathname: "/screens/insertEntryCode", params: { gate } });
+        } catch (error: any) {
+          if (error.response) {
+            console.error('Erro no servidor:', error.response.data);
+            setShowWarning("Erro inesperado na geração de senha");
+          } else {
+            console.error('Erro inesperado:', error.message);
+            setShowWarning("Erro inesperado na geração de senha");
+          }
+        }
+        finally {
+          setIsGenerating(false);
         }
       }
-      
+
     }
   };
 
@@ -54,24 +65,28 @@ export default function GetEntryCode() {
           mode='dialog'
         >
           <Picker.Item label="Selecione abaixo" value="0" />
-          <Picker.Item label="Guichê 1" value="1"/>
+          <Picker.Item label="Guichê 1" value="1" />
           <Picker.Item label="Guichê 2" value="2" />
           <Picker.Item label="Guichê 3" value="3" />
         </Picker>
       </View>
 
-      {showWarning && (
-        <Text style={styles.warningText}>Selecione um dos guichês</Text>
+      {showWarning !== "" && (
+        <Text style={styles.warningText}>
+          {showWarning}
+        </Text>
       )}
 
       <TouchableOpacity style={styles.buttonContainer} onPress={() => handleGeneratePassword(selectedOption)} >
-        <Text style={styles.buttonText} >Gerar senha</Text>
+        <Text style={styles.buttonText}>
+          {isGenerating ? "Gerando..." : "Gerar senha"}
+        </Text>
       </TouchableOpacity>
 
       <Link href="/screens/onboarding" asChild>
         <TouchableOpacity style={styles.help}>
-          <Text style={{fontSize: 25}}>Ajuda</Text>
-          <Ionicons name="help-circle-outline" size={30} color="black"/>
+          <Text style={{ fontSize: 25 }}>Ajuda</Text>
+          <Ionicons name="help-circle-outline" size={30} color="black" />
         </TouchableOpacity>
       </Link>
 
