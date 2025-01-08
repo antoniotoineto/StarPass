@@ -1,12 +1,3 @@
----
-name: PR's template
-about: Intended to PR's related.
-title: ''
-labels: pull-request
-assignees: antoniotoineto
-
----
-
 # ➡️ User Storie X
 
 # 🔍 O que está sendo adicionado?
