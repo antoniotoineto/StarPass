@@ -8,12 +8,12 @@ interface AttractionCardProps {
     subtitle: string;
     description: string;
     minimumHeight: string;
-    avarageTime: string;
+    averageTime: string;
     location: string;
     carouselImages: string[];
   }
 
-export default function AttractionCard({ id, image, title, subtitle, description, minimumHeight, avarageTime, location, carouselImages }: AttractionCardProps) {
+export default function AttractionCard({ id, image, title, subtitle, description, minimumHeight, averageTime, location, carouselImages }: AttractionCardProps) {
   return (
     <Link href={{
       pathname: '/screens/attractionDetails',
@@ -23,7 +23,7 @@ export default function AttractionCard({ id, image, title, subtitle, description
         subtitle,
         description,
         minimumHeight,
-        avarageTime,
+        averageTime,
         location,
         carouselImages: JSON.stringify(carouselImages)
       }
@@ -39,7 +39,7 @@ export default function AttractionCard({ id, image, title, subtitle, description
                 <Text>
                     <Text style={{fontWeight: 'bold'}}>Característica:</Text> {subtitle}{"\n"}
                     <Text style={{fontWeight: 'bold'}}>Altura mínima:</Text> {minimumHeight}{"\n"}
-                    <Text style={{fontWeight: 'bold'}}>Tempo médio:</Text> {avarageTime}{"\n"}
+                    <Text style={{fontWeight: 'bold'}}>Tempo médio:</Text> {averageTime}{"\n"}
                 </Text>
 
             </View>
