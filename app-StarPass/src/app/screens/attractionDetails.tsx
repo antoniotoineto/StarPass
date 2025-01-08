@@ -1,13 +1,17 @@
-import { Link, useLocalSearchParams } from 'expo-router';
+import { Link, useLocalSearchParams, useRouter } from 'expo-router';
 import { StyleSheet, Text, TouchableOpacity, View, Image, SafeAreaView, ScrollView, Alert  } from 'react-native';
 import TopBar from '../components/topBar';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ImagesCarousel from '../components/imagesCarousel/imagesCarousel';
 import { StatusBar } from 'expo-status-bar';
+import api from '../data/api';
+import { usePin } from '../context/pinCodeContext';
 
 export default function AttractionDetailsScreen() {
   
   const { id, title, subtitle, description, minimumHeight, avarageTime, location, carouselImages } = useLocalSearchParams();
+  const { pin } = usePin()
+  const router = useRouter();
   const locationString = String(location);
   const parsedImages = carouselImages ? JSON.parse(carouselImages as string) : [];
   const iconName = subtitle === 'Insano' ? 'flash' :
@@ -26,8 +30,16 @@ export default function AttractionDetailsScreen() {
         },
         {
           text: "Entrar",
-          onPress: () => {
-            console.log('Envia request para fila do Brinquedo/ID: ', {title, id})
+          onPress: async () => {
+            try{
+              const res = await api.post('/entrar-fila', { id: id, atractionName: title, userCode: pin });
+              console.log(res.data.message)
+              router.push("/screens/queueList")
+
+            } catch (error){
+              console.error("Erro ao entrar na fila:", error);
+
+            }
           },
         },
       ]
