@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import path from "path";
+import { PrismaClient } from '@prisma/client';
 
 const app = express();
 app.use(express.json());
@@ -11,6 +12,7 @@ const gate2Codes = [];
 const gate3Codes = [];
 
 const activeUsers = [];
+const prisma = new PrismaClient();
 
 const generateCode = () => {
     let newCode;
@@ -115,6 +117,16 @@ app.get('/codigos-guiche/:gate', (req, res) => {
 app.get('/usuarios-ativos', (req, res) => {
     return res.status(200).json(activeUsers);
 });
+
+app.get('/lista-brinquedos', async (req, res) => {
+    try {
+      const attractions = await prisma.attractions.findMany();
+      res.status(200).json(attractions);
+    } catch (error) {
+      console.error('Erro ao buscar atrações:', error);
+      res.status(500).json({ message: 'Erro ao buscar atrações' });
+    }
+  });
 
 app.post('/retirar-usuario', (req, res) => {
     const { code } = req.body;
