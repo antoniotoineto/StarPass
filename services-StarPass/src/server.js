@@ -15,6 +15,7 @@ const activeUsers = [];
 const prisma = new PrismaClient();
 
 const queues = {};
+const userQueues = {};
 
 const generateCode = () => {
     let newCode;
@@ -142,6 +143,10 @@ app.post('/entrar-fila', async (req, res) => {
             atractionName,
             queue: []
         };
+    }
+
+    if (userQueues[userCode] && userQueues[userCode].length >= 6) {
+        return res.status(400).json({ message: "Usuário atingiu o limite máximo de 6 filas simultâneas." });
     }
 
     const userAlreadyInQueue = queues[id].queue.find(user => user.code === userCode);
