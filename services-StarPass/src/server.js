@@ -14,6 +14,8 @@ const gate3Codes = [];
 const activeUsers = [];
 const prisma = new PrismaClient();
 
+const queues = {};
+
 const generateCode = () => {
     let newCode;
 
@@ -120,13 +122,40 @@ app.get('/usuarios-ativos', (req, res) => {
 
 app.get('/lista-brinquedos', async (req, res) => {
     try {
-      const attractions = await prisma.attractions.findMany();
-      res.status(200).json(attractions);
+        const attractions = await prisma.attractions.findMany();
+        res.status(200).json(attractions);
     } catch (error) {
-      console.error('Erro ao buscar atrações:', error);
-      res.status(500).json({ message: 'Erro ao buscar atrações' });
+        console.error('Erro ao buscar atrações:', error);
+        res.status(500).json({ message: 'Erro ao buscar atrações' });
     }
-  });
+});
+
+app.post('/entrar-fila', async (req, res) => {
+    const { id, atractionName, userCode } = req.body;
+
+    if (!id || !atractionName || !userCode) {
+        return res.status(400).json({ message: "Os campos 'id', 'atractionName' e 'userCode' são obrigatórios." });
+    }
+
+    if (!queues[id]) {
+        queues[id] = {
+            atractionName,
+            queue: []
+        };
+    }
+
+    const userAlreadyInQueue = queues[id].queue.find(user => user.code === userCode);
+    if (userAlreadyInQueue) {
+        return res.status(400).json({ message: "Usuário já está na fila deste brinquedo." });
+    }
+
+    queues[id].queue.push({ code: userCode, timestamp: new Date() });
+
+    return res.status(200).json({
+        message: `Usuário ${userCode} entrou na fila do brinquedo '${atractionName}' com sucesso.`,
+        currentQueue: queues[id].queue
+    });
+});
 
 app.post('/retirar-usuario', (req, res) => {
     const { code } = req.body;
