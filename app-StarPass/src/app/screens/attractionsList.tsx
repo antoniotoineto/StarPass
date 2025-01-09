@@ -2,15 +2,40 @@ import { Link } from 'expo-router';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
 import TopBar from '../components/topBar';
 import AttractionCard from '../components/attractionCard';
-import attractionsData from '../data/attractions.json';
 import { usePin } from '../context/pinCodeContext';
 import { useRouter } from 'expo-router';
 import api from '../data/api';
+import { useState, useEffect } from 'react';
 
+interface Attraction {
+  id: string;
+  name: string;
+  type: string;
+  description: string;
+  minimumHeight: string;
+  averageTime: string;
+  images: string[];
+  location: string;
+}
 
 export default function AttractionsList() {
   const { pin } = usePin();
   const router = useRouter();
+  const [attractions, setAttractions] = useState<Attraction[]>([]);
+
+  useEffect(() => {
+    const fetchAttractions = async () => {
+      try {
+        const response = await api.get('/lista-brinquedos');
+        setAttractions(response.data);
+      } catch (error: any) {
+        console.error('Erro ao buscar atrações:', error.message);
+      }
+    };
+  
+    fetchAttractions();
+  }, []);
+  
 
   const handleExit = async () => {
     Alert.alert(
@@ -72,18 +97,18 @@ export default function AttractionsList() {
 
       <View style={styles.listContainer}>
         <ScrollView>
-        {attractionsData.map((attraction, key) => (
+        {attractions.map((attraction, key) => (
           <AttractionCard
             key={key}
             id={attraction.id}
-            image={attraction.image}
-            title={attraction.title}
-            subtitle={attraction.subtitle}
+            image={attraction.images[0]}
+            title={attraction.name}
+            subtitle={attraction.type}
             description={attraction.description}
             minimumHeight={attraction.minimumHeight}
-            avarageTime={attraction.avarageTime}
+            averageTime={attraction.averageTime}
             location={attraction.location}
-            carouselImages={attraction.carouselImages}
+            carouselImages={attraction.images}
           />
         ))}
         </ScrollView>
