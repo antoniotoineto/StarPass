@@ -39,7 +39,7 @@ export default function AttractionCard({ id, image, title, subtitle, description
                 <Text>
                     <Text style={{fontWeight: 'bold'}}>Característica:</Text> {subtitle}{"\n"}
                     <Text style={{fontWeight: 'bold'}}>Altura mínima:</Text> {minimumHeight}{"\n"}
-                    <Text style={{fontWeight: 'bold'}}>Tempo médio:</Text> {averageTime}{"\n"}
+                    <Text style={{fontWeight: 'bold'}}>Duração média:</Text> {averageTime}{"\n"}
                 </Text>
 
             </View>
