@@ -100,9 +100,9 @@ export default function AttractionDetailsScreen() {
             <Text style={{ fontSize: 30 }}>Informações</Text>
             <View style={styles.infoContainer}>
               <Text>
-                <Text style={{ fontWeight: 'bold' }}>Descrição:</Text>{description}{"\n"}
-                <Text style={{ fontWeight: 'bold' }}>Altura mínima:</Text>{minimumHeight}{"\n"}
-                <Text style={{ fontWeight: 'bold' }}>Tempo médio:</Text> {avarageTime}
+                <Text style={{fontWeight: 'bold'}}>Descrição:</Text>{description}{"\n"}
+                <Text style={{fontWeight: 'bold'}}>Altura mínima:</Text>{minimumHeight}{"\n"}
+                <Text style={{fontWeight: 'bold'}}>Duração média:</Text> {avarageTime}
               </Text>
             </View>
           </View>
