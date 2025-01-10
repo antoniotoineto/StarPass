@@ -162,6 +162,13 @@ app.post('/entrar-fila', async (req, res) => {
     });
 });
 
+app.get('/consultar-fila/:id', (req, res) => {
+    const { id } = req.params
+    return res.status(200).json({
+        attractionQueue: queues[id]
+    })
+})
+
 app.post('/retirar-usuario', (req, res) => {
     const { code } = req.body;
 
