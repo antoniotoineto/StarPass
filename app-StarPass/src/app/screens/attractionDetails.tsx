@@ -1,23 +1,27 @@
 import { Link, useLocalSearchParams, useRouter } from 'expo-router';
-import { StyleSheet, Text, TouchableOpacity, View, Image, SafeAreaView, ScrollView, Alert  } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image, SafeAreaView, ScrollView, Alert, Modal } from 'react-native';
 import TopBar from '../components/topBar';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import ImagesCarousel from '../components/imagesCarousel/imagesCarousel';
 import { StatusBar } from 'expo-status-bar';
 import api from '../data/api';
 import { usePin } from '../context/pinCodeContext';
+import { useState } from 'react';
+import LottieView from 'lottie-react-native';
 
 export default function AttractionDetailsScreen() {
-  
+
   const { id, title, subtitle, description, minimumHeight, avarageTime, location, carouselImages } = useLocalSearchParams();
   const { pin } = usePin()
   const router = useRouter();
+  const [modalType, setModalType] = useState<"success" | "fail" | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const locationString = String(location);
   const parsedImages = carouselImages ? JSON.parse(carouselImages as string) : [];
   const iconName = subtitle === 'Insano' ? 'flash' :
-                 subtitle === 'Relaxante' ? 'cafe' :
-                 subtitle === 'Instigante' ? 'flashlight-sharp' :
-                 'help-circle';
+    subtitle === 'Relaxante' ? 'cafe' :
+      subtitle === 'Instigante' ? 'flashlight-sharp' :
+        'help-circle';
 
   const handleConfirm = () => {
     Alert.alert(
@@ -31,72 +35,119 @@ export default function AttractionDetailsScreen() {
         {
           text: "Entrar",
           onPress: async () => {
-            try{
+            try {
               const res = await api.post('/entrar-fila', { id: id, atractionName: title, userCode: pin });
-              console.log(res.data.message)
-              router.push("/screens/queueList")
+              console.log(res.data.message);
 
-            } catch (error){
-              console.error("Erro ao entrar na fila:", error);
+              if (res.status === 200) {
+                setModalType("success");
 
+                setTimeout(() => {
+                  setModalType(null);
+                  router.push("/screens/queueList");
+                }, 1500);
+              }
+
+            } catch (error: any) {
+              if (error.response) {
+                console.error('Erro ao entrar na fila:', error.response.data);
+
+                if (error.response.status === 400 || error.response.status === 401) {
+                  if (error.response.data.message === "Usuário já está na fila deste brinquedo.") {
+                    setErrorMessage("Usuário já está na fila!");
+                  }
+                  setModalType("fail");
+
+                  setTimeout(() => {
+                    setModalType(null);
+                  }, 2500);
+                }
+              }
             }
           },
         },
       ]
     );
+  };
 
-  }
-                 
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <View style={{marginTop: 14}}>
+        <View style={{ marginTop: 14 }}>
           <TopBar />
         </View>
 
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.attractionTitle}>
             <Link href="/screens/attractionsList" style={{ position: 'absolute', left: 15 }}>
-              <Ionicons name="arrow-back-outline" size={30} color="black"/>
+              <Ionicons name="arrow-back-outline" size={30} color="black" />
             </Link>
             <View style={styles.titleContainer}>
               <Text style={styles.title} numberOfLines={1} adjustsFontSizeToFit={true}>{title}</Text>
-              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Text style={styles.subtitle}>{subtitle}</Text>
-                <Ionicons name={iconName} size={22} color="black" style={{marginLeft: 5}}/>
+                <Ionicons name={iconName} size={22} color="black" style={{ marginLeft: 5 }} />
               </View>
             </View>
           </View>
 
           <View style={[styles.imagesContainer]}>
-            <ImagesCarousel images={parsedImages}/>
+            <ImagesCarousel images={parsedImages} />
           </View>
 
           <View>
-            <Text style={{fontSize: 30}}>Informações</Text>
+            <Text style={{ fontSize: 30 }}>Informações</Text>
             <View style={styles.infoContainer}>
               <Text>
-                <Text style={{fontWeight: 'bold'}}>Descrição:</Text>{description}{"\n"}
-                <Text style={{fontWeight: 'bold'}}>Altura mínima:</Text>{minimumHeight}{"\n"}
-                <Text style={{fontWeight: 'bold'}}>Tempo médio:</Text> {avarageTime}
+                <Text style={{ fontWeight: 'bold' }}>Descrição:</Text>{description}{"\n"}
+                <Text style={{ fontWeight: 'bold' }}>Altura mínima:</Text>{minimumHeight}{"\n"}
+                <Text style={{ fontWeight: 'bold' }}>Tempo médio:</Text> {avarageTime}
               </Text>
             </View>
           </View>
 
-          <View style={{marginTop: 35}}>
-            <Text style={{fontSize: 30}}>Localização</Text>
+          <View style={{ marginTop: 35 }}>
+            <Text style={{ fontSize: 30 }}>Localização</Text>
             <View style={styles.locContainer}>
-              <Image source={{uri: locationString}} style={styles.image}/>
+              <Image source={{ uri: locationString }} style={styles.image} />
             </View>
           </View>
 
-          <TouchableOpacity onPress={()=>handleConfirm()} style={styles.entryQueueButton}>
-            <Text style={{fontSize:25}}>Entrar na fila</Text>
+          <TouchableOpacity onPress={() => handleConfirm()} style={styles.entryQueueButton}>
+            <Text style={{ fontSize: 25 }}>Entrar na fila</Text>
           </TouchableOpacity>
         </ScrollView>
 
       </View>
-      <StatusBar style="auto" backgroundColor='white'/>
+
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={modalType !== null}
+        onRequestClose={() => setModalType(null)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            {errorMessage !== "" &&
+              <Text style={{ color: 'red' }}>{errorMessage}</Text>
+            }
+            <LottieView
+              source={
+                modalType === "success"
+                  ? require("../../assets/Check.json")
+                  : require("../../assets/Fail.json")
+              }
+              speed={modalType === "fail" ? 0.7 : 1}
+              autoPlay
+              loop
+              style={styles.animation}
+            />
+          </View>
+        </View>
+      </Modal>
+
+      <StatusBar style="auto" backgroundColor='white' />
     </SafeAreaView>
   );
 }
@@ -114,7 +165,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     gap: 15
   },
-  scrollContainer:{
+  scrollContainer: {
     paddingTop: 5,
     paddingBottom: 50,
     alignItems: 'center',
@@ -139,7 +190,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 28,
     alignItems: 'center',
-  },  
+  },
   imagesContainer: {
     width: '100%',
     height: 300,
@@ -150,14 +201,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     height: 250,
   },
-  infoContainer:{
+  infoContainer: {
     width: '85%',
     backgroundColor: '#e6e6e6',
     borderRadius: 10,
     padding: 10,
     marginTop: 6
   },
-  locContainer:{
+  locContainer: {
     width: '85%',
     marginTop: 6
   },
@@ -173,6 +224,22 @@ const styles = StyleSheet.create({
     marginTop: 35,
     backgroundColor: '#cfd0d1',
     borderRadius: 10,
-
-  }
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',  // Fundo translúcido
+  },
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  animation: {
+    width: 150,
+    height: 150,
+  },
 });
