@@ -66,7 +66,7 @@ export default function AttractionDetailsScreen() {
               <Text>
                 <Text style={{fontWeight: 'bold'}}>Descrição:</Text>{description}{"\n"}
                 <Text style={{fontWeight: 'bold'}}>Altura mínima:</Text>{minimumHeight}{"\n"}
-                <Text style={{fontWeight: 'bold'}}>Tempo médio:</Text> {avarageTime}
+                <Text style={{fontWeight: 'bold'}}>Duração média:</Text> {avarageTime}
               </Text>
             </View>
           </View>
