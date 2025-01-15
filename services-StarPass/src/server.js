@@ -145,7 +145,11 @@ app.post('/entrar-fila', async (req, res) => {
         };
     }
 
-    if (userQueues[userCode] && userQueues[userCode].length >= 6) {
+    if (!userQueues[userCode]) {
+        userQueues[userCode] = [];
+    }
+
+    if (userQueues[userCode].length >= 6) {
         return res.status(400).json({ message: "Usuário atingiu o limite máximo de 6 filas simultâneas." });
     }
 
@@ -155,6 +159,7 @@ app.post('/entrar-fila', async (req, res) => {
     }
 
     queues[id].queue.push({ code: userCode, timestamp: new Date() });
+    userQueues[userCode].push({ attractionId: id })
 
     return res.status(200).json({
         message: `Usuário ${userCode} entrou na fila do brinquedo '${atractionName}' com sucesso.`,
@@ -166,6 +171,14 @@ app.get('/consultar-fila/:id', (req, res) => {
     const { id } = req.params
     return res.status(200).json({
         attractionQueue: queues[id]
+    })
+})
+
+app.get('/filas-usuario/:userCode', (req, res) => {
+    const { userCode } = req.params
+    const userQueuesData = userQueues[userCode] || [];
+    return res.status(200).json({
+        userQueues: userQueuesData
     })
 })
 
