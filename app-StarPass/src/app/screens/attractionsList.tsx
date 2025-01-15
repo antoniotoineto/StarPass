@@ -3,39 +3,28 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Alert } from 'rea
 import TopBar from '../components/topBar';
 import AttractionCard from '../components/attractionCard';
 import { usePin } from '../context/pinCodeContext';
+import { useAttractions } from '../context/attractionsContext';
 import { useRouter } from 'expo-router';
 import api from '../data/api';
-import { useState, useEffect } from 'react';
-
-interface Attraction {
-  id: string;
-  name: string;
-  type: string;
-  description: string;
-  minimumHeight: string;
-  averageTime: string;
-  images: string[];
-  location: string;
-}
+import { useEffect } from 'react';
 
 export default function AttractionsList() {
   const { pin } = usePin();
   const router = useRouter();
-  const [attractions, setAttractions] = useState<Attraction[]>([]);
+  const { attractions } = useAttractions();
 
   useEffect(() => {
     const fetchAttractions = async () => {
       try {
         const response = await api.get('/lista-brinquedos');
-        setAttractions(response.data);
       } catch (error: any) {
         console.error('Erro ao buscar atrações:', error.message);
       }
     };
-  
+
     fetchAttractions();
   }, []);
-  
+
 
   const handleExit = async () => {
     Alert.alert(
@@ -51,39 +40,17 @@ export default function AttractionsList() {
           onPress: async () => {
             try {
               const res = await api.post('/retirar-usuario', { code: pin });
-      
-              /*if (res.status === 200) {
-                setModalType("success");
-      
-                setTimeout(() => {
-                  setModalType(null);
-                  router.push("/screens/attractionsList");
-                }, 1500);
-      
-              }*/
-
               console.log(res.data)
-
               router.push("/");
-              
+
             } catch (error: any) {
-      
               if (error.response) {
                 console.error('Erro no servidor:', error.response.data);
-                /*if (error.response.status === 400 || error.response.status === 401) {
-                  setModalType("fail");
-            
-                  setTimeout(() => {
-                    setModalType(null);
-                  }, 2500);
-                }*/
                 console.log("Erro: ", error.response.status)
               } else {
                 console.error('Erro inesperado:', error.message);
-              }  
+              }
             }
-            
-
           },
         },
       ]
@@ -97,20 +64,20 @@ export default function AttractionsList() {
 
       <View style={styles.listContainer}>
         <ScrollView>
-        {attractions.map((attraction, key) => (
-          <AttractionCard
-            key={key}
-            id={attraction.id}
-            image={attraction.images[0]}
-            title={attraction.name}
-            subtitle={attraction.type}
-            description={attraction.description}
-            minimumHeight={attraction.minimumHeight}
-            averageTime={attraction.averageTime}
-            location={attraction.location}
-            carouselImages={attraction.images}
-          />
-        ))}
+          {attractions.map((attraction, key) => (
+            <AttractionCard
+              key={key}
+              id={attraction.id}
+              image={attraction.images[0]}
+              title={attraction.name}
+              subtitle={attraction.type}
+              description={attraction.description}
+              minimumHeight={attraction.minimumHeight}
+              averageTime={attraction.averageTime}
+              location={attraction.location}
+              carouselImages={attraction.images}
+            />
+          ))}
         </ScrollView>
       </View>
 
@@ -140,7 +107,7 @@ const styles = StyleSheet.create({
   listContainer: {
     width: '80%',
     height: 600,
-  }, 
+  },
   bottomBar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -159,8 +126,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: '#bdbdbd'
   },
-  bottomButtonText:{
-    fontSize: 15, 
+  bottomButtonText: {
+    fontSize: 15,
     fontWeight: 'bold'
   }
 });

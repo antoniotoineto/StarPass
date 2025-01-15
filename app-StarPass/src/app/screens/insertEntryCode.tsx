@@ -87,7 +87,9 @@ export default function GetEntryCode() {
           <Text style={styles.logoText}>Logo</Text>
         </View>
 
-        <Text style={styles.infoText}>Insira a senha apresentada no guichê selecionado.</Text>
+        <Text style={styles.infoText}>
+          Insira a senha apresentada no <Text style={{fontWeight: 'bold'}}>guichê {gate}</Text>.
+          </Text>
 
         <AntDesign name="checksquare" size={50} color="black" />
 

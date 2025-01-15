@@ -6,8 +6,12 @@ import QueueCard from '../components/queueCard';
 import queuesData from '../data/queues.json';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useAttractions } from '../context/attractionsContext';
+
 
 export default function QueueListScreen() {
+  const { attractions } = useAttractions();
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={{marginTop: 14}}>

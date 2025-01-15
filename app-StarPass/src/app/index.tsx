@@ -1,37 +1,34 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Link } from 'expo-router';
-import { PinProvider } from './context/pinCodeContext';
 import LottieView from 'lottie-react-native';
 
 
 export default function Home() {
   return (
-    <PinProvider>
-      <View style={styles.container}>
-        <Text style={styles.text}>Logo</Text>
-        <View style={styles.infoContainer}>
-          <Text style={{fontSize: 28, textAlign: 'center'}}>
-            Sua diversão garantida em apenas
-            <Text style={{fontSize: 30, fontWeight: 'bold'}}> 3 passos!</Text>
-          </Text>
+    <View style={styles.container}>
+      <Text style={styles.text}>Logo</Text>
+      <View style={styles.infoContainer}>
+        <Text style={{ fontSize: 28, textAlign: 'center' }}>
+          Sua diversão garantida em apenas
+          <Text style={{ fontSize: 30, fontWeight: 'bold' }}> 3 passos!</Text>
+        </Text>
 
-          <LottieView
-            source={require('../assets/StepsAnimation.json')}
-            autoPlay
-            loop
-            style={styles.animation}
-          />
+        <LottieView
+          source={require('../assets/StepsAnimation.json')}
+          autoPlay
+          loop
+          style={styles.animation}
+        />
 
-        </View>
-        <Link  href={"/screens/onboarding"} asChild>
-          <TouchableOpacity style={styles.startButton}>
-            <Text style={styles.button}>Iniciar</Text>
-          </TouchableOpacity>
-        </Link>
-        <StatusBar style="auto" />
       </View>
-    </PinProvider>
+      <Link href={"/screens/onboarding"} asChild>
+        <TouchableOpacity style={styles.startButton}>
+          <Text style={styles.button}>Iniciar</Text>
+        </TouchableOpacity>
+      </Link>
+      <StatusBar style="auto" />
+    </View>
   );
 }
 
