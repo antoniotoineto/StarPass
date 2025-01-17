@@ -20,6 +20,7 @@ model Attractions {
   description   String
   minimumHeight String
   averageTime   String
+  maximumCapacity Int
   images        String[]
   location      String
 }

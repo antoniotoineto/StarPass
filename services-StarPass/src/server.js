@@ -174,6 +174,11 @@ app.get('/consultar-fila/:attractionId', (req, res) => {
     })
 })
 
+app.get('/dados-fila/:attractionId', (req, res) => {
+    const { attractionId } = req.params
+    const queueLength = queues[attractionId].queue.length()
+})
+
 app.get('/filas-usuario/:userCode', (req, res) => {
     const { userCode } = req.params
     const userQueuesData = userQueues[userCode] || [];
