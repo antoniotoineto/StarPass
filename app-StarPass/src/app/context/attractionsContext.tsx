@@ -7,7 +7,7 @@ interface Attraction {
     type: string;
     description: string;
     minimumHeight: string;
-    executionTime: string;
+    executionTime: number;
     images: string[];
     location: string;
 }

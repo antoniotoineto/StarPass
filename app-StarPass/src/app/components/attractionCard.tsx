@@ -8,7 +8,7 @@ interface AttractionCardProps {
     subtitle: string;
     description: string;
     minimumHeight: string;
-    averageTime: string;
+    averageTime: number;
     location: string;
     carouselImages: string[];
   }
@@ -39,7 +39,7 @@ export default function AttractionCard({ id, image, title, subtitle, description
                 <Text>
                     <Text style={{fontWeight: 'bold'}}>Característica:</Text> {subtitle}{"\n"}
                     <Text style={{fontWeight: 'bold'}}>Altura mínima:</Text> {minimumHeight}{"\n"}
-                    <Text style={{fontWeight: 'bold'}}>Duração média:</Text> {averageTime}{"\n"}
+                    <Text style={{fontWeight: 'bold'}}>Duração média:</Text> {averageTime} min{"\n"}
                 </Text>
 
             </View>

@@ -11,7 +11,7 @@ import LottieView from 'lottie-react-native';
 
 export default function AttractionDetailsScreen() {
 
-  const { id, title, subtitle, description, minimumHeight, avarageTime, location, carouselImages } = useLocalSearchParams();
+  const { id, title, subtitle, description, minimumHeight, averageTime, location, carouselImages } = useLocalSearchParams();
   const { pin } = usePin()
   const router = useRouter();
   const [modalType, setModalType] = useState<"success" | "fail" | null>(null);
@@ -100,9 +100,9 @@ export default function AttractionDetailsScreen() {
             <Text style={{ fontSize: 30 }}>Informações</Text>
             <View style={styles.infoContainer}>
               <Text>
-                <Text style={{fontWeight: 'bold'}}>Descrição:</Text>{description}{"\n"}
-                <Text style={{fontWeight: 'bold'}}>Altura mínima:</Text>{minimumHeight}{"\n"}
-                <Text style={{fontWeight: 'bold'}}>Duração média:</Text> {avarageTime}
+                <Text style={{fontWeight: 'bold'}}>Descrição:</Text> {description}{"\n"}
+                <Text style={{fontWeight: 'bold'}}>Altura mínima:</Text> {minimumHeight}{"\n"}
+                <Text style={{fontWeight: 'bold'}}>Duração média:</Text> {averageTime} min
               </Text>
             </View>
           </View>
