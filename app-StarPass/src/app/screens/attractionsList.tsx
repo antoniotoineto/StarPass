@@ -73,7 +73,7 @@ export default function AttractionsList() {
               subtitle={attraction.type}
               description={attraction.description}
               minimumHeight={attraction.minimumHeight}
-              averageTime={attraction.averageTime}
+              averageTime={attraction.executionTime}
               location={attraction.location}
               carouselImages={attraction.images}
             />

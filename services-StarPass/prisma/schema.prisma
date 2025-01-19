@@ -19,8 +19,9 @@ model Attractions {
   type          String
   description   String
   minimumHeight String
-  averageTime   String
+  executionTime Float
   maximumCapacity Int
+  operationalTime Float
   images        String[]
   location      String
 }

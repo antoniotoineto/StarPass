@@ -16,6 +16,7 @@ const prisma = new PrismaClient();
 
 const queues = {};
 const userQueues = {};
+let attractionsCache = null;
 
 const generateCode = () => {
     let newCode;
@@ -121,14 +122,30 @@ app.get('/usuarios-ativos', (req, res) => {
     return res.status(200).json(activeUsers);
 });
 
-app.get('/lista-brinquedos', async (req, res) => {
+const fetchAttractions = async () => {
     try {
         const attractions = await prisma.attractions.findMany();
-        res.status(200).json(attractions);
+        attractionsCache = attractions;
+        console.log("Atrações atualizadas no cache.");
     } catch (error) {
-        console.error('Erro ao buscar atrações:', error);
-        res.status(500).json({ message: 'Erro ao buscar atrações' });
+        console.error('Erro ao buscar brinquedos:', error);
     }
+};
+
+fetchAttractions();
+
+app.get('/lista-brinquedos', async (req, res) => {
+    if (attractionsCache === null) {
+        try {
+            await fetchAttractions();
+        } catch (error) {
+            console.error('Erro ao buscar brinquedos:', error);
+            res.status(500).json({ message: 'Erro ao buscar brinquedos' });
+        }
+    }
+
+    res.status(200).json(attractionsCache);
+
 });
 
 app.post('/entrar-fila', async (req, res) => {
@@ -174,9 +191,38 @@ app.get('/consultar-fila/:attractionId', (req, res) => {
     })
 })
 
-app.get('/dados-fila/:attractionId', (req, res) => {
+app.get('/status-fila-brinquedo/:attractionId', (req, res) => {
     const { attractionId } = req.params
-    const queueLength = queues[attractionId].queue.length()
+
+    const attraction = attractionsCache.find(attraction => attraction.id === attractionId)
+    if (!attraction) {
+        return res.status(404).json({ message: "Atração não encontrada." });
+    }
+
+    const queue = queues[attractionId]?.queue;
+    if (!queue) {
+        return res.status(200).json({
+            queueLength: 0,
+            estimatedTime: 0
+        });
+    }
+
+    const queueLength = queue.length();
+    const { executionTime, maximumCapacity, operationalTime } = attraction;
+    let estimatedTime = null;
+
+    const cyclesNeeded = Math.floor(queueLength / maximumCapacity);
+
+    if (cyclesNeeded < 1) {
+        estimatedTime = 0
+    } else {
+        estimatedTime = (executionTime + operationalTime) * cyclesNeeded;
+    }
+
+    return res.status(200).json({
+        queueLength,
+        estimatedTime,
+    });
 })
 
 app.get('/filas-usuario/:userCode', (req, res) => {
