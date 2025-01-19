@@ -16,12 +16,25 @@ export default function AttractionDetailsScreen() {
   const router = useRouter();
   const [modalType, setModalType] = useState<"success" | "fail" | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isQueueModalVisible, setQueueModalVisible] = useState(false);
   const locationString = String(location);
   const parsedImages = carouselImages ? JSON.parse(carouselImages as string) : [];
   const iconName = subtitle === 'Insano' ? 'flash' :
     subtitle === 'Relaxante' ? 'cafe' :
       subtitle === 'Instigante' ? 'flashlight-sharp' :
         'help-circle';
+
+  const handleQueueModal = async () => {
+    try {
+      //const res = await api.get(`/dados-fila/${id}`); // Endpoint que retorna os dados da fila
+      //const { peopleCount, estimatedWaitTime } = res.data;
+      //setQueueData({ people: peopleCount, waitTime: estimatedWaitTime });
+      setQueueModalVisible(true);
+    } catch (error) {
+      console.error('Erro ao buscar dados da fila:', error);
+      Alert.alert("Erro", "Não foi possível carregar os dados da fila.");
+    }
+  };
 
   const handleConfirm = () => {
     Alert.alert(
@@ -40,6 +53,7 @@ export default function AttractionDetailsScreen() {
               console.log(res.data.message);
 
               if (res.status === 200) {
+                setQueueModalVisible(false);
                 setModalType("success");
 
                 setTimeout(() => {
@@ -56,6 +70,7 @@ export default function AttractionDetailsScreen() {
                   if (error.response.data.message === "Usuário já está na fila deste brinquedo.") {
                     setErrorMessage("Usuário já está na fila!");
                   }
+                  setQueueModalVisible(false);
                   setModalType("fail");
 
                   setTimeout(() => {
@@ -100,9 +115,9 @@ export default function AttractionDetailsScreen() {
             <Text style={{ fontSize: 30 }}>Informações</Text>
             <View style={styles.infoContainer}>
               <Text>
-                <Text style={{fontWeight: 'bold'}}>Descrição:</Text> {description}{"\n"}
-                <Text style={{fontWeight: 'bold'}}>Altura mínima:</Text> {minimumHeight}{"\n"}
-                <Text style={{fontWeight: 'bold'}}>Duração média:</Text> {averageTime} min
+                <Text style={{ fontWeight: 'bold' }}>Descrição:</Text> {description}{"\n"}
+                <Text style={{ fontWeight: 'bold' }}>Altura mínima:</Text> {minimumHeight}{"\n"}
+                <Text style={{ fontWeight: 'bold' }}>Duração média:</Text> {averageTime} min
               </Text>
             </View>
           </View>
@@ -114,12 +129,35 @@ export default function AttractionDetailsScreen() {
             </View>
           </View>
 
-          <TouchableOpacity onPress={() => handleConfirm()} style={styles.entryQueueButton}>
+          <TouchableOpacity onPress={() => handleQueueModal()} style={styles.entryQueueButton}>
             <Text style={{ fontSize: 25 }}>Entrar na fila</Text>
           </TouchableOpacity>
         </ScrollView>
 
       </View>
+
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={isQueueModalVisible}
+        onRequestClose={() => setQueueModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>Confirmação</Text>
+            <Text style={{ fontSize: 16, marginBottom: 5 }}>Quantidade de pessoas na fila: N/A</Text>
+            <Text style={{ fontSize: 16, marginBottom: 20 }}>Tempo estimado de espera: N/A</Text>
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity onPress={() => setQueueModalVisible(false)} style={styles.cancelButton}>
+                <Text style={{ color: 'white' }}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleConfirm()} style={styles.confirmButton}>
+                <Text style={{ color: 'white' }}>Confirmar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       <Modal
         transparent={true}
@@ -242,4 +280,15 @@ const styles = StyleSheet.create({
     width: 150,
     height: 150,
   },
+  buttonsContainer: {
+    flexDirection: 'row', justifyContent: 'space-between', width: '70%',
+  },
+  cancelButton: {
+    height: 20, width: '35%', backgroundColor: 'red', alignItems: 'center', justifyContent: 'center',
+    borderRadius: 8
+  },
+  confirmButton: {
+    height: 20, width: '45%', backgroundColor: 'blue', alignItems: 'center', justifyContent: 'center',
+    borderRadius: 8
+  }
 });
