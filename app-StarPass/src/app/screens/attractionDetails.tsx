@@ -134,8 +134,12 @@ export default function AttractionDetailsScreen() {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>Confirmação</Text>
-            <Text style={{ fontSize: 16, marginBottom: 5 }}>Pessoas na fila: {queueData.people}</Text>
-            <Text style={{ fontSize: 16, marginBottom: 20 }}>Estimativa de espera: {queueData.waitTime} min</Text>
+            <Text style={{ fontSize: 16, marginBottom: 5 }}>
+              Pessoas na fila: <Text style={{fontWeight: 'bold'}}>{queueData.people}</Text>
+              </Text>
+            <Text style={{ fontSize: 16, marginBottom: 20 }}>
+              Estimativa de espera: <Text style={{fontWeight: 'bold'}}>{queueData.waitTime} min</Text>
+              </Text>
             {instantBoarding && <Text style={styles.warningText}>Embarque imediato</Text>}
             <View style={styles.buttonsContainer}>
               <TouchableOpacity onPress={() => setQueueModalVisible(false)} style={styles.cancelButton}>
