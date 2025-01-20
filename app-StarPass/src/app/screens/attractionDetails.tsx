@@ -11,11 +11,14 @@ import LottieView from 'lottie-react-native';
 
 export default function AttractionDetailsScreen() {
 
-  const { id, title, subtitle, description, minimumHeight, avarageTime, location, carouselImages } = useLocalSearchParams();
+  const { id, title, subtitle, description, minimumHeight, averageTime, location, carouselImages } = useLocalSearchParams();
   const { pin } = usePin()
   const router = useRouter();
   const [modalType, setModalType] = useState<"success" | "fail" | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isQueueModalVisible, setQueueModalVisible] = useState(false);
+  const [queueData, setQueueData] = useState({ people: -1, waitTime: -1 });
+  const [instantBoarding, setInstantBoarding] = useState(false);
   const locationString = String(location);
   const parsedImages = carouselImages ? JSON.parse(carouselImages as string) : [];
   const iconName = subtitle === 'Insano' ? 'flash' :
@@ -23,51 +26,52 @@ export default function AttractionDetailsScreen() {
       subtitle === 'Instigante' ? 'flashlight-sharp' :
         'help-circle';
 
-  const handleConfirm = () => {
-    Alert.alert(
-      "Entrar na fila",
-      "Deseja entrar na fila para esse brinquedo?",
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Entrar",
-          onPress: async () => {
-            try {
-              const res = await api.post('/entrar-fila', { id: id, atractionName: title, userCode: pin });
-              console.log(res.data.message);
+  const handleQueueModal = async () => {
+    try {
+      const res = await api.get(`/status-fila-brinquedo/${id}`);
+      const { queueLength, estimatedTime } = res.data;
+      (estimatedTime === 0)? setInstantBoarding(true) : setInstantBoarding(false)
+      setQueueData({ people: queueLength, waitTime: estimatedTime });
+      setQueueModalVisible(true);
+    } catch (error) {
+      console.error('Erro ao buscar dados da fila:', error);
+    }
+  };
 
-              if (res.status === 200) {
-                setModalType("success");
+  const handleConfirm = async () => {
 
-                setTimeout(() => {
-                  setModalType(null);
-                  router.push("/screens/queueList");
-                }, 1500);
-              }
+    try {
+      const res = await api.post('/entrar-fila', { id: id, atractionName: title, userCode: pin });
+      console.log(res.data.message);
 
-            } catch (error: any) {
-              if (error.response) {
-                console.error('Erro ao entrar na fila:', error.response.data);
+      if (res.status === 200) {
+        setQueueModalVisible(false);
+        setModalType("success");
 
-                if (error.response.status === 400 || error.response.status === 401) {
-                  if (error.response.data.message === "Usuário já está na fila deste brinquedo.") {
-                    setErrorMessage("Usuário já está na fila!");
-                  }
-                  setModalType("fail");
+        setTimeout(() => {
+          setModalType(null);
+          router.push("/screens/queueList");
+        }, 1500);
+      }
 
-                  setTimeout(() => {
-                    setModalType(null);
-                  }, 2500);
-                }
-              }
-            }
-          },
-        },
-      ]
-    );
+    } catch (error: any) {
+      if (error.response) {
+        console.error('Erro ao entrar na fila:', error.response.data);
+
+        if (error.response.status === 400 || error.response.status === 401) {
+          if (error.response.data.message === "Usuário já está na fila deste brinquedo.") {
+            setErrorMessage("Usuário já está na fila!");
+          }
+          setQueueModalVisible(false);
+          setModalType("fail");
+
+          setTimeout(() => {
+            setModalType(null);
+          }, 2500);
+        }
+      }
+    }
+
   };
 
 
@@ -100,9 +104,9 @@ export default function AttractionDetailsScreen() {
             <Text style={{ fontSize: 30 }}>Informações</Text>
             <View style={styles.infoContainer}>
               <Text>
-                <Text style={{fontWeight: 'bold'}}>Descrição:</Text>{description}{"\n"}
-                <Text style={{fontWeight: 'bold'}}>Altura mínima:</Text>{minimumHeight}{"\n"}
-                <Text style={{fontWeight: 'bold'}}>Duração média:</Text> {avarageTime}
+                <Text style={{ fontWeight: 'bold' }}>Descrição:</Text> {description}{"\n"}
+                <Text style={{ fontWeight: 'bold' }}>Altura mínima:</Text> {minimumHeight}{"\n"}
+                <Text style={{ fontWeight: 'bold' }}>Duração média:</Text> {averageTime} min
               </Text>
             </View>
           </View>
@@ -114,12 +118,36 @@ export default function AttractionDetailsScreen() {
             </View>
           </View>
 
-          <TouchableOpacity onPress={() => handleConfirm()} style={styles.entryQueueButton}>
+          <TouchableOpacity onPress={() => handleQueueModal()} style={styles.entryQueueButton}>
             <Text style={{ fontSize: 25 }}>Entrar na fila</Text>
           </TouchableOpacity>
         </ScrollView>
 
       </View>
+
+      <Modal
+        transparent={true}
+        animationType="fade"
+        visible={isQueueModalVisible}
+        onRequestClose={() => setQueueModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>Confirmação</Text>
+            <Text style={{ fontSize: 16, marginBottom: 5 }}>Pessoas na fila: {queueData.people}</Text>
+            <Text style={{ fontSize: 16, marginBottom: 20 }}>Estimativa de espera: {queueData.waitTime} min</Text>
+            {instantBoarding && <Text style={styles.warningText}>Embarque imediato</Text>}
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity onPress={() => setQueueModalVisible(false)} style={styles.cancelButton}>
+                <Text style={{ color: 'white' }}>Cancelar</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => handleConfirm()} style={styles.confirmButton}>
+                <Text style={{ color: 'white' }}>Confirmar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       <Modal
         transparent={true}
@@ -239,7 +267,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   animation: {
-    width: 150,
-    height: 150,
+    width: 150, height: 150,
   },
+  warningText: {
+    backgroundColor: 'orange', padding: 7, marginBottom: 20, borderRadius: 5
+  },
+  buttonsContainer: {
+    flexDirection: 'row', justifyContent: 'space-between', width: '70%', alignItems: 'center'
+  },
+  cancelButton: {
+    height: 30, width: '35%', backgroundColor: 'red', alignItems: 'center', justifyContent: 'center',
+    borderRadius: 8
+  },
+  confirmButton: {
+    height: 40, width: '45%', backgroundColor: 'blue', alignItems: 'center', justifyContent: 'center',
+    borderRadius: 8
+  }
 });
