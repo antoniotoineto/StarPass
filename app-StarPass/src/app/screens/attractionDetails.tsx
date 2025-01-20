@@ -17,6 +17,8 @@ export default function AttractionDetailsScreen() {
   const [modalType, setModalType] = useState<"success" | "fail" | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [isQueueModalVisible, setQueueModalVisible] = useState(false);
+  const [queueData, setQueueData] = useState({ people: -1, waitTime: -1 });
+  const [instantBoarding, setInstantBoarding] = useState(false);
   const locationString = String(location);
   const parsedImages = carouselImages ? JSON.parse(carouselImages as string) : [];
   const iconName = subtitle === 'Insano' ? 'flash' :
@@ -26,63 +28,50 @@ export default function AttractionDetailsScreen() {
 
   const handleQueueModal = async () => {
     try {
-      //const res = await api.get(`/dados-fila/${id}`); // Endpoint que retorna os dados da fila
-      //const { peopleCount, estimatedWaitTime } = res.data;
-      //setQueueData({ people: peopleCount, waitTime: estimatedWaitTime });
+      const res = await api.get(`/status-fila-brinquedo/${id}`);
+      const { queueLength, estimatedTime } = res.data;
+      (estimatedTime === 0)? setInstantBoarding(true) : setInstantBoarding(false)
+      setQueueData({ people: queueLength, waitTime: estimatedTime });
       setQueueModalVisible(true);
     } catch (error) {
       console.error('Erro ao buscar dados da fila:', error);
-      Alert.alert("Erro", "Não foi possível carregar os dados da fila.");
     }
   };
 
-  const handleConfirm = () => {
-    Alert.alert(
-      "Entrar na fila",
-      "Deseja entrar na fila para esse brinquedo?",
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Entrar",
-          onPress: async () => {
-            try {
-              const res = await api.post('/entrar-fila', { id: id, atractionName: title, userCode: pin });
-              console.log(res.data.message);
+  const handleConfirm = async () => {
 
-              if (res.status === 200) {
-                setQueueModalVisible(false);
-                setModalType("success");
+    try {
+      const res = await api.post('/entrar-fila', { id: id, atractionName: title, userCode: pin });
+      console.log(res.data.message);
 
-                setTimeout(() => {
-                  setModalType(null);
-                  router.push("/screens/queueList");
-                }, 1500);
-              }
+      if (res.status === 200) {
+        setQueueModalVisible(false);
+        setModalType("success");
 
-            } catch (error: any) {
-              if (error.response) {
-                console.error('Erro ao entrar na fila:', error.response.data);
+        setTimeout(() => {
+          setModalType(null);
+          router.push("/screens/queueList");
+        }, 1500);
+      }
 
-                if (error.response.status === 400 || error.response.status === 401) {
-                  if (error.response.data.message === "Usuário já está na fila deste brinquedo.") {
-                    setErrorMessage("Usuário já está na fila!");
-                  }
-                  setQueueModalVisible(false);
-                  setModalType("fail");
+    } catch (error: any) {
+      if (error.response) {
+        console.error('Erro ao entrar na fila:', error.response.data);
 
-                  setTimeout(() => {
-                    setModalType(null);
-                  }, 2500);
-                }
-              }
-            }
-          },
-        },
-      ]
-    );
+        if (error.response.status === 400 || error.response.status === 401) {
+          if (error.response.data.message === "Usuário já está na fila deste brinquedo.") {
+            setErrorMessage("Usuário já está na fila!");
+          }
+          setQueueModalVisible(false);
+          setModalType("fail");
+
+          setTimeout(() => {
+            setModalType(null);
+          }, 2500);
+        }
+      }
+    }
+
   };
 
 
@@ -145,8 +134,9 @@ export default function AttractionDetailsScreen() {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>Confirmação</Text>
-            <Text style={{ fontSize: 16, marginBottom: 5 }}>Quantidade de pessoas na fila: N/A</Text>
-            <Text style={{ fontSize: 16, marginBottom: 20 }}>Tempo estimado de espera: N/A</Text>
+            <Text style={{ fontSize: 16, marginBottom: 5 }}>Pessoas na fila: {queueData.people}</Text>
+            <Text style={{ fontSize: 16, marginBottom: 20 }}>Estimativa de espera: {queueData.waitTime} min</Text>
+            {instantBoarding && <Text style={styles.warningText}>Embarque imediato</Text>}
             <View style={styles.buttonsContainer}>
               <TouchableOpacity onPress={() => setQueueModalVisible(false)} style={styles.cancelButton}>
                 <Text style={{ color: 'white' }}>Cancelar</Text>
@@ -277,18 +267,20 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   animation: {
-    width: 150,
-    height: 150,
+    width: 150, height: 150,
+  },
+  warningText: {
+    backgroundColor: 'orange', padding: 7, marginBottom: 20, borderRadius: 5
   },
   buttonsContainer: {
-    flexDirection: 'row', justifyContent: 'space-between', width: '70%',
+    flexDirection: 'row', justifyContent: 'space-between', width: '70%', alignItems: 'center'
   },
   cancelButton: {
-    height: 20, width: '35%', backgroundColor: 'red', alignItems: 'center', justifyContent: 'center',
+    height: 30, width: '35%', backgroundColor: 'red', alignItems: 'center', justifyContent: 'center',
     borderRadius: 8
   },
   confirmButton: {
-    height: 20, width: '45%', backgroundColor: 'blue', alignItems: 'center', justifyContent: 'center',
+    height: 40, width: '45%', backgroundColor: 'blue', alignItems: 'center', justifyContent: 'center',
     borderRadius: 8
   }
 });

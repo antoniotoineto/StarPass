@@ -207,9 +207,10 @@ app.get('/status-fila-brinquedo/:attractionId', (req, res) => {
         });
     }
 
-    const queueLength = queue.length();
+    let queueLength = 0
+    queueLength = queue.length();
     const { executionTime, maximumCapacity, operationalTime } = attraction;
-    let estimatedTime = null;
+    let estimatedTime = -1
 
     const cyclesNeeded = Math.floor(queueLength / maximumCapacity);
 
