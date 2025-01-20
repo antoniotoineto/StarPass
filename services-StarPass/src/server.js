@@ -145,7 +145,11 @@ app.post('/entrar-fila', async (req, res) => {
         };
     }
 
-    if (userQueues[userCode] && userQueues[userCode].length >= 6) {
+    if (!userQueues[userCode]) {
+        userQueues[userCode] = [];
+    }
+
+    if (userQueues[userCode].length >= 6) {
         return res.status(400).json({ message: "Usuário atingiu o limite máximo de 6 filas simultâneas." });
     }
 
@@ -155,6 +159,7 @@ app.post('/entrar-fila', async (req, res) => {
     }
 
     queues[id].queue.push({ code: userCode, timestamp: new Date() });
+    userQueues[userCode].push({ attractionId: id, queuePosition: "X", estimatedTime: "Y" })
 
     return res.status(200).json({
         message: `Usuário ${userCode} entrou na fila do brinquedo '${atractionName}' com sucesso.`,
@@ -162,11 +167,42 @@ app.post('/entrar-fila', async (req, res) => {
     });
 });
 
-app.get('/consultar-fila/:id', (req, res) => {
-    const { id } = req.params
+app.get('/consultar-fila/:attractionId', (req, res) => {
+    const { attractionId } = req.params
     return res.status(200).json({
-        attractionQueue: queues[id]
+        attractionQueue: queues[attractionId]
     })
+})
+
+app.get('/filas-usuario/:userCode', (req, res) => {
+    const { userCode } = req.params
+    const userQueuesData = userQueues[userCode] || [];
+    return res.status(200).json({
+        userQueues: userQueuesData
+    })
+})
+
+app.post('/sair-fila/:userCode/:attractionId', (req, res) => {
+    const { userCode, attractionId } = req.params
+
+    if (!queues[attractionId]) {
+        return res.status(404).json({ message: 'Brinquedo não encontrado.' });
+    }
+
+    queues[attractionId].queue = queues[attractionId].queue.filter(
+        (user) => user.code !== userCode
+    );
+
+    if (userQueues[userCode]) {
+        userQueues[userCode] = userQueues[userCode].filter(
+            (queue) => queue.attractionId !== attractionId
+        );
+    }
+
+    return res.status(200).json({
+        message: `Usuário ${userCode} foi removido da fila do brinquedo.`,
+        userQueues: userQueues[userCode] || [],
+    });
 })
 
 app.post('/retirar-usuario', (req, res) => {

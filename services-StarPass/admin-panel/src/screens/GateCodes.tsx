@@ -13,7 +13,7 @@ const GateCodes: React.FC = () => {
     const navigate = useNavigate();
 
     const handleBack = () => {
-        navigate(`/`);
+        navigate(`/codes`);
     }
 
 useEffect(() => {
