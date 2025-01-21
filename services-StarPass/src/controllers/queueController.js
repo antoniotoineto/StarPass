@@ -1,4 +1,10 @@
-import { processQueueEntry, attractionQueue, attractionQueueStatus, exitQueue } from "../services/queueService.js";
+import { 
+    processQueueEntry, 
+    attractionQueue, 
+    attractionQueueStatus, 
+    exitQueue,
+    allUserQueues
+} from "../services/queueService.js";
 import { attractionsCache } from "./attractionController.js";
 
 export const joinQueue = (req, res) => {
@@ -43,6 +49,12 @@ export const getAttractionQueueStatus = (req, res) => {
 };
 
 export const getUserQueues = (req, res) => {
+    const { userCode } = req.params
+    const userQueues = allUserQueues(userCode);
+
+    return res.status(200).json({
+        userQueues: userQueues.response
+    })
 
 };
 

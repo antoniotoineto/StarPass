@@ -1,4 +1,5 @@
 import { generateCode, validateCode, gateCodes } from "../services/codeService.js";
+import { allActiveUsers } from "../services/userService.js";
 
 export const generateEntryCode = (req, res) => {
     const { gate } = req.body;
@@ -17,7 +18,7 @@ export const validateEntryCode = (req, res) => {
     const isCodeValid = validateCode(gate, code);
 
     if (isCodeValid.status){
-        //activeUsers.push({ code });
+        allActiveUsers.push({ code });
 
         console.log(`Código ${code} validado no portão ${gate}.`);
         return res.status(200).json({ valid: isCodeValid.status, message: isCodeValid.message });

@@ -95,3 +95,8 @@ export const exitQueue = (userCode, attractionId) => {
         response: userQueues[userCode] || []
     }
 };
+
+export const allUserQueues = (userCode) => {
+    const userQueuesData = userQueues[userCode] || [];
+    return {status: true, response: userQueuesData}
+};
