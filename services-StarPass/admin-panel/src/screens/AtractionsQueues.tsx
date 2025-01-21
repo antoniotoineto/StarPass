@@ -11,7 +11,7 @@ const AttractionQueue: React.FC = () => {
   useEffect(() => {
     const fetchQueue = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/consultar-fila/${id}`);
+        const response = await axios.get(`http://localhost:5000/filas/consultar-fila/${id}`);
         const attractionQueue = response.data.attractionQueue || {};
         setQueue(attractionQueue.queue || []);
         setAttractionName(attractionQueue.atractionName || 'Brinquedo Desconhecido');

@@ -13,16 +13,16 @@ export default function AttractionsList() {
   const router = useRouter();
   const { attractions } = useAttractions();
 
- // useEffect(() => {
-//const fetchAttractions = async () => {
-    //  try {
-   //     const response = await api.get('brinquedos/lista-brinquedos');
-   //   } catch (error: any) {
-   //     console.error('Erro ao buscar atrações:', error.message);
+  // useEffect(() => {
+  //const fetchAttractions = async () => {
+  //  try {
+  //     const response = await api.get('brinquedos/lista-brinquedos');
+  //   } catch (error: any) {
+  //     console.error('Erro ao buscar atrações:', error.message);
   //    }
   //  };
 
- //   fetchAttractions();
+  //   fetchAttractions();
   //}, []);
 
 
@@ -64,20 +64,26 @@ export default function AttractionsList() {
 
       <View style={styles.listContainer}>
         <ScrollView>
-          {attractions.map((attraction, key) => (
-            <AttractionCard
-              key={key}
-              id={attraction.id}
-              image={attraction.images[0]}
-              title={attraction.name}
-              subtitle={attraction.type}
-              description={attraction.description}
-              minimumHeight={attraction.minimumHeight}
-              averageTime={attraction.executionTime}
-              location={attraction.location}
-              carouselImages={attraction.images}
-            />
-          ))}
+          {attractions && attractions.length > 0 ? (
+            attractions.map((attraction, key) => (
+              <AttractionCard
+                key={key}
+                id={attraction.id}
+                image={attraction.images[0]}
+                title={attraction.name}
+                subtitle={attraction.type}
+                description={attraction.description}
+                minimumHeight={attraction.minimumHeight}
+                averageTime={attraction.executionTime}
+                location={attraction.location}
+                carouselImages={attraction.images}
+              />
+            ))
+          ) : (
+            <Text style={{ textAlign: 'center', alignItems: 'center', fontSize: 18, color: '#f77474' }}>
+              Carregando atrações...
+            </Text>
+          )}
         </ScrollView>
       </View>
 

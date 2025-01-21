@@ -16,53 +16,53 @@ const GateCodes: React.FC = () => {
         navigate(`/codes`);
     }
 
-useEffect(() => {
-    const fetchCodes = async () => {
-        try {
-            const response = await axios.get(`http://localhost:5000/codigos-guiche/${gate}`);
-            if (response.data && Array.isArray(response.data.codes)) {
-                setCodes(response.data.codes);
-            } else {
-                setCodes([]);
-                setError("Nenhum código encontrado para este portão.");
+    useEffect(() => {
+        const fetchCodes = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/guiche/codigos-guiche/${gate}`);
+                if (response.data && Array.isArray(response.data.codes)) {
+                    setCodes(response.data.codes);
+                } else {
+                    setCodes([]);
+                    setError("Nenhum código encontrado para este portão.");
+                }
+            } catch (err) {
+                setError("Erro ao buscar os códigos.");
             }
-        } catch (err) {
-            setError("Erro ao buscar os códigos.");
-        }
-    };
+        };
 
-    fetchCodes();
+        fetchCodes();
 
-    const intervalId = setInterval(fetchCodes, 5000);
+        const intervalId = setInterval(fetchCodes, 5000);
 
-    return () => clearInterval(intervalId);
-}, [gate]);
+        return () => clearInterval(intervalId);
+    }, [gate]);
 
-return (
-    <div style={styles.container}>
-        <div style={styles.card} >
-            <div style={styles.topBar}>
-                <IoMdArrowBack size={35} style={styles.icon} onClick={()=> handleBack()}/>
-                <h1 style={styles.logo}>Logo</h1>
-            </div>
-            <h1>Guichê {gate}</h1>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            {codes.length > 0 ? (
-                <div style={styles.scrollContainer}>
-                    <ul style={styles.codeList}>
-                        {codes.map((code, index) => (
-                            <li key={index} style={index === 0 ? styles.firstCodeItem : styles.codeItem}>
-                                {code}
-                            </li>
-                        ))}
-                    </ul>
+    return (
+        <div style={styles.container}>
+            <div style={styles.card} >
+                <div style={styles.topBar}>
+                    <IoMdArrowBack size={35} style={styles.icon} onClick={() => handleBack()} />
+                    <h1 style={styles.logo}>Logo</h1>
                 </div>
-            ) : (
-                <p style={styles.emptyMessage}>Nenhum código encontrado para este portão.</p>
-            )}
+                <h1>Guichê {gate}</h1>
+                {error && <p style={{ color: "red" }}>{error}</p>}
+                {codes.length > 0 ? (
+                    <div style={styles.scrollContainer}>
+                        <ul style={styles.codeList}>
+                            {codes.map((code, index) => (
+                                <li key={index} style={index === 0 ? styles.firstCodeItem : styles.codeItem}>
+                                    {code}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                ) : (
+                    <p style={styles.emptyMessage}>Nenhum código encontrado para este portão.</p>
+                )}
+            </div>
         </div>
-    </div>
-);
+    );
 };
 
 const styles = {

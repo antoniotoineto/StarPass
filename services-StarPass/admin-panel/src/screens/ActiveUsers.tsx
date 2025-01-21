@@ -1,15 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { IoMdArrowBack } from 'react-icons/io';
+import { useNavigate } from 'react-router-dom';
+
 
 const ActiveUsers: React.FC = () => {
   const [codes, setCodes] = useState<{ code: string }[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate(`/`);
+  }
 
   useEffect(() => {
     const fetchCodes = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/usuarios-ativos');
-        setCodes(response.data);
+        const response = await axios.get('http://localhost:5000/usuarios/usuarios-ativos');
+        setCodes(response.data.currentActiveUsers);
+        setError('');
       } catch (err) {
         setError('Erro ao buscar códigos');
       }
@@ -25,7 +34,10 @@ const ActiveUsers: React.FC = () => {
   return (
     <div style={styles.container}>
       <div style={styles.card}>
-        <h1 style={styles.logo}>Logo</h1>
+        <div style={styles.topBar}>
+          <IoMdArrowBack size={35} style={styles.icon} onClick={() => handleBack()} />
+          <h1 style={styles.logo}>Logo</h1>
+        </div>
         <h2 style={styles.subtitle}>Usuários Ativos</h2>
         {error && <p style={styles.error}>{error}</p>}
         <ul style={styles.list}>
@@ -48,6 +60,20 @@ const styles = {
     height: "85vh",
     backgroundColor: "#e6e6e6",
     padding: "40px",
+  },
+  topBar: {
+    display: "flex",
+    flexDirection: "row" as "row",
+    width: "100%",
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    position: "relative" as "relative",
+  },
+  icon: {
+    position: "absolute" as "absolute",
+    left: 20,
+    cursor: "pointer",
   },
   card: {
     display: "flex",
