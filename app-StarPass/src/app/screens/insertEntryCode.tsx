@@ -41,7 +41,7 @@ export default function GetEntryCode() {
       setShowWarning(false);
 
       try {
-        const res = await api.post('/validar-codigo', { gate: gate, code: code });
+        const res = await api.post('guiche/validar-codigo', { gate: gate, code: code });
 
         if (res.status === 200) {
           setModalType("success");

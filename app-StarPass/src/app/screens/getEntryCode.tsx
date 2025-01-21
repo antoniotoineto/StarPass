@@ -29,7 +29,7 @@ export default function GetEntryCode() {
         console.log('Senha enviada para o guichê:', gate);
 
         try {
-          const res = await api.post('/codigo-entrada', { gate });
+          const res = await api.post('guiche/codigo-entrada', { gate });
           router.push({ pathname: "/screens/insertEntryCode", params: { gate } });
         } catch (error: any) {
           if (error.response) {
