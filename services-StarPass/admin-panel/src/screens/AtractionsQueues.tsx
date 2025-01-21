@@ -15,12 +15,20 @@ const AttractionQueue: React.FC = () => {
         const attractionQueue = response.data.attractionQueue || {};
         setQueue(attractionQueue.queue || []);
         setAttractionName(attractionQueue.atractionName || 'Brinquedo Desconhecido');
-      } catch (err) {
-        setError('Erro ao buscar fila para o brinquedo.');
+      } catch (err: any) {
+        if (err.response && err.response.data && err.response.data.message) {
+          setError(err.response.data.message);
+        } else {
+          setError("Atração ainda não possui fila ou está indisponível.")
+        }
       }
     };
 
     fetchQueue();
+
+    const intervalId = setInterval(fetchQueue, 5000);
+
+    return () => clearInterval(intervalId);
   }, [id]);
 
   return (
@@ -84,6 +92,7 @@ const styles = {
     color: "red",
     fontSize: "0.9rem",
     marginBottom: "10px",
+    textAlign: 'center' as 'center'
   },
   list: {
     width: "100%",
