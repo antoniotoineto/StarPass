@@ -16,13 +16,13 @@ export const validateEntryCode = (req, res) => {
 
     const isCodeValid = validateCode(gate, code);
 
-    if (isCodeValid){
+    if (isCodeValid.status){
         //activeUsers.push({ code });
 
         console.log(`Código ${code} validado no portão ${gate}.`);
-        return res.status(200).json({ valid: true, message: "Código válido!" });
+        return res.status(200).json({ valid: isCodeValid.status, message: isCodeValid.message });
     } else {
-        res.status(401).json({ valid: false, message: "Código inválido." });
+        res.status(401).json({ valid: isCodeValid.status, message: isCodeValid.message });
     }
     
 };
@@ -32,9 +32,9 @@ export const getGateCodes = (req, res) => {
     
     const codes = gateCodes(gate)
 
-    if(codes !== null){
-        return res.status(200).json({ gate, codes });
+    if(codes.status){
+        return res.status(200).json({ gate, codes: codes.response });
     } 
 
-    return res.status(400).json({ error: "Portão inválido. Escolha 1, 2 ou 3." });
+    return res.status(400).json({ error: codes.message });
 };

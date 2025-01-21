@@ -29,7 +29,7 @@ export const validateCode = (gate, code) => {
             isValid = gate3Codes.includes(code);
             break;
         default:
-            return false;
+            return {status: false, message: "Portão inválido."};
     }
 
     if (isValid) {
@@ -45,10 +45,10 @@ export const validateCode = (gate, code) => {
                 break;
         }
     } else {
-        return false;
+        return {status: false, message: "Código inválido."};
     }
 
-    return true;
+    return {status: true, message: "Código válido!"};
 };
 
 export const gateCodes = (gate) => {
@@ -65,9 +65,9 @@ export const gateCodes = (gate) => {
             codes = gate3Codes;
             break;
         default:
-            return null;
+            return {status: false, message: "Portão inválido. Escolha 1, 2 ou 3."};
     }
 
-    return codes;
+    return {status: true, response: codes};
 
 };
