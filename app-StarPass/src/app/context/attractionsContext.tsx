@@ -25,7 +25,7 @@ export const AttractionProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     const fetchAttractions = async () => {
         if (attractions.length > 0) return; // Avoid unecessary calls
         try {
-            const response = await api.get('/lista-brinquedos');
+            const response = await api.get('/brinquedos/lista-brinquedos');
             setAttractions(response.data);
         } catch (error: any) {
             console.error('Erro ao buscar atrações:', error.message);

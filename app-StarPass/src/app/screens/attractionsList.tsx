@@ -13,17 +13,17 @@ export default function AttractionsList() {
   const router = useRouter();
   const { attractions } = useAttractions();
 
-  useEffect(() => {
-    const fetchAttractions = async () => {
-      try {
-        const response = await api.get('/lista-brinquedos');
-      } catch (error: any) {
-        console.error('Erro ao buscar atrações:', error.message);
-      }
-    };
+ // useEffect(() => {
+//const fetchAttractions = async () => {
+    //  try {
+   //     const response = await api.get('brinquedos/lista-brinquedos');
+   //   } catch (error: any) {
+   //     console.error('Erro ao buscar atrações:', error.message);
+  //    }
+  //  };
 
-    fetchAttractions();
-  }, []);
+ //   fetchAttractions();
+  //}, []);
 
 
   const handleExit = async () => {
@@ -39,7 +39,7 @@ export default function AttractionsList() {
           text: "Sair",
           onPress: async () => {
             try {
-              const res = await api.post('/retirar-usuario', { code: pin });
+              const res = await api.post('/usuarios/retirar-usuario', { code: pin });
               console.log(res.data)
               router.push("/");
 

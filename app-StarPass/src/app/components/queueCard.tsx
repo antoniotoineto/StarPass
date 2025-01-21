@@ -27,7 +27,7 @@ export default function QueueCard({ number, id, title, queuePosition, estimatedT
           text: "Sair",
           onPress: async () => {
             try {
-              const res = await api.post(`/sair-fila/${pin}/${id}`);
+              const res = await api.post(`/filas/sair-fila/${pin}/${id}`);
               console.log(res.data.message)
 
             } catch (error: any) {
