@@ -3,8 +3,10 @@ import { activeUsers, takeOutUser } from "../services/userService.js";
 export const getActiveUsers = (req, res) => {
     const result = activeUsers();
 
+    const currentActiveUsers = result.response;
+
     return res.status(200).json({
-        activeUsers: result.response
+        currentActiveUsers
     })
 
 };
