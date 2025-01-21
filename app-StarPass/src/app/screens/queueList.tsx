@@ -26,7 +26,7 @@ export default function QueueListScreen() {
 
   const fetchQueues = async () => {
     try {
-      const response = await api.get(`/filas-usuario/${pin}`);
+      const response = await api.get(`/filas/filas-usuario/${pin}`);
       const queues = response.data.userQueues;
       
       const processedQueues = queues.map((queue: any) => {

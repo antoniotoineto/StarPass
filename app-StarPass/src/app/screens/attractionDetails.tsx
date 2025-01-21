@@ -28,7 +28,7 @@ export default function AttractionDetailsScreen() {
 
   const handleQueueModal = async () => {
     try {
-      const res = await api.get(`/status-fila-brinquedo/${id}`);
+      const res = await api.get(`/filas/status-fila-brinquedo/${id}`);
       const { queueLength, estimatedTime } = res.data;
       (estimatedTime === 0)? setInstantBoarding(true) : setInstantBoarding(false)
       setQueueData({ people: queueLength, waitTime: estimatedTime });
@@ -41,7 +41,7 @@ export default function AttractionDetailsScreen() {
   const handleConfirm = async () => {
 
     try {
-      const res = await api.post('/entrar-fila', { id: id, atractionName: title, userCode: pin });
+      const res = await api.post('/filas/entrar-fila', { id: id, attractionName: title, userCode: pin });
       console.log(res.data.message);
 
       if (res.status === 200) {
