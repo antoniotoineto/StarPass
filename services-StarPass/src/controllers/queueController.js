@@ -1,4 +1,5 @@
 import { processQueueEntry, attractionQueue, attractionQueueStatus, exitQueue } from "../services/queueService.js";
+import { attractionsCache } from "./attractionController.js";
 
 export const joinQueue = (req, res) => {
     const { id, attractionName, userCode } = req.body;
@@ -30,35 +31,13 @@ export const getAttractionQueue = (req, res) => {
 export const getAttractionQueueStatus = (req, res) => {
     const { attractionId } = req.params
 
-    const attraction = attractionsCache.find(attraction => attraction.id === attractionId)
-    if (!attraction) {
-        return res.status(404).json({ message: "Atração não encontrada." });
-    }
+    const attrQueueStatus = attractionQueueStatus(attractionId, attractionsCache);
 
-    const queue = queues[attractionId]?.queue;
-    if (!queue) {
-        return res.status(200).json({
-            queueLength: 0,
-            estimatedTime: 0
-        });
-    }
-
-    let queueLength = 0
-    queueLength = queue.length();
-    const { executionTime, maximumCapacity, operationalTime } = attraction;
-    let estimatedTime = -1
-
-    const cyclesNeeded = Math.floor(queueLength / maximumCapacity);
-
-    if (cyclesNeeded < 1) {
-        estimatedTime = 0
-    } else {
-        estimatedTime = (executionTime + operationalTime) * cyclesNeeded;
-    }
+    if(!attrQueueStatus.status) return res.status(404).json({ message: attrQueueStatus.message });
 
     return res.status(200).json({
-        queueLength,
-        estimatedTime,
+        queueLength: attrQueueStatus.peopleInQueue,
+        estimatedTime: attrQueueStatus.waitTime
     });
 
 };

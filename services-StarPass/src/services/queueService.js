@@ -41,19 +41,24 @@ export const attractionQueue = (attractionId) => {
     return { status: true, response: queues[attractionId] };
 };
 
-export const attractionQueueStatus = (attractionId) => {
-    //const attraction = attractionsCache.find(attraction => attraction.id === attractionId)
-    //if (!attraction) {
-    //    return res.status(404).json({ message: "Atração não encontrada." });
-    //}
+export const attractionQueueStatus = (attractionId, attractionsCache) => {
+    let attraction = null;
+    if(attractionsCache !== null){
+        attraction = attractionsCache.find(attraction => attraction.id === attractionId)
+        if (!attraction) {
+            return {status: false, message: "Atração não encontrada."}
+        }
+    } else {
+        return {status: false, message: "Atrações não foram carregadas da base de dados."}
+    }
 
     const queue = queues[attractionId]?.queue;
     if (!queue) {
-        return { status: true, queueLength: 0, estimatedTime: 0 }
+        return { status: true, peopleInQueue: 0, waitTime: 0 }
     }
 
     let queueLength = 0
-    queueLength = queue.length();
+    queueLength = queue.length;
     const { executionTime, maximumCapacity, operationalTime } = attraction;
     let estimatedTime = -1
 
@@ -65,10 +70,7 @@ export const attractionQueueStatus = (attractionId) => {
         estimatedTime = (executionTime + operationalTime) * cyclesNeeded;
     }
 
-    return res.status(200).json({
-        queueLength,
-        estimatedTime,
-    });
+    return {status: true, peopleInQueue: queueLength, waitTime: estimatedTime}
 
 };
 

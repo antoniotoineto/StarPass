@@ -1,6 +1,6 @@
 import { fetchAttractions } from "../services/attractionService.js";
 
-let attractionsCache = null
+export let attractionsCache = null
 
 export const getAllAttractions = async (req, res) => {
     if (attractionsCache === null) {
