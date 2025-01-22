@@ -5,7 +5,6 @@ import axios from 'axios';
 const AttractionQueue: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [queue, setQueue] = useState<{ code: string; timestamp: string }[]>([]);
-  const [attractionName, setAttractionName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -14,11 +13,9 @@ const AttractionQueue: React.FC = () => {
         const response = await axios.get(`http://localhost:5000/filas/consultar-fila/${id}`);
         const attractionQueue = response.data.attractionQueue || {};
         setQueue(attractionQueue.queue || []);
-        setAttractionName(attractionQueue.attractionName || 'Brinquedo Desconhecido');
       } catch (err: any) {
         if (err.response && err.response.data && err.response.data.message) {
           setError(err.response.data.message);
-          setAttractionName(err.response.data.attractionName || 'Brinquedo Desconhecido');
         } else {
           setError("Atração ainda não possui fila ou está indisponível.")
         }
@@ -35,7 +32,7 @@ const AttractionQueue: React.FC = () => {
   return (
       <div style={styles.card}>
         <h2 style={styles.subtitle}>
-          Fila do Brinquedo: {attractionName || 'Carregando...'}
+          Fila
         </h2>
         {error ? (
           <p style={styles.error}>{error}</p>
@@ -69,6 +66,8 @@ const styles = {
     borderRadius: 18,
     width: "80%",
     maxWidth: "500px",
+    height: "40vh"
+
   },
   subtitle: {
     fontSize: "1.2rem",

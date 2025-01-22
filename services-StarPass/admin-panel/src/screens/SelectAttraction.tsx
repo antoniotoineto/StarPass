@@ -26,7 +26,12 @@ const SelectAttraction: React.FC = () => {
     if (selectedAttraction === "0") {
       setError(true);
     } else {
-      navigate(`/attractions/${selectedAttraction}`);
+      const attraction = attractions.find(attraction => attraction.id === selectedAttraction);
+      if (attraction) {
+        navigate(`/attractions/${selectedAttraction}`, {
+          state: { name: attraction.name }
+        });
+      }
     }
   };
 
@@ -41,7 +46,7 @@ const SelectAttraction: React.FC = () => {
           <IoMdArrowBack size={35} style={styles.icon} onClick={() => handleBack()} />
           <h1 style={styles.logo}>Logo</h1>
         </div>
-        <h2 style={styles.subtitle}>Selecione um Brinquedo</h2>
+        <h2 style={styles.subtitle}>Selecione uma Atração</h2>
         {attractions && attractions.length > 0 ? (
           <select
             style={styles.select}

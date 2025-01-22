@@ -1,10 +1,15 @@
 import React from 'react';
 import { IoMdArrowBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
-import AttractionQueue from './AtractionsQueues';
+import AttractionQueue from '../components/AtractionQueues';
+import { useLocation } from 'react-router-dom';
+import AttractionState from '../components/AttractionState';
+import { subscribe } from 'diagnostics_channel';
 
 const AttractionStatus: React.FC = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const { name } = location.state || {};
 
     const handleBack = () => {
         navigate(`/attractions`);
@@ -17,8 +22,12 @@ const AttractionStatus: React.FC = () => {
                     <IoMdArrowBack size={35} style={styles.icon} onClick={() => handleBack()} />
                     <h1 style={styles.logo}>Logo</h1>
                 </div>
-                <h1 style={styles.subtitle}>Consulta de brinquedo</h1>
-                <AttractionQueue />
+                <h1 style={styles.title}>Consulta de Atração</h1>
+                <h3 style={styles.subtitle}>{name}</h3>
+                <div style={styles.dataContainer}>
+                    <AttractionQueue />
+                    <AttractionState />
+                </div>
             </div>
         </div>
     );
@@ -34,7 +43,6 @@ const styles = {
         padding: "40px",
     },
     card: {
-        display: "flex",
         flexDirection: "column" as "column",
         alignItems: "center",
         justifyContent: "center",
@@ -51,34 +59,34 @@ const styles = {
         alignItems: "center",
         justifyContent: "center",
         position: "relative" as "relative",
-      },
-      icon: {
+    },
+    icon: {
         position: "absolute" as "absolute",
         left: 20,
         cursor: "pointer",
-      },
+    },
     logo: {
         fontSize: "2rem",
         fontWeight: "bold" as "bold",
     },
-    subtitle: {
+    title: {
         fontSize: "1.6rem",
         textAlign: "center" as "center",
-        marginBottom: "20px",
     },
-    button: {
-        width: "80%",
-        maxWidth: "400px",
-        padding: "15px",
-        fontSize: "1rem",
+    subtitle: {
+        fontSize: "1.3rem",
         textAlign: "center" as "center",
-        backgroundColor: "#007BFF",
-        color: "#FFF",
-        border: "none",
-        borderRadius: "5px",
-        cursor: "pointer",
-        transition: "background-color 0.3s",
+        backgroundColor: '#5ca0ff',
+        borderRadius: 10
     },
+    dataContainer: {
+        display: "flex",
+        flexDirection: "row" as "row",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 100
+    },
+    
 };
 
 export default AttractionStatus;
