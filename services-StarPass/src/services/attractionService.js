@@ -10,3 +10,12 @@ export const fetchAttractions = async () => {
     }
 
 };
+
+export const toggleAttractionState = (attractionState) => {
+
+    const currentState = attractionState.operant;
+    attractionState.operant = !currentState;
+
+    console.log(`Estado do brinquedo alterado para: ${!currentState ? "Operante" : "Não Operante"}`);
+    return { message: "Estado alterado com sucesso.", state: attractionState.operant }
+};

@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import AttractionQueue from '../components/AtractionQueues';
 import { useLocation } from 'react-router-dom';
 import AttractionState from '../components/AttractionState';
-import { subscribe } from 'diagnostics_channel';
 
 const AttractionStatus: React.FC = () => {
     const navigate = useNavigate();
