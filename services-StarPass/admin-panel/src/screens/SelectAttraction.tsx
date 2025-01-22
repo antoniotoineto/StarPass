@@ -26,7 +26,7 @@ const SelectAttraction: React.FC = () => {
     if (selectedAttraction === "0") {
       setError(true);
     } else {
-      navigate(`/queues/${selectedAttraction}`);
+      navigate(`/attractions/${selectedAttraction}`);
     }
   };
 

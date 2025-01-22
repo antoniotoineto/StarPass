@@ -23,10 +23,15 @@ export const joinQueue = (req, res) => {
 
 export const getAttractionQueue = (req, res) => {
     const { attractionId } = req.params
+    let name = null
+    if(attractionsCache && attractionsCache.length > 0){
+        const attraction = attractionsCache.find(attraction => attraction.id === attractionId);
+        if(attraction) name = attraction.name;
+    }
 
     const attrQueue = attractionQueue(attractionId);
 
-    if (!attrQueue.status) return res.status(400).json({ message: attrQueue.message })
+    if (!attrQueue.status) return res.status(400).json({ attractionName: name, message: attrQueue.message })
 
     return res.status(200).json({
         attractionQueue: attrQueue.response

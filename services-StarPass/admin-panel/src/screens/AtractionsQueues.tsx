@@ -14,10 +14,11 @@ const AttractionQueue: React.FC = () => {
         const response = await axios.get(`http://localhost:5000/filas/consultar-fila/${id}`);
         const attractionQueue = response.data.attractionQueue || {};
         setQueue(attractionQueue.queue || []);
-        setAttractionName(attractionQueue.atractionName || 'Brinquedo Desconhecido');
+        setAttractionName(attractionQueue.attractionName || 'Brinquedo Desconhecido');
       } catch (err: any) {
         if (err.response && err.response.data && err.response.data.message) {
           setError(err.response.data.message);
+          setAttractionName(err.response.data.attractionName || 'Brinquedo Desconhecido');
         } else {
           setError("Atração ainda não possui fila ou está indisponível.")
         }
@@ -32,9 +33,7 @@ const AttractionQueue: React.FC = () => {
   }, [id]);
 
   return (
-    <div style={styles.container}>
       <div style={styles.card}>
-        <h1 style={styles.logo}>Logo</h1>
         <h2 style={styles.subtitle}>
           Fila do Brinquedo: {attractionName || 'Carregando...'}
         </h2>
@@ -55,19 +54,10 @@ const AttractionQueue: React.FC = () => {
           </ul>
         )}
       </div>
-    </div>
   );
 };
 
 const styles = {
-  container: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "85vh",
-    backgroundColor: "#e6e6e6",
-    padding: "40px",
-  },
   card: {
     display: "flex",
     flexDirection: "column" as "column",
@@ -75,14 +65,10 @@ const styles = {
     justifyContent: "center",
     gap: "20px",
     padding: "20px",
-    backgroundColor: "white",
+    backgroundColor: "#e3e3e3",
     borderRadius: 18,
     width: "80%",
     maxWidth: "500px",
-  },
-  logo: {
-    fontSize: "2rem",
-    fontWeight: "bold" as "bold",
   },
   subtitle: {
     fontSize: "1.2rem",

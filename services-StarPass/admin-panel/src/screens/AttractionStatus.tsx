@@ -1,27 +1,24 @@
 import React from 'react';
+import { IoMdArrowBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
+import AttractionQueue from './AtractionsQueues';
 
-const AdminPanel: React.FC = () => {
+const AttractionStatus: React.FC = () => {
     const navigate = useNavigate();
 
-    const handleNavigation = (path: string) => {
-        navigate(path);
-    };
+    const handleBack = () => {
+        navigate(`/attractions`);
+    }
 
     return (
         <div style={styles.container}>
             <div style={styles.card}>
-                <h1 style={styles.logo}>Logo</h1>
-                <h2 style={styles.subtitle}>Telas Administrativas - Star Pass</h2>
-                <div style={styles.button} onClick={() => handleNavigation('/codes')}>
-                    Códigos de entrada
+                <div style={styles.topBar}>
+                    <IoMdArrowBack size={35} style={styles.icon} onClick={() => handleBack()} />
+                    <h1 style={styles.logo}>Logo</h1>
                 </div>
-                <div style={styles.button} onClick={() => handleNavigation('/active-users')}>
-                    Usuários ativos
-                </div>
-                <div style={styles.button} onClick={() => handleNavigation('/attractions')}>
-                    Atrações
-                </div>
+                <h1 style={styles.subtitle}>Consulta de brinquedo</h1>
+                <AttractionQueue />
             </div>
         </div>
     );
@@ -46,12 +43,26 @@ const styles = {
         backgroundColor: "white",
         borderRadius: 18,
     },
+    topBar: {
+        display: "flex",
+        flexDirection: "row" as "row",
+        width: "100%",
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative" as "relative",
+      },
+      icon: {
+        position: "absolute" as "absolute",
+        left: 20,
+        cursor: "pointer",
+      },
     logo: {
         fontSize: "2rem",
         fontWeight: "bold" as "bold",
     },
     subtitle: {
-        fontSize: "1.2rem",
+        fontSize: "1.6rem",
         textAlign: "center" as "center",
         marginBottom: "20px",
     },
@@ -70,4 +81,4 @@ const styles = {
     },
 };
 
-export default AdminPanel;
+export default AttractionStatus;
