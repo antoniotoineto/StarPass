@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 
@@ -7,42 +7,63 @@ const AttractionState: React.FC = () => {
   const [state, setState] = useState<boolean | null>(null);
   const [timer, setTimer] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const timerCache = useRef<number | null>(null);
+  const isTimerEnded = useRef(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  const fetchState = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/brinquedos/consultar-estado/${id}`);
+      setState(response.data.state);
+      setTimer(response.data.executionTime);
+      timerCache.current = response.data.executionTime; // Salva no cache
+    } catch (err: any) {
+      setError("Atração ainda não possui fila ou está indisponível.");
+    }
+  };
 
   useEffect(() => {
-    const fetchState = async () => {
-      try {
-        const response = await axios.get(`http://localhost:5000/brinquedos/consultar-estado/${id}`);
-        setState(response.data.state);
-        setTimer(response.data.executionTime);
-        console.log("timer: ",timer);
-      } catch (err: any) {
-        if (err.response && err.response.data && err.response.data.message) {
-          setError(err.response.data.message);
-        } else {
-          setError("Atração ainda não possui fila ou está indisponível.")
-        }
-      }
-    };
-
     fetchState();
   }, [id]);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (state && timer !== null) {
-      interval = setInterval(() => {
-        setTimer((prev) => (prev !== null ? prev - 1 : null));
-      }, 1000);
-    }
+  const startTimer = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
+      setTimer((prev) => {
+        if (prev !== null && prev > 0) {
+          return prev - 1 / 60;
+        } else {
+          clearInterval(intervalRef.current!);
+          handleTimerEnd();
+          return 0;
+        }
+      });
+    }, 1000);
+  };
 
-    return () => clearInterval(interval);
-  }, [state, timer]);
+  const handleTimerEnd = async () => {
+    if (isTimerEnded.current) return;
+    isTimerEnded.current = true;
+
+    try {
+      const response = await axios.post(`http://localhost:5000/brinquedos/mudar-estado/${id}`);
+      setState(response.data.state);
+      setTimer(timerCache.current);
+    } catch (err) {
+      console.error("Erro ao finalizar o brinquedo:", err);
+      setError("Erro ao finalizar o brinquedo. Tente novamente.");
+    } finally {
+      isTimerEnded.current = false;
+    }
+  };
 
   const handleStart = async () => {
-    if (state === false) {
+    if (!state) {
       try {
         const response = await axios.post(`http://localhost:5000/brinquedos/mudar-estado/${id}`);
         setState(response.data.state);
+        setTimer(timerCache.current);
+        startTimer();
       } catch (err) {
         console.error("Erro ao iniciar o brinquedo:", err);
         setError("Erro ao iniciar o brinquedo. Tente novamente.");
@@ -67,7 +88,7 @@ const AttractionState: React.FC = () => {
           <p style={styles.cardText}>Tempo restante:
             <p style={styles.timer}>
               {timer !== null
-                ? `${Math.floor(timer / 60)}m ${timer % 60}s`
+                ? `${Math.floor(timer)}m ${Math.round((timer % 1) * 60)}s`
                 : "Sem cronômetro disponível"}
             </p>
           </p>
