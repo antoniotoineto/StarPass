@@ -1,3 +1,5 @@
+import { attractionStates } from "../controllers/attractionController.js";
+
 const queues = {};
 const userQueues = {};
 
@@ -41,17 +43,8 @@ export const attractionQueue = (attractionId) => {
     return { status: true, response: queues[attractionId] };
 };
 
-export const attractionQueueStatus = (attractionId, attractionsCache) => {
-    let attraction = null;
-    if(attractionsCache !== null){
-        attraction = attractionsCache.find(attraction => attraction.id === attractionId)
-        if (!attraction) {
-            return {status: false, message: "Atração não encontrada."}
-        }
-    } else {
-        return {status: false, message: "Atrações não foram carregadas da base de dados."}
-    }
-
+export const attractionQueueStatus = (attractionId, attraction) => {
+    
     const queue = queues[attractionId]?.queue;
     if (!queue) {
         return { status: true, peopleInQueue: 0, waitTime: 0 }
@@ -59,16 +52,30 @@ export const attractionQueueStatus = (attractionId, attractionsCache) => {
 
     let queueLength = 0
     queueLength = queue.length;
-    const { executionTime, maximumCapacity, operationalTime } = attraction;
-    let estimatedTime = -1
 
-    const cyclesNeeded = Math.floor(queueLength / maximumCapacity);
+    // TEM QUE REFAZER TUDOOOOOO AAAAA
+    // let currentExecutionTime = 0;
+    // let currentOperationalTime = 0;
+    // let estimatedTime = -1;
 
-    if (cyclesNeeded < 1) {
-        estimatedTime = 0
-    } else {
-        estimatedTime = (executionTime + operationalTime) * cyclesNeeded;
-    }
+    // const { maximumCapacity, executionTime, entryTime, exitTime } = attraction;
+    // const operationalTime = entryTime + exitTime;
+    // const cyclesNeeded = Math.floor(queueLength / maximumCapacity);
+
+    // if(!attractionStates[attractionId]) {
+    //     return {status: false, message: "Atração não encontrada na base de dados."}
+    // } else if(attractionStates[attractionId].operant){
+    //     currentExecutionTime = attractionStates[attractionId].timer;
+    //     currentOperationalTime = exitTime;
+    // }
+
+    // if (cyclesNeeded < 1) {
+    //     estimatedTime = 0
+    // } else {
+    //     estimatedTime = 
+    //         (currentExecutionTime + currentOperationalTime) + 
+    //         (executionTime + operationalTime) * (cyclesNeeded-1);
+    // }
 
     return {status: true, peopleInQueue: queueLength, waitTime: estimatedTime}
 

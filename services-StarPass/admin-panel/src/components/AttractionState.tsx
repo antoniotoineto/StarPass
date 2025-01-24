@@ -46,7 +46,6 @@ const AttractionState: React.FC = () => {
     isTimerEnded.current = true;
 
     try {
-      //const response = await axios.post(`http://localhost:5000/brinquedos/mudar-estado/${id}`);
       setState(false);
       setTimer(timerCache.current);
     } catch (err) {

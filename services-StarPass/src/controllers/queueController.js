@@ -42,7 +42,17 @@ export const getAttractionQueue = (req, res) => {
 export const getAttractionQueueStatus = (req, res) => {
     const { attractionId } = req.params
 
-    const attrQueueStatus = attractionQueueStatus(attractionId, attractionsCache);
+    let attraction = null;
+    if(attractionsCache !== null){
+        attraction = attractionsCache.find(attraction => attraction.id === attractionId)
+        if (!attraction) {
+            return res.status(404).json({message: "Atração não encontrada."});
+        }
+    } else {
+        return res.status(404).json({message: "Atrações não foram carregadas da base de dados."});
+    }
+
+    const attrQueueStatus = attractionQueueStatus(attractionId, attraction);
 
     if(!attrQueueStatus.status) return res.status(404).json({ message: attrQueueStatus.message });
 
