@@ -39,21 +39,26 @@ export const setAttractionState = async (req, res) => {
 
     const attractionState = toggleAttractionState(attractionStates[attractionId])
 
-    return res.status(200).json({ message: attractionState.message, state: attractionState.state });
+    return res.status(200).json({ 
+        message: attractionState.message, 
+        state: attractionState.state, 
+    });
 };
 
-// export const getAttractionState = async (req, res) => {
-//     const { attractionId } = req.params;
+export const getAttractionState = async (req, res) => {
+    const { attractionId } = req.params;
 
-//     try {
-//         const result = await fetchAttractionState(attractionId);
-//         if (!result.status) {
-//             return res.status(404).json({ message: "Atração não encontrada" });
-//         }
+    if (!attractionsCache || !attractionStates[attractionId]) {
+        return res.status(404).json({ message: "Atração não encontrada." });
+    }
 
-//         res.status(200).json(result.response);
-//     } catch (error) {
-//         console.error("Erro ao buscar estado do brinquedo:", error);
-//         res.status(500).json({ message: "Erro ao buscar estado do brinquedo" });
-//     }
-// };
+    //const attraction = attractionsCache.find(attraction => attraction.id === attractionId);
+    const attractionCurrentState = attractionStates[attractionId].operant
+    const timer = attractionStates[attractionId].timer
+
+    return res.status(200).json({ 
+        state: attractionCurrentState, 
+        executionTime: timer,
+        currentExecutionTime: 0
+    });
+};

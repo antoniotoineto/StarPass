@@ -19,3 +19,5 @@ export const toggleAttractionState = (attractionState) => {
     console.log(`Estado do brinquedo alterado para: ${!currentState ? "Operante" : "Não Operante"}`);
     return { message: "Estado alterado com sucesso.", state: attractionState.operant }
 };
+
+
