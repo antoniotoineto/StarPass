@@ -2,6 +2,7 @@ import { fetchAttractions, toggleAttractionState } from "../services/attractionS
 
 export let attractionsCache = null
 export const attractionStates = {};
+let attractionIntervals = {};
 
 export const getAllAttractions = async (req, res) => {
     if (attractionsCache === null) {
@@ -15,7 +16,8 @@ export const getAllAttractions = async (req, res) => {
             attractionsCache.forEach(attraction => {
                 attractionStates[attraction.id] = {
                     operant: false,
-                    timer: attraction.executionTime || 0,
+                    timer: attraction.executionTime,
+                    initialTimer: attraction.executionTime
                 };
             });
             console.log("Atrações e estados inicializados no cache.");
@@ -39,9 +41,15 @@ export const setAttractionState = async (req, res) => {
 
     const attractionState = toggleAttractionState(attractionStates[attractionId])
 
-    return res.status(200).json({ 
-        message: attractionState.message, 
-        state: attractionState.state, 
+    if (attractionState.state) {
+        startAttractionTimer(attractionId);
+    } else {
+        stopAttraction(attractionId);
+    }
+
+    return res.status(200).json({
+        message: attractionState.message,
+        state: attractionState.state,
     });
 };
 
@@ -52,13 +60,45 @@ export const getAttractionState = async (req, res) => {
         return res.status(404).json({ message: "Atração não encontrada." });
     }
 
-    //const attraction = attractionsCache.find(attraction => attraction.id === attractionId);
     const attractionCurrentState = attractionStates[attractionId].operant
     const timer = attractionStates[attractionId].timer
+    const initialTimer = attractionStates[attractionId].initialTimer
 
-    return res.status(200).json({ 
-        state: attractionCurrentState, 
-        executionTime: timer,
-        currentExecutionTime: 0
+    return res.status(200).json({
+        state: attractionCurrentState,
+        currentExecutionTime: timer,
+        initialExecutionTime: initialTimer
     });
+};
+
+export const startAttractionTimer = (attractionId) => {
+
+    if (!attractionStates[attractionId]) {
+        return {status: false, message: "Atração não encontrada."};
+    }
+
+    const attraction = attractionStates[attractionId];
+
+    if (attractionIntervals[attractionId]) {
+        clearInterval(attractionIntervals[attractionId]);
+    }
+
+    attractionIntervals[attractionId] = setInterval(() => {
+        if (attraction.operant && attraction.timer > 0) {
+            attraction.timer -= 1;
+            console.log(`Atração ${attractionId} - Timer: ${attraction.timer}s`);
+        } else {
+            clearInterval(attractionIntervals[attractionId]); 
+            attraction.operant = false;
+            attraction.timer = attraction.initialTimer;
+            console.log(`Atração ${attractionId} finalizada.`);
+        }
+    }, 1000);
+};
+
+export const stopAttraction = (attractionId) => {
+    const attraction = attractionStates[attractionId];
+    attraction.operant = false;
+    attraction.timer = attraction.initialTimer;
+    console.log(`Atração ${attractionId} parada.`);
 };

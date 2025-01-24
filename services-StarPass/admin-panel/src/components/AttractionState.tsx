@@ -15,8 +15,8 @@ const AttractionState: React.FC = () => {
     try {
       const response = await axios.get(`http://localhost:5000/brinquedos/consultar-estado/${id}`);
       setState(response.data.state);
-      setTimer(response.data.executionTime);
-      timerCache.current = response.data.executionTime; // Salva no cache
+      setTimer(response.data.initialExecutionTime);
+      timerCache.current = response.data.initialExecutionTime; 
     } catch (err: any) {
       setError("Atração ainda não possui fila ou está indisponível.");
     }
@@ -31,7 +31,7 @@ const AttractionState: React.FC = () => {
     intervalRef.current = setInterval(() => {
       setTimer((prev) => {
         if (prev !== null && prev > 0) {
-          return prev - 1 / 60;
+          return prev - 1;
         } else {
           clearInterval(intervalRef.current!);
           handleTimerEnd();
@@ -46,8 +46,8 @@ const AttractionState: React.FC = () => {
     isTimerEnded.current = true;
 
     try {
-      const response = await axios.post(`http://localhost:5000/brinquedos/mudar-estado/${id}`);
-      setState(response.data.state);
+      //const response = await axios.post(`http://localhost:5000/brinquedos/mudar-estado/${id}`);
+      setState(false);
       setTimer(timerCache.current);
     } catch (err) {
       console.error("Erro ao finalizar o brinquedo:", err);
@@ -88,7 +88,7 @@ const AttractionState: React.FC = () => {
           <p style={styles.cardText}>Tempo restante:
             <p style={styles.timer}>
               {timer !== null
-                ? `${Math.floor(timer)}m ${Math.round((timer % 1) * 60)}s`
+                ? `${Math.floor(timer / 60)}m ${timer % 60}s`
                 : "Sem cronômetro disponível"}
             </p>
           </p>
