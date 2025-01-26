@@ -40,7 +40,7 @@ export const getAttractionQueue = (req, res) => {
 };
 
 export const getAttractionQueueStatus = (req, res) => {
-    const { attractionId } = req.params
+    const { attractionId, userStatus } = req.params
 
     let attraction = null;
     if (attractionsCache !== null) {
@@ -52,26 +52,41 @@ export const getAttractionQueueStatus = (req, res) => {
         return res.status(404).json({ message: "Atrações não foram carregadas da base de dados." });
     }
 
-    const attrQueueStatus = attractionQueueStatus(attractionId, attraction);
+    const attrQueueStatus = attractionQueueStatus(attractionId, attraction, userStatus);
 
-    switch(attrQueueStatus.status){
-        case("not_found"):
+    switch (attrQueueStatus.status) {
+        case ("not_found"):
             return res.status(404).json({ message: attrQueueStatus.message });
 
-        case("boarding"):
+        case ("boarding"):
             return res.status(200).json({
                 queueLength: attrQueueStatus.peopleInQueue,
                 estimatedTime: attrQueueStatus.waitTime,
                 timeLeft: attrQueueStatus.timeLeft
-            })
-        
-        case("operational" || "not_operational" || "long_queue"):
-        return res.status(200).json({
-            queueLength: attrQueueStatus.peopleInQueue,
-            estimatedTime: attrQueueStatus.waitTime,
-        })
+            });
 
+        case ("operational"):
+            console.log("Status da fila: ", attrQueueStatus.status);
+            return res.status(200).json({
+                queueLength: attrQueueStatus.peopleInQueue,
+                estimatedTime: attrQueueStatus.waitTime,
+            });
+        case ("not_operational"):
+            console.log("Status da fila: ", attrQueueStatus.status);
+            return res.status(200).json({
+                queueLength: attrQueueStatus.peopleInQueue,
+                estimatedTime: attrQueueStatus.waitTime,
+            });
+        case ("long_queue"):
+            console.log("Status da fila: ", attrQueueStatus.status);
+            return res.status(200).json({
+                queueLength: attrQueueStatus.peopleInQueue,
+                estimatedTime: attrQueueStatus.waitTime,
+            });
+        default:
+            return res.status(400).json({ message: "Erro inesperado. Tente novamente." });
     }
+
 
 };
 

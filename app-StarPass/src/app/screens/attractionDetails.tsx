@@ -6,12 +6,13 @@ import ImagesCarousel from '../components/imagesCarousel/imagesCarousel';
 import { StatusBar } from 'expo-status-bar';
 import api from '../data/api';
 import { usePin } from '../context/pinCodeContext';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import LottieView from 'lottie-react-native';
 
 export default function AttractionDetailsScreen() {
 
   const { id, title, subtitle, description, minimumHeight, averageTime, location, carouselImages } = useLocalSearchParams();
+  const parsedAverageTime = Number(averageTime);
   const { pin } = usePin()
   const router = useRouter();
   const [modalType, setModalType] = useState<"success" | "fail" | null>(null);
@@ -19,6 +20,7 @@ export default function AttractionDetailsScreen() {
   const [isQueueModalVisible, setQueueModalVisible] = useState(false);
   const [queueData, setQueueData] = useState({ people: -1, waitTime: -1 });
   const [instantBoarding, setInstantBoarding] = useState(false);
+  const [currentTimer, setCurrentTimer] = useState<number | null>(null);
   const locationString = String(location);
   const parsedImages = carouselImages ? JSON.parse(carouselImages as string) : [];
   const iconName = subtitle === 'Insano' ? 'flash' :
@@ -28,15 +30,38 @@ export default function AttractionDetailsScreen() {
 
   const handleQueueModal = async () => {
     try {
-      const res = await api.get(`/filas/status-fila-brinquedo/${id}`);
-      const { queueLength, estimatedTime } = res.data;
-      (estimatedTime === 0)? setInstantBoarding(true) : setInstantBoarding(false)
+      const res = await api.get(`/filas/status-fila-brinquedo/${id}/out`);
+      const { queueLength, estimatedTime, timeLeft } = res.data;
+      (estimatedTime === 0 && timeLeft) ? setInstantBoarding(true) : setInstantBoarding(false)
       setQueueData({ people: queueLength, waitTime: estimatedTime });
+      setCurrentTimer(timeLeft);
       setQueueModalVisible(true);
     } catch (error) {
       console.error('Erro ao buscar dados da fila:', error);
     }
   };
+
+  useEffect(() => {
+    let timerInterval: NodeJS.Timeout | null = null;
+
+    if (isQueueModalVisible && currentTimer !== null && currentTimer > 0) {
+      timerInterval = setInterval(() => {
+        setCurrentTimer((prev) => {
+          if (prev && prev > 0) {
+            return prev - 1; 
+          } else {
+            if (timerInterval) clearInterval(timerInterval);
+            setInstantBoarding(false);
+            return 0;
+          }
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (timerInterval) clearInterval(timerInterval);
+    };
+  }, [isQueueModalVisible, currentTimer]);
 
   const handleConfirm = async () => {
 
@@ -106,7 +131,7 @@ export default function AttractionDetailsScreen() {
               <Text>
                 <Text style={{ fontWeight: 'bold' }}>Descrição:</Text> {description}{"\n"}
                 <Text style={{ fontWeight: 'bold' }}>Altura mínima:</Text> {minimumHeight}{"\n"}
-                <Text style={{ fontWeight: 'bold' }}>Duração média:</Text> {averageTime} min
+                <Text style={{ fontWeight: 'bold' }}>Duração média:</Text> {`${Math.floor(parsedAverageTime / 60)}m ${parsedAverageTime % 60}s`}
               </Text>
             </View>
           </View>
@@ -135,12 +160,23 @@ export default function AttractionDetailsScreen() {
           <View style={styles.modalContent}>
             <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 10 }}>Confirmação</Text>
             <Text style={{ fontSize: 16, marginBottom: 5 }}>
-              Pessoas na fila: <Text style={{fontWeight: 'bold'}}>{queueData.people}</Text>
-              </Text>
+              Pessoas na fila: <Text style={{ fontWeight: 'bold' }}>{queueData.people}</Text>
+            </Text>
             <Text style={{ fontSize: 16, marginBottom: 20 }}>
-              Estimativa de espera: <Text style={{fontWeight: 'bold'}}>{queueData.waitTime} min</Text>
+              Estimativa de espera: ~
+              <Text style={{ fontWeight: 'bold' }}>
+                {`${Math.floor(queueData.waitTime / 60)}m  ${queueData.waitTime % 60}s`}
               </Text>
-            {instantBoarding && <Text style={styles.warningText}>Embarque imediato</Text>}
+
+            </Text>
+            {instantBoarding &&
+              <>
+                <View style={styles.warningText}>
+                  <Text>Embarque imediato</Text>
+                  <Text>Tempo restante: {currentTimer !== null ? `${currentTimer}s` : "Calculando..."}</Text>
+                </View>
+              </>
+            }
             <View style={styles.buttonsContainer}>
               <TouchableOpacity onPress={() => setQueueModalVisible(false)} style={styles.cancelButton}>
                 <Text style={{ color: 'white' }}>Cancelar</Text>
@@ -274,7 +310,7 @@ const styles = StyleSheet.create({
     width: 150, height: 150,
   },
   warningText: {
-    backgroundColor: 'orange', padding: 7, marginBottom: 20, borderRadius: 5
+    backgroundColor: 'orange', padding: 7, marginBottom: 20, borderRadius: 5, flexDirection: 'column', gap: 5
   },
   buttonsContainer: {
     flexDirection: 'row', justifyContent: 'space-between', width: '70%', alignItems: 'center'

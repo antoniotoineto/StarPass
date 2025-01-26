@@ -1,4 +1,4 @@
-import { attractionStates } from "../controllers/attractionController.js";
+import { attractionStates, attractionsCache } from "../controllers/attractionController.js";
 
 const queues = {};
 const userQueues = {};
@@ -29,7 +29,24 @@ export const processQueueEntry = (id, attractionName, userCode) => {
     }
 
     queues[id].queue.push({ code: userCode, timestamp: new Date() });
-    userQueues[userCode].push({ attractionId: id, queuePosition: "X", estimatedTime: "Y" })
+
+    let attraction = null;
+    if (attractionsCache !== null) {
+        attraction = attractionsCache.find(attraction => attraction.id === id)
+        if (!attraction) {
+            return {status: false, message: "Atração não encontrada na base de dados."}
+        }
+    } else {
+        return {status: false, message: "Atrações não foram carregadas da base de dados." };
+    }
+
+    const queueStatus = attractionQueueStatus(id, attraction, userCode);
+
+    userQueues[userCode].push({ 
+        attractionId: id, 
+        queuePosition: queueStatus.peopleInQueue, 
+        estimatedTime: queueStatus.waitTime 
+    })
 
     return { status: true, response: queues[id].queue };
 };
@@ -43,9 +60,9 @@ export const attractionQueue = (attractionId) => {
     return { status: true, response: queues[attractionId] };
 };
 
-export const attractionQueueStatus = (attractionId, attraction) => {
+export const attractionQueueStatus = (attractionId, attraction, userStatus) => {
 
-    let currentExecutionTime = -1;
+    let currentExecutionTime = 0;
     const { executionTime, exitTime } = attraction;
 
     if (!attractionStates[attractionId]) {
@@ -75,15 +92,28 @@ export const attractionQueueStatus = (attractionId, attraction) => {
 
     let estimatedTime = -1;
     const { maximumCapacity } = attraction;
-    const cyclesNeeded = Math.floor(queueLength / maximumCapacity);
+    const totalExecutionTime = attractionStates[attractionId].initialTimer;
+    let cyclesNeeded = -1;
+
+    if(userStatus === "out"){
+        cyclesNeeded = Math.floor(queueLength / maximumCapacity);
+    } else {
+        const userIndex = queue.findIndex(user => user.code === userStatus);
+        if(userIndex === -1) return {status: "not_found", message: "Usuário não encontrado na fila."};
+
+        cyclesNeeded = Math.floor(userIndex / maximumCapacity);
+        queueLength = userIndex + 1;
+    }
 
     if (cyclesNeeded < 1) {
         if (boarding.status) {
             return { status: "boarding", peopleInQueue: queueLength, waitTime: 0, timeLeft: boarding.timeLeft };
         }
-        return { status: "operational", peopleInQueue: queueLength, waitTime: currentExecutionTime };
+        if(isAttractionOperant) return { status: "operational", peopleInQueue: queueLength, waitTime: currentExecutionTime };
+
+        return { status: "not_operational", peopleInQueue: queueLength, waitTime: 0 };
     } else {
-        estimatedTime = currentExecutionTime + (executionTime * cyclesNeeded);
+        estimatedTime = currentExecutionTime + (totalExecutionTime * cyclesNeeded);
         return { status: "long_queue", peopleInQueue: queueLength, waitTime: estimatedTime };
     }
 

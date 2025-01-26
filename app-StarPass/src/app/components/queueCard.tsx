@@ -13,8 +13,9 @@ interface QueueCardProps {
 
 export default function QueueCard({ number, id, title, queuePosition, estimatedTime }: QueueCardProps) {
   const { pin } = usePin();
+  const parsedEstimatedTime = Number(estimatedTime);
 
-  const handleDeleteQueue = (excludedId: any) => {
+  const handleDeleteQueue = () => {
     Alert.alert(
       "Sair da fila",
       "Tem certeza que deseja sair dessa fila?",
@@ -59,11 +60,13 @@ export default function QueueCard({ number, id, title, queuePosition, estimatedT
           </Text>
         </View>
         <View style={styles.leftInfos}>
-          <Text style={{ fontSize: 15 }}>{queuePosition} |</Text>
-          <Text style={{ fontSize: 15, color: 'red' }}>{estimatedTime}</Text>
+          <Text style={{ fontSize: 15 }}>{queuePosition}º |</Text>
+          <Text style={{ fontSize: 15, color: 'red' }}>
+            {`${Math.floor(parsedEstimatedTime / 60)}m ${parsedEstimatedTime % 60}s`}
+          </Text>
         </View>
       </View>
-      <TouchableOpacity onPress={() => handleDeleteQueue(id)}>
+      <TouchableOpacity onPress={() => handleDeleteQueue()}>
         <Ionicons name="trash-outline" size={23} color="black" style={{ marginLeft: 5 }} />
       </TouchableOpacity>
 
