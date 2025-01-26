@@ -4,7 +4,6 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useEffect, useState } from 'react';
 import TopBar from '../components/topBar';
 import QueueCard from '../components/queueCard';
-import queuesData from '../data/queues.json';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAttractions } from '../context/attractionsContext';

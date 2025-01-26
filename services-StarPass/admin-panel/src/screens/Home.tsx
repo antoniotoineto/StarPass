@@ -19,8 +19,8 @@ const AdminPanel: React.FC = () => {
                 <div style={styles.button} onClick={() => handleNavigation('/active-users')}>
                     Usuários ativos
                 </div>
-                <div style={styles.button} onClick={() => handleNavigation('/queues')}>
-                    Filas das atrações
+                <div style={styles.button} onClick={() => handleNavigation('/attractions')}>
+                    Atrações
                 </div>
             </div>
         </div>

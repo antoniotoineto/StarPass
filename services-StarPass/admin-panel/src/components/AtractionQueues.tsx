@@ -5,30 +5,34 @@ import axios from 'axios';
 const AttractionQueue: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [queue, setQueue] = useState<{ code: string; timestamp: string }[]>([]);
-  const [attractionName, setAttractionName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchQueue = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/consultar-fila/${id}`);
+        const response = await axios.get(`http://localhost:5000/filas/consultar-fila/${id}`);
         const attractionQueue = response.data.attractionQueue || {};
         setQueue(attractionQueue.queue || []);
-        setAttractionName(attractionQueue.atractionName || 'Brinquedo Desconhecido');
-      } catch (err) {
-        setError('Erro ao buscar fila para o brinquedo.');
+      } catch (err: any) {
+        if (err.response && err.response.data && err.response.data.message) {
+          setError(err.response.data.message);
+        } else {
+          setError("Atração ainda não possui fila ou está indisponível.")
+        }
       }
     };
 
     fetchQueue();
+
+    const intervalId = setInterval(fetchQueue, 5000);
+
+    return () => clearInterval(intervalId);
   }, [id]);
 
   return (
-    <div style={styles.container}>
       <div style={styles.card}>
-        <h1 style={styles.logo}>Logo</h1>
         <h2 style={styles.subtitle}>
-          Fila do Brinquedo: {attractionName || 'Carregando...'}
+          Fila
         </h2>
         {error ? (
           <p style={styles.error}>{error}</p>
@@ -47,19 +51,10 @@ const AttractionQueue: React.FC = () => {
           </ul>
         )}
       </div>
-    </div>
   );
 };
 
 const styles = {
-  container: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "85vh",
-    backgroundColor: "#e6e6e6",
-    padding: "40px",
-  },
   card: {
     display: "flex",
     flexDirection: "column" as "column",
@@ -67,14 +62,12 @@ const styles = {
     justifyContent: "center",
     gap: "20px",
     padding: "20px",
-    backgroundColor: "white",
+    backgroundColor: "#e3e3e3",
     borderRadius: 18,
     width: "80%",
     maxWidth: "500px",
-  },
-  logo: {
-    fontSize: "2rem",
-    fontWeight: "bold" as "bold",
+    height: "40vh"
+
   },
   subtitle: {
     fontSize: "1.2rem",
@@ -84,6 +77,7 @@ const styles = {
     color: "red",
     fontSize: "0.9rem",
     marginBottom: "10px",
+    textAlign: 'center' as 'center'
   },
   list: {
     width: "100%",

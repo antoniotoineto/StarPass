@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AiOutlineSelect } from 'react-icons/ai';
+import { IoMdArrowBack } from 'react-icons/io';
 
 const SelectGate: React.FC = () => {
     const [selectedGate, setSelectedGate] = useState<string>("0");
@@ -15,10 +16,17 @@ const SelectGate: React.FC = () => {
         }
     };
 
+    const handleBack = () => {
+        navigate(`/`);
+    }
+
     return (
         <div style={styles.container}>
             <div style={styles.card}>
-                <h1 style={styles.logo}>Logo</h1>
+                <div style={styles.topBar}>
+                    <IoMdArrowBack size={35} style={styles.backIcon} onClick={() => handleBack()} />
+                    <h1 style={styles.logo}>Logo</h1>
+                </div>
                 <h2 style={styles.subtitle}>
                     Selecione o guichê para mostrar as senhas de entrada
                 </h2>
@@ -50,6 +58,20 @@ const styles = {
         height: "85vh",
         backgroundColor: "#e6e6e6",
         padding: "40px",
+    },
+    topBar: {
+        display: "flex",
+        flexDirection: "row" as "row",
+        width: "100%",
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        position: "relative" as "relative",
+    },
+    backIcon: {
+        position: "absolute" as "absolute",
+        left: 20,
+        cursor: "pointer",
     },
     card: {
         display: "flex",

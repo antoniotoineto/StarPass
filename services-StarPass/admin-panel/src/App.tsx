@@ -4,8 +4,8 @@ import SelectGate from './screens/SelectGate';
 import GateCodes from './screens/GateCodes';
 import AdminPanel from './screens/Home';
 import ActiveUsers from './screens/ActiveUsers';
-import AttractionQueue from './screens/AtractionsQueues';
 import SelectAttraction from './screens/SelectAttraction';
+import AttractionStatus from './screens/AttractionStatus';
 
 const App: React.FC = () => {
     return (
@@ -15,8 +15,8 @@ const App: React.FC = () => {
                 <Route path="/codes" element={<SelectGate />} />
                 <Route path="/codes/:gate" element={<GateCodes />} />
                 <Route path="/active-users" element={<ActiveUsers />} />
-                <Route path="/queues" element={<SelectAttraction />} />
-                <Route path="/queues/:id" element={<AttractionQueue />} />
+                <Route path="/attractions" element={<SelectAttraction />} />
+                <Route path="/attractions/:id" element={<AttractionStatus />} />
 
 
             </Routes>

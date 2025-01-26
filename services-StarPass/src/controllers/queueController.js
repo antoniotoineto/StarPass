@@ -1,7 +1,7 @@
-import { 
-    processQueueEntry, 
-    attractionQueue, 
-    attractionQueueStatus, 
+import {
+    processQueueEntry,
+    attractionQueue,
+    attractionQueueStatus,
     exitQueue,
     allUserQueues
 } from "../services/queueService.js";
@@ -23,10 +23,15 @@ export const joinQueue = (req, res) => {
 
 export const getAttractionQueue = (req, res) => {
     const { attractionId } = req.params
+    let name = null
+    if (attractionsCache && attractionsCache.length > 0) {
+        const attraction = attractionsCache.find(attraction => attraction.id === attractionId);
+        if (attraction) name = attraction.name;
+    }
 
     const attrQueue = attractionQueue(attractionId);
 
-    if (!attrQueue.status) return res.status(400).json({ message: attrQueue.message })
+    if (!attrQueue.status) return res.status(400).json({ attractionName: name, message: attrQueue.message })
 
     return res.status(200).json({
         attractionQueue: attrQueue.response
@@ -35,16 +40,53 @@ export const getAttractionQueue = (req, res) => {
 };
 
 export const getAttractionQueueStatus = (req, res) => {
-    const { attractionId } = req.params
+    const { attractionId, userStatus } = req.params
 
-    const attrQueueStatus = attractionQueueStatus(attractionId, attractionsCache);
+    let attraction = null;
+    if (attractionsCache !== null) {
+        attraction = attractionsCache.find(attraction => attraction.id === attractionId)
+        if (!attraction) {
+            return res.status(404).json({ message: "Atração não encontrada." });
+        }
+    } else {
+        return res.status(404).json({ message: "Atrações não foram carregadas da base de dados." });
+    }
 
-    if(!attrQueueStatus.status) return res.status(404).json({ message: attrQueueStatus.message });
+    const attrQueueStatus = attractionQueueStatus(attractionId, attraction, userStatus);
 
-    return res.status(200).json({
-        queueLength: attrQueueStatus.peopleInQueue,
-        estimatedTime: attrQueueStatus.waitTime
-    });
+    switch (attrQueueStatus.status) {
+        case ("not_found"):
+            return res.status(404).json({ message: attrQueueStatus.message });
+
+        case ("boarding"):
+            return res.status(200).json({
+                queueLength: attrQueueStatus.peopleInQueue,
+                estimatedTime: attrQueueStatus.waitTime,
+                timeLeft: attrQueueStatus.timeLeft
+            });
+
+        case ("operational"):
+            console.log("Status da fila: ", attrQueueStatus.status);
+            return res.status(200).json({
+                queueLength: attrQueueStatus.peopleInQueue,
+                estimatedTime: attrQueueStatus.waitTime,
+            });
+        case ("not_operational"):
+            console.log("Status da fila: ", attrQueueStatus.status);
+            return res.status(200).json({
+                queueLength: attrQueueStatus.peopleInQueue,
+                estimatedTime: attrQueueStatus.waitTime,
+            });
+        case ("long_queue"):
+            console.log("Status da fila: ", attrQueueStatus.status);
+            return res.status(200).json({
+                queueLength: attrQueueStatus.peopleInQueue,
+                estimatedTime: attrQueueStatus.waitTime,
+            });
+        default:
+            return res.status(400).json({ message: "Erro inesperado. Tente novamente." });
+    }
+
 
 };
 
