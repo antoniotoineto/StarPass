@@ -1,7 +1,7 @@
-import { 
-    processQueueEntry, 
-    attractionQueue, 
-    attractionQueueStatus, 
+import {
+    processQueueEntry,
+    attractionQueue,
+    attractionQueueStatus,
     exitQueue,
     allUserQueues
 } from "../services/queueService.js";
@@ -24,9 +24,9 @@ export const joinQueue = (req, res) => {
 export const getAttractionQueue = (req, res) => {
     const { attractionId } = req.params
     let name = null
-    if(attractionsCache && attractionsCache.length > 0){
+    if (attractionsCache && attractionsCache.length > 0) {
         const attraction = attractionsCache.find(attraction => attraction.id === attractionId);
-        if(attraction) name = attraction.name;
+        if (attraction) name = attraction.name;
     }
 
     const attrQueue = attractionQueue(attractionId);
@@ -43,23 +43,35 @@ export const getAttractionQueueStatus = (req, res) => {
     const { attractionId } = req.params
 
     let attraction = null;
-    if(attractionsCache !== null){
+    if (attractionsCache !== null) {
         attraction = attractionsCache.find(attraction => attraction.id === attractionId)
         if (!attraction) {
-            return res.status(404).json({message: "Atração não encontrada."});
+            return res.status(404).json({ message: "Atração não encontrada." });
         }
     } else {
-        return res.status(404).json({message: "Atrações não foram carregadas da base de dados."});
+        return res.status(404).json({ message: "Atrações não foram carregadas da base de dados." });
     }
 
     const attrQueueStatus = attractionQueueStatus(attractionId, attraction);
 
-    if(!attrQueueStatus.status) return res.status(404).json({ message: attrQueueStatus.message });
+    switch(attrQueueStatus.status){
+        case("not_found"):
+            return res.status(404).json({ message: attrQueueStatus.message });
 
-    return res.status(200).json({
-        queueLength: attrQueueStatus.peopleInQueue,
-        estimatedTime: attrQueueStatus.waitTime
-    });
+        case("boarding"):
+            return res.status(200).json({
+                queueLength: attrQueueStatus.peopleInQueue,
+                estimatedTime: attrQueueStatus.waitTime,
+                timeLeft: attrQueueStatus.timeLeft
+            })
+        
+        case("operational" || "not_operational" || "long_queue"):
+        return res.status(200).json({
+            queueLength: attrQueueStatus.peopleInQueue,
+            estimatedTime: attrQueueStatus.waitTime,
+        })
+
+    }
 
 };
 

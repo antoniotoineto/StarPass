@@ -16,8 +16,9 @@ export const getAllAttractions = async (req, res) => {
             attractionsCache.forEach(attraction => {
                 attractionStates[attraction.id] = {
                     operant: false,
-                    timer: attraction.executionTime,
-                    initialTimer: attraction.executionTime
+                    timer: attraction.entryTime + attraction.executionTime + attraction.exitTime,
+                    initialTimer: attraction.entryTime + attraction.executionTime + attraction.exitTime,
+                    peopleOnboard: 0
                 };
             });
             console.log("Atrações e estados inicializados no cache.");

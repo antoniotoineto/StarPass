@@ -44,41 +44,59 @@ export const attractionQueue = (attractionId) => {
 };
 
 export const attractionQueueStatus = (attractionId, attraction) => {
-    
+
+    let currentExecutionTime = -1;
+    const { executionTime, exitTime } = attraction;
+
+    if (!attractionStates[attractionId]) {
+        return { status: "not_found", message: "Estados da atração não encontrados." }
+    }
+
+    const isAttractionOperant = attractionStates[attractionId].operant;
+    if (isAttractionOperant) {
+        currentExecutionTime = attractionStates[attractionId].timer;
+    }
+
+    const boarding = isBoardingInProgress(currentExecutionTime, executionTime, exitTime);
+
     const queue = queues[attractionId]?.queue;
     if (!queue) {
-        return { status: true, peopleInQueue: 0, waitTime: 0 }
+        if (boarding.status) {
+            return { status: "boarding", peopleInQueue: 0, waitTime: 0, timeLeft: boarding.timeLeft }
+        }
+
+        if (isAttractionOperant) return { status: "operational", peopleInQueue: 0, waitTime: currentExecutionTime }
+
+        return { status: "not_operational", peopleInQueue: 0, waitTime: 0 }
     }
 
     let queueLength = 0
     queueLength = queue.length;
 
-    // TEM QUE REFAZER TUDOOOOOO AAAAA
-    // let currentExecutionTime = 0;
-    // let currentOperationalTime = 0;
-    // let estimatedTime = -1;
+    let estimatedTime = -1;
+    const { maximumCapacity } = attraction;
+    const cyclesNeeded = Math.floor(queueLength / maximumCapacity);
 
-    // const { maximumCapacity, executionTime, entryTime, exitTime } = attraction;
-    // const operationalTime = entryTime + exitTime;
-    // const cyclesNeeded = Math.floor(queueLength / maximumCapacity);
+    if (cyclesNeeded < 1) {
+        if (boarding.status) {
+            return { status: "boarding", peopleInQueue: queueLength, waitTime: 0, timeLeft: boarding.timeLeft };
+        }
+        return { status: "operational", peopleInQueue: queueLength, waitTime: currentExecutionTime };
+    } else {
+        estimatedTime = currentExecutionTime + (executionTime * cyclesNeeded);
+        return { status: "long_queue", peopleInQueue: queueLength, waitTime: estimatedTime };
+    }
 
-    // if(!attractionStates[attractionId]) {
-    //     return {status: false, message: "Atração não encontrada na base de dados."}
-    // } else if(attractionStates[attractionId].operant){
-    //     currentExecutionTime = attractionStates[attractionId].timer;
-    //     currentOperationalTime = exitTime;
-    // }
+};
 
-    // if (cyclesNeeded < 1) {
-    //     estimatedTime = 0
-    // } else {
-    //     estimatedTime = 
-    //         (currentExecutionTime + currentOperationalTime) + 
-    //         (executionTime + operationalTime) * (cyclesNeeded-1);
-    // }
+const isBoardingInProgress = (timer, executionTime, exitTime) => {
+    if (timer < 0) return { status: false, message: "Atração em estado não-operante." };
 
-    return {status: true, peopleInQueue: queueLength, waitTime: estimatedTime}
+    if (timer > (executionTime + exitTime)) {
+        return { status: true, timeLeft: timer - (executionTime + exitTime)};
+    }
 
+    return { status: false, message: "Embarque encerrado." };
 };
 
 export const exitQueue = (userCode, attractionId) => {
@@ -105,5 +123,5 @@ export const exitQueue = (userCode, attractionId) => {
 
 export const allUserQueues = (userCode) => {
     const userQueuesData = userQueues[userCode] || [];
-    return {status: true, response: userQueuesData}
+    return { status: true, response: userQueuesData }
 };
