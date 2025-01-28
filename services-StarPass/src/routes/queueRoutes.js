@@ -4,7 +4,8 @@ import {
     getAttractionQueue,
     getAttractionQueueStatus,
     getUserQueues,
-    leaveQueue
+    leaveQueue,
+    joinAttraction
 } from "../controllers/queueController.js";
 
 const queueRoutes = express.Router();
@@ -14,5 +15,7 @@ queueRoutes.get("/consultar-fila/:attractionId", getAttractionQueue);
 queueRoutes.get("/status-fila-brinquedo/:attractionId/:userStatus", getAttractionQueueStatus);
 queueRoutes.get("/filas-usuario/:userCode", getUserQueues);
 queueRoutes.post("/sair-fila/:userCode/:attractionId", leaveQueue);
+queueRoutes.post("/entrar-brinquedo", joinAttraction);
+
 
 export default queueRoutes;

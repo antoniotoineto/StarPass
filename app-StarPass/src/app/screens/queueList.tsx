@@ -27,19 +27,22 @@ export default function QueueListScreen() {
     try {
       const response = await api.get(`/filas/filas-usuario/${pin}`);
       const queues = response.data.userQueues;
-      
-      const processedQueues = queues.map((queue: any) => {
-        const attraction = attractions.find((attr) => attr.id === queue.attractionId);
-        return {
-          id: queue.attractionId,
-          title: attraction?.name || 'Atração desconhecida',
-          queuePosition: queue.queuePosition,
-          estimatedTime: queue.estimatedTime,
-        };
-      });
-      setUserQueues(processedQueues);
 
-      setIsEmpty(processedQueues.length === 0);
+      if (queues) {
+        const processedQueues = queues.map((queue: any) => {
+          const attraction = attractions.find((attr) => attr.id === queue.attractionId);
+          return {
+            id: queue.attractionId,
+            title: attraction?.name || 'Atração desconhecida',
+            queuePosition: queue.queuePosition,
+            estimatedTime: queue.estimatedTime,
+          };
+        });
+        setUserQueues(processedQueues);
+        setIsEmpty(processedQueues.length === 0);
+      } else {
+        setIsEmpty(true);
+      }
 
     } catch (error: any) {
       console.error('Erro ao buscar atrações:', error.message);
@@ -65,7 +68,7 @@ export default function QueueListScreen() {
       </View>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.listContainer}>
-        {isEmpty ? (
+          {isEmpty ? (
             <Text style={styles.warningText}>Você não está em nenhuma fila no momento.</Text>
           ) : (
             userQueues.map((queue, key) => (
@@ -116,7 +119,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   warningText: {
-    fontSize: 18, 
+    fontSize: 18,
     color: '#f77474',
     textAlign: 'center'
   }

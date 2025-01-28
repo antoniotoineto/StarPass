@@ -83,7 +83,7 @@ const styles = {
         flexDirection: "row" as "row",
         alignItems: "center",
         justifyContent: "center",
-        gap: 100
+        gap: 100,
     },
     
 };

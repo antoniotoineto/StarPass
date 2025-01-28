@@ -13,6 +13,7 @@ const AttractionQueue: React.FC = () => {
         const response = await axios.get(`http://localhost:5000/filas/consultar-fila/${id}`);
         const attractionQueue = response.data.attractionQueue || {};
         setQueue(attractionQueue.queue || []);
+        setError(null);
       } catch (err: any) {
         if (err.response && err.response.data && err.response.data.message) {
           setError(err.response.data.message);
@@ -66,12 +67,11 @@ const styles = {
     borderRadius: 18,
     width: "80%",
     maxWidth: "500px",
-    height: "40vh"
-
   },
   subtitle: {
     fontSize: "1.2rem",
     textAlign: "center" as "center",
+   
   },
   error: {
     color: "red",
