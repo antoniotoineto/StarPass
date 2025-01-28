@@ -6,6 +6,9 @@ const AttractionState: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [state, setState] = useState<boolean | null>(null);
   const [timer, setTimer] = useState<number | null>(null);
+  const [inputValue, setInputValue] = useState("");
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
   const timerCache = useRef<number | null>(null);
   const isTimerEnded = useRef(false);
@@ -25,6 +28,17 @@ const AttractionState: React.FC = () => {
   useEffect(() => {
     fetchState();
   }, [id]);
+
+  const handleAdd = () => {
+    if (inputValue.trim() === "") {
+      setFeedbackMessage("O campo não pode estar vazio.");
+      setIsSuccess(false);
+    } else {
+      setFeedbackMessage("Adicionado com sucesso!");
+      setIsSuccess(true);
+    }
+    setInputValue("");
+  };
 
   const startTimer = () => {
     if (intervalRef.current) clearInterval(intervalRef.current);
@@ -63,6 +77,7 @@ const AttractionState: React.FC = () => {
         setState(response.data.state);
         setTimer(timerCache.current);
         startTimer();
+        setError(null);
       } catch (err) {
         console.error("Erro ao iniciar o brinquedo:", err);
         setError("Erro ao iniciar o brinquedo. Tente novamente.");
@@ -78,7 +93,7 @@ const AttractionState: React.FC = () => {
       {error ? (
         <p style={styles.error}>{error}</p>
       ) : (
-        <div>
+        <div style={styles.contentContainer}>
           <p style={styles.cardText}>
             Estado do brinquedo: <br />
             <b>{state === null ? "Carregando..." : state ? "Operante" : "Não operante"}</b>
@@ -91,6 +106,31 @@ const AttractionState: React.FC = () => {
                 : "Sem cronômetro disponível"}
             </p>
           </p>
+
+          <p style={styles.cardText}>Embarque:</p>
+          <div style={styles.inputContainer}>
+            <input
+              style={styles.input}
+              type="text"
+              placeholder="Insira o código do usuário"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+            />
+            <button style={styles.addButton} onClick={handleAdd}>
+              +
+            </button>
+          </div>
+
+          {feedbackMessage && (
+            <p
+              style={{
+                ...styles.feedback,
+                color: isSuccess ? "green" : "red",
+              }}
+            >
+              {feedbackMessage}
+            </p>
+          )}
 
           <div style={styles.buttonContainer}>
             <button
@@ -113,17 +153,20 @@ const AttractionState: React.FC = () => {
 
 const styles = {
   card: {
-    display: "flex",
     flexDirection: "column" as "column",
     alignItems: "center",
     justifyContent: "center",
-    gap: "15px",
     padding: "20px",
     backgroundColor: "#e3e3e3",
     borderRadius: 18,
     width: "80%",
     maxWidth: "500px",
-    height: "40vh"
+  },
+  contentContainer: {
+    flexDirection: "column" as "column",
+    alignItems: "center",
+    justifyContent: "center",
+
   },
   subtitle: {
     fontSize: "1.2rem",
@@ -143,6 +186,33 @@ const styles = {
     fontSize: "1.2rem",
     color: "#555",
     textAlign: "center" as "center",
+    marginTop: 1
+  },
+  inputContainer: {
+    display: "flex",
+    gap: "10px",
+    alignItems: "center",
+  },
+  input: {
+    padding: "8px",
+    fontSize: "0.8rem",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+    flex: 1,
+  },
+  addButton: {
+    padding: "8px 16px",
+    fontSize: "0.8rem",
+    backgroundColor: "#6f86e3",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+  },
+  feedback: {
+    fontSize: "0.9rem",
+    marginTop: "10px",
+    textAlign: "center" as "center",
   },
   button: {
     padding: "10px 20px",
@@ -150,12 +220,12 @@ const styles = {
     borderRadius: "5px",
     border: "none",
     color: "#fff",
-
   },
   buttonContainer: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    marginTop: "10%"
   }
 
 
