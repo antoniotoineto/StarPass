@@ -1,7 +1,7 @@
 import { attractionStates, attractionsCache } from "../controllers/attractionController.js";
 
-const queues = {};
-const userQueues = {};
+export const queues = {};
+export const userQueues = {};
 
 export const processQueueEntry = (id, userCode) => {
     if (!id || !userCode) {
@@ -48,7 +48,7 @@ export const processQueueEntry = (id, userCode) => {
         wave: queueStatus.wave !== -1 ? queueStatus.wave : -1,
     })
 
-    return { status: true, response: queues[id].queue };
+    return { status: true, message: "Usuário entrou na fila do brinquedo com sucesso!" };
 };
 
 export const attractionQueue = (attractionId) => {
@@ -75,7 +75,6 @@ export const attractionQueueStatus = (attractionId, attraction, userStatus) => {
     }
 
     const boarding = isBoardingInProgress(attractionId, currentExecutionTime, executionTime, exitTime, maximumCapacity);
-    console.log("BOARDING: ", boarding);
 
     const queue = queues[attractionId]?.queue;
     if (!queue) {
@@ -196,7 +195,6 @@ export const allUserQueues = (userCode) => {
     const userQueuesData = userQueues[userCode];
     return { status: true, response: userQueuesData };
 };
-
 
 export const enterAttraction = (attractionId, userCode) => {
     if (!queues[attractionId] || !queues[attractionId].queue) {

@@ -16,8 +16,7 @@ export const joinQueue = (req, res) => {
     if (!processEntry.status) return res.status(400).json({ message: processEntry.message });
 
     return res.status(200).json({
-        message: `Usuário ${userCode} entrou na fila do brinquedo com sucesso.`,
-        currentQueue: processEntry.response
+        message: `Usuário ${userCode} entrou na fila do brinquedo com sucesso.`
     });
 
 };
