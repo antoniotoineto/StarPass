@@ -159,7 +159,7 @@ export const checkFinishBoarding = (attractionId) => {
                 });
 
                 console.log(
-                    `${absentUsers} usuários foram removidos da fila da atração ${attractionId}.`
+                    `Usuários ausentes foram removidos da fila da atração ${attractionId}.`
                 );
 
                 clearInterval(monitoredAttractions[attractionId]);

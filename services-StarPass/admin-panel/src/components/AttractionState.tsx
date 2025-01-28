@@ -19,7 +19,7 @@ const AttractionState: React.FC = () => {
       const response = await axios.get(`http://localhost:5000/brinquedos/consultar-estado/${id}`);
       setState(response.data.state);
       setTimer(response.data.initialExecutionTime);
-      timerCache.current = response.data.initialExecutionTime; 
+      timerCache.current = response.data.initialExecutionTime;
     } catch (err: any) {
       setError("Atração ainda não possui fila ou está indisponível.");
     }
@@ -29,14 +29,35 @@ const AttractionState: React.FC = () => {
     fetchState();
   }, [id]);
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (inputValue.trim() === "") {
       setFeedbackMessage("O campo não pode estar vazio.");
       setIsSuccess(false);
-    } else {
-      setFeedbackMessage("Adicionado com sucesso!");
-      setIsSuccess(true);
+      return;
     }
+
+    try {
+      const response = await axios.post("http://localhost:5000/filas/entrar-brinquedo", {
+        attractionId: id,
+        userCode: inputValue,
+      });
+
+      if (response.status === 200) {
+        setFeedbackMessage("Usuário adicionado à fila com sucesso!");
+        setIsSuccess(true);
+      } else {
+        setIsSuccess(false);
+      }
+    } catch (error: any) {
+      console.error("Erro ao adicionar usuário à fila:", error);
+      if (error.response.data.message) {
+        setFeedbackMessage(error.response.data.message);
+      } else {
+        setFeedbackMessage("Falha ao adicionar usuário na fila.");
+      }
+      setIsSuccess(false);
+    }
+
     setInputValue("");
   };
 

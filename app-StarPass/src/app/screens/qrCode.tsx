@@ -16,21 +16,26 @@ export default function QrCodeScreen() {
       <View style={styles.titleContainer}>
         <Text style={styles.text}>QR Code</Text>
         <Link href="/screens/attractionsList" style={{ position: 'absolute', left: 15 }}>
-          <Ionicons name="arrow-back-outline" size={30} color="black"/>
+          <Ionicons name="arrow-back-outline" size={30} color="black" />
         </Link>
       </View>
 
-      <Text style={{fontSize: 25, textAlign: 'center'}}>Apresente na entrada para a diversão!</Text>
-      
+      <Text style={{ fontSize: 25, textAlign: 'center' }}>Apresente na entrada para a diversão!</Text>
+
       <View style={styles.qrCodeContainer}>
         {pin ? (
-          
-          <View style={styles.qrCode}>
-            <QRCode value={pin} size={250} />
-          </View>
+
+          <>
+            <View style={styles.qrCode}>
+              <QRCode value={pin} size={250} />
+            </View>
+
+            <Text style={styles.pinText}>{pin}</Text>
+          </>
+
         ) : (
           <View style={styles.qrCode}>
-            <Text style={{textAlign: 'center'}}>QR Code não disponível. Peça suporte à algum funcionário do parque.</Text>
+            <Text style={{ textAlign: 'center' }}>QR Code não disponível. Peça suporte à algum funcionário do parque.</Text>
           </View>
         )}
       </View>
@@ -57,7 +62,7 @@ const styles = StyleSheet.create({
     width: '100%',
     justifyContent: 'center',
   },
-  qrCodeContainer :{
+  qrCodeContainer: {
     width: '85%',
     height: 475,
     justifyContent: 'center',
@@ -71,5 +76,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
+  pinText: {
+    fontSize: 40,
+    backgroundColor: '#d1d1cf',
+    borderRadius: 15,
+    padding: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 30
+
+  }
 
 });
