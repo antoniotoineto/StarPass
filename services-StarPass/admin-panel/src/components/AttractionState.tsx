@@ -33,6 +33,12 @@ const AttractionState: React.FC = () => {
     if (inputValue.trim() === "") {
       setFeedbackMessage("O campo não pode estar vazio.");
       setIsSuccess(false);
+
+      setTimeout(() => {
+        setFeedbackMessage("");
+        setIsSuccess(null);
+      }, 7000);
+
       return;
     }
 
@@ -59,6 +65,11 @@ const AttractionState: React.FC = () => {
     }
 
     setInputValue("");
+
+    setTimeout(() => {
+      setFeedbackMessage("");
+      setIsSuccess(null);
+    }, 7000);
   };
 
   const startTimer = () => {

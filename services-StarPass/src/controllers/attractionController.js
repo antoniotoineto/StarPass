@@ -94,6 +94,7 @@ export const startAttractionTimer = (attractionId) => {
             clearInterval(attractionIntervals[attractionId]);
             attraction.operant = false;
             attraction.timer = attraction.initialTimer;
+            attractionStates[attractionId].peopleOnboard = 0;
             console.log(`Atração ${attractionId} finalizada.`);
         }
     }, 1000);
