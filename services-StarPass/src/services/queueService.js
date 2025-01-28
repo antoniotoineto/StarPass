@@ -3,14 +3,13 @@ import { attractionStates, attractionsCache } from "../controllers/attractionCon
 const queues = {};
 const userQueues = {};
 
-export const processQueueEntry = (id, attractionName, userCode) => {
-    if (!id || !attractionName || !userCode) {
-        return { status: false, message: "Os campos 'id', 'attractionName' e 'userCode' são obrigatórios." };
+export const processQueueEntry = (id, userCode) => {
+    if (!id || !userCode) {
+        return { status: false, message: "Os campos 'id', e 'userCode' são obrigatórios." };
     }
 
     if (!queues[id]) {
         queues[id] = {
-            attractionName,
             queue: []
         };
     }
@@ -154,4 +153,31 @@ export const exitQueue = (userCode, attractionId) => {
 export const allUserQueues = (userCode) => {
     const userQueuesData = userQueues[userCode] || [];
     return { status: true, response: userQueuesData }
+};
+
+export const enterAttraction = (attractionId, userCode) => {
+  if (!queues[attractionId] || !queues[attractionId].queue) {
+    return { status: false, message: "Brinquedo não encontrado ou sem fila ativa." };
+  }
+
+  const userInQueue = queues[attractionId].queue.find((entry) => entry.code === userCode);
+  if (!userInQueue) {
+    return { status: false, message: "Usuário não está na fila deste brinquedo." };
+  }
+
+  if (!userQueues[userCode] || !userQueues[userCode].some((entry) => entry.attractionId === attractionId)) {
+    return { status: false, message: "O brinquedo não está entre as filas do usuário." };
+  }
+
+  queues[attractionId].queue = queues[attractionId].queue.filter((entry) => entry.code !== userCode);
+
+  userQueues[userCode] = userQueues[userCode].filter((entry) => entry.attractionId !== attractionId);
+
+  if (!attractionStates[attractionId]) {
+    return { status: false, message: "Estado do brinquedo não encontrado." };
+  }
+
+  attractionStates[attractionId].peopleOnboard += 1;
+
+  return { status: true, message: "Usuário entrou no brinquedo com sucesso." };
 };

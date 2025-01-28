@@ -3,19 +3,20 @@ import {
     attractionQueue,
     attractionQueueStatus,
     exitQueue,
-    allUserQueues
+    allUserQueues,
+    enterAttraction
 } from "../services/queueService.js";
 import { attractionsCache } from "./attractionController.js";
 
 export const joinQueue = (req, res) => {
-    const { id, attractionName, userCode } = req.body;
+    const { id, userCode } = req.body;
 
-    const processEntry = processQueueEntry(id, attractionName, userCode);
+    const processEntry = processQueueEntry(id, userCode);
 
     if (!processEntry.status) return res.status(400).json({ message: processEntry.message });
 
     return res.status(200).json({
-        message: `Usuário ${userCode} entrou na fila do brinquedo '${attractionName}' com sucesso.`,
+        message: `Usuário ${userCode} entrou na fila do brinquedo com sucesso.`,
         currentQueue: processEntry.response
     });
 
@@ -112,4 +113,14 @@ export const leaveQueue = (req, res) => {
         userQueues: exit.response,
     });
 
+};
+
+export const joinAttraction = (req, res) => {
+    const { attractionId, userCode } = req.body;
+
+    const joinAttraction = enterAttraction(attractionId, userCode);
+
+    if(!joinAttraction.status) return res.status(400).json({ message: joinAttraction.message });
+
+    return res.status(200).json({ message: joinAttraction.message });
 };
