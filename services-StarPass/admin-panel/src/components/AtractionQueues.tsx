@@ -67,12 +67,11 @@ const styles = {
     borderRadius: 18,
     width: "80%",
     maxWidth: "500px",
-    height: "40vh"
-
   },
   subtitle: {
     fontSize: "1.2rem",
     textAlign: "center" as "center",
+   
   },
   error: {
     color: "red",

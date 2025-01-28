@@ -17,9 +17,14 @@ const AttractionState: React.FC = () => {
   const fetchState = async () => {
     try {
       const response = await axios.get(`http://localhost:5000/brinquedos/consultar-estado/${id}`);
-      setState(response.data.state);
-      setTimer(response.data.initialExecutionTime);
-      timerCache.current = response.data.initialExecutionTime;
+      const { state: attractionState, currentExecutionTime, initialExecutionTime } = response.data;
+      setState(attractionState);
+      setTimer(currentExecutionTime);
+      timerCache.current = initialExecutionTime;
+
+      if (attractionState && currentExecutionTime > 0) {
+        startTimer(currentExecutionTime);
+      }
     } catch (err: any) {
       setError("Atração ainda não possui fila ou está indisponível.");
     }
@@ -72,8 +77,10 @@ const AttractionState: React.FC = () => {
     }, 7000);
   };
 
-  const startTimer = () => {
+  const startTimer = (startValue?: number) => {
     if (intervalRef.current) clearInterval(intervalRef.current);
+    setTimer((prev) => startValue ?? prev);
+    
     intervalRef.current = setInterval(() => {
       setTimer((prev) => {
         if (prev !== null && prev > 0) {
