@@ -6,48 +6,10 @@ import TopBar from '../components/topBar';
 import QueueCard from '../components/queueCard';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAttractions } from '../context/attractionsContext';
-import api from '../data/api';
-import { usePin } from '../context/pinCodeContext';
-
-interface Queue {
-  id: string;
-  title: string;
-  queuePosition: string;
-  estimatedTime: string;
-}
+import { useUserQueues } from '../hooks/fetchUserQueues';
 
 export default function QueueListScreen() {
-  const { attractions } = useAttractions();
-  const { pin } = usePin();
-  const [userQueues, setUserQueues] = useState<Queue[]>([]);
-  const [isEmpty, setIsEmpty] = useState(false)
-
-  const fetchQueues = async () => {
-    try {
-      const response = await api.get(`/filas/filas-usuario/${pin}`);
-      const queues = response.data.userQueues;
-
-      if (queues) {
-        const processedQueues = queues.map((queue: any) => {
-          const attraction = attractions.find((attr) => attr.id === queue.attractionId);
-          return {
-            id: queue.attractionId,
-            title: attraction?.name || 'Atração desconhecida',
-            queuePosition: queue.queuePosition,
-            estimatedTime: queue.estimatedTime,
-          };
-        });
-        setUserQueues(processedQueues);
-        setIsEmpty(processedQueues.length === 0);
-      } else {
-        setIsEmpty(true);
-      }
-
-    } catch (error: any) {
-      console.error('Erro ao buscar atrações:', error.message);
-    }
-  };
+  const { userQueues, isEmpty, fetchQueues } = useUserQueues();
 
   useEffect(() => {
     fetchQueues();
@@ -79,6 +41,7 @@ export default function QueueListScreen() {
                 title={queue.title}
                 queuePosition={queue.queuePosition}
                 estimatedTime={queue.estimatedTime}
+                wave={queue.wave}
               />
             ))
           )}

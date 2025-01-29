@@ -65,7 +65,7 @@ const styles = {
     padding: "20px",
     backgroundColor: "#e3e3e3",
     borderRadius: 18,
-    width: "80%",
+    width: "90%",
     maxWidth: "500px",
   },
   subtitle: {

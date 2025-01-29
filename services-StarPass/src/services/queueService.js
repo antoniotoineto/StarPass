@@ -124,7 +124,7 @@ export const attractionQueueStatus = (attractionId, attraction, userStatus) => {
 const isBoardingInProgress = (attractionId, timer, executionTime, exitTime, maximumCapacity) => {
     if (timer < 0) return { status: false, message: "Atração em estado não-operante." };
 
-    if(attractionStates[attractionId].peopleOnboard >= maximumCapacity) return { status: false, message: "Atração em capacidade máxima." };
+    if (attractionStates[attractionId].peopleOnboard >= maximumCapacity) return { status: false, message: "Atração em capacidade máxima." };
 
     if (timer > (executionTime + exitTime)) {
         return { status: true, timeLeft: timer - (executionTime + exitTime) };
@@ -169,7 +169,7 @@ export const allUserQueues = (userCode) => {
 
             if (!attraction) {
                 console.warn(`Atração com ID ${attractionId} não encontrada no cache.`);
-                return; 
+                return;
             }
         } else {
             return { status: false, message: "Atrações não foram carregadas da base de dados." };
@@ -179,7 +179,7 @@ export const allUserQueues = (userCode) => {
 
         if (queueStatus) {
             userQueues[userCode][index] = {
-                ...entry, 
+                ...entry,
                 queuePosition: queueStatus.peopleInQueue,
                 estimatedTime: queueStatus.waitTime,
                 wave: queueStatus.wave !== -1 ? queueStatus.wave : -1,
@@ -199,21 +199,6 @@ export const allUserQueues = (userCode) => {
 export const enterAttraction = (attractionId, userCode) => {
     if (!queues[attractionId] || !queues[attractionId].queue) {
         return { status: false, message: "Brinquedo não encontrado ou sem fila ativa." };
-    }
-
-    const userInQueue = queues[attractionId].queue.find((entry) => entry.code === userCode);
-    if (!userInQueue) {
-        return { status: false, message: "Usuário não está na fila deste brinquedo." };
-    }
-
-    const userAttractionData = userQueues[userCode]?.find((entry) => entry.attractionId === attractionId);
-
-    if (!userAttractionData) {
-        return { status: false, message: "O brinquedo não está entre as filas do usuário." };
-    }
-
-    if (userAttractionData.wave !== 1) {
-        return { status: false, message: "Ainda não está na vez desse usuário." };
     }
 
     let attraction = null;
@@ -238,8 +223,24 @@ export const enterAttraction = (attractionId, userCode) => {
         if (timer < preBoardingTime) return { status: false, message: "Embarque finalizado." };
     }
 
-    if(attractionStates[attractionId].peopleOnboard >= attraction.maximumCapacity){
+    if (attractionStates[attractionId].peopleOnboard >= attraction.maximumCapacity) {
         return { status: false, message: "Brinquedo atingiu capacidade máxima." };
+    }
+
+    const userInQueue = queues[attractionId].queue.find((entry) => entry.code === userCode);
+
+    if (!userInQueue) {
+        return { status: false, message: "Usuário não está na fila deste brinquedo." };
+    }
+
+    const userAttractionData = userQueues[userCode]?.find((entry) => entry.attractionId === attractionId);
+
+    if (!userAttractionData) {
+        return { status: false, message: "O brinquedo não está entre as filas do usuário." };
+    }
+
+    if (userAttractionData.wave !== 1) {
+        return { status: false, message: "Ainda não está na vez desse usuário." };
     }
 
     queues[attractionId].queue = queues[attractionId].queue.filter((entry) => entry.code !== userCode);
