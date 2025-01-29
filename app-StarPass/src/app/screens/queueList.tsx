@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
   listContainer: {
     width: '100%',
     alignItems: 'flex-start',
-    height: 360
+    minHeight: 360
   },
   titleContainer: {
     flexDirection: 'row',
