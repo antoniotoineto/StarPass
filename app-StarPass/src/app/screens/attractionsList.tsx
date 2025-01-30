@@ -6,25 +6,11 @@ import { usePin } from '../context/pinCodeContext';
 import { useAttractions } from '../context/attractionsContext';
 import { useRouter } from 'expo-router';
 import api from '../data/api';
-import { useEffect } from 'react';
 
 export default function AttractionsList() {
   const { pin } = usePin();
   const router = useRouter();
   const { attractions } = useAttractions();
-
-  // useEffect(() => {
-  //const fetchAttractions = async () => {
-  //  try {
-  //     const response = await api.get('brinquedos/lista-brinquedos');
-  //   } catch (error: any) {
-  //     console.error('Erro ao buscar atrações:', error.message);
-  //    }
-  //  };
-
-  //   fetchAttractions();
-  //}, []);
-
 
   const handleExit = async () => {
     Alert.alert(
@@ -50,6 +36,7 @@ export default function AttractionsList() {
               } else {
                 console.error('Erro inesperado:', error.message);
               }
+              router.push("/");
             }
           },
         },
