@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Entypo from '@expo/vector-icons/Entypo';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -50,11 +50,9 @@ export default function GetEntryCode() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.logoText}>Logo</Text>
+      <Image source={require('../../assets/logo_StarPass_nome.png')} style={styles.image} />
 
       <Text style={styles.infoText}>Você precisará de uma senha de entrada.</Text>
-
-      <Entypo name="login" size={50} color="black" />
 
       <View style={styles.pickerContainer}>
         <Text style={styles.pickerTitle}>Selecione o Guichê</Text>
@@ -102,9 +100,9 @@ const styles = StyleSheet.create({
     padding: 50,
     backgroundColor: '#fff',
   },
-  logoText: {
-    fontSize: 50,
-    fontWeight: 'bold',
+  image: {
+    width: 300,
+    height: 180,
   },
   infoText: {
     fontSize: 25,
@@ -127,13 +125,14 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: 300,
-    backgroundColor: '#b0b0b0',
+    backgroundColor: '#2cc4f6',
     alignItems: 'center',
     padding: 15,
     borderRadius: 15
   },
   buttonText: {
-    fontSize: 25
+    fontSize: 25,
+    color: 'white'
   },
   help: {
     flexDirection: 'row',
