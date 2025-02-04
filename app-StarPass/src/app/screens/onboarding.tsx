@@ -1,6 +1,6 @@
 import { Link } from 'expo-router';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Image } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useRouter } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -45,7 +45,8 @@ export default function OnboardingScreen() {
                 <Link href="/" style={{ position: 'absolute', left: 10 }}>
                     <Ionicons name="arrow-back-outline" size={30} color="black" />
                 </Link>
-                <Text style={styles.text}>Logo</Text>
+                <Image source={require('../../assets/logo_StarPass.png')} style={styles.image} />
+
             </View>
             <View style={styles.infoContainer}>
                 <View style={{ flex: 1, width: '100%' }}>
@@ -63,7 +64,7 @@ export default function OnboardingScreen() {
                                         <Text style={{ fontSize: 30, fontWeight: 'bold', paddingRight: 10 }}>{step.id}</Text>
                                         <Text style={styles.stepText}>{step.content}</Text>
                                     </View>
-                                    <MaterialIcons name={step.icon} size={35} color="black" style={{marginTop: 5}} />
+                                    <MaterialIcons name={step.icon} size={35} color="black" style={{ marginTop: 5 }} />
                                 </View>
                             }
                         </Animated.View>
@@ -77,7 +78,7 @@ export default function OnboardingScreen() {
                     </TouchableOpacity>
                 </Link>
                 <TouchableOpacity
-                    style={[styles.nextButton, { backgroundColor: currentStep === steps.length ? '#7deb6e' : '#b0b0b0' }]}
+                    style={[styles.nextButton, { backgroundColor: currentStep === steps.length ? '#90e66e' : '#2cc4f6' }]}
                     onPress={handleNextStep}
                 >
                     <Text style={[{ fontSize: 25, }]}>
@@ -105,8 +106,10 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
     },
-    text: {
-        fontSize: 60,
+    image: {
+        width: 250,
+        height: 90,
+        marginRight: 15,
     },
     infoContainer: {
         width: '100%',
@@ -130,7 +133,7 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         color: '#333',
         textAlign: 'left',
-        backgroundColor: '#e3e3e3',
+        backgroundColor: '#f2efaa',
         padding: 10,
         borderRadius: 8,
         width: '100%'
@@ -147,7 +150,7 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     nextButton: {
-        backgroundColor: '#b0b0b0',
+        backgroundColor: '#2cc4f6',
         padding: 10,
         borderRadius: 10
     }
