@@ -78,13 +78,12 @@ const styles = StyleSheet.create({
   },
   pinText: {
     fontSize: 40,
-    backgroundColor: '#d1d1cf',
+    backgroundColor: '#fbc412',
     borderRadius: 15,
     padding: 15,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 30
-
   }
 
 });

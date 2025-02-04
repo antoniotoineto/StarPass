@@ -19,7 +19,7 @@ const AttractionStatus: React.FC = () => {
             <div style={styles.card}>
                 <div style={styles.topBar}>
                     <IoMdArrowBack size={35} style={styles.icon} onClick={() => handleBack()} />
-                    <h1 style={styles.logo}>Logo</h1>
+                    <img src='/logo_StarPass.png' style={styles.image}/>
                 </div>
                 <h1 style={styles.title}>Consulta de Atração</h1>
                 <h3 style={styles.subtitle}>{name}</h3>
@@ -64,9 +64,10 @@ const styles = {
         left: 20,
         cursor: "pointer",
     },
-    logo: {
-        fontSize: "2rem",
-        fontWeight: "bold" as "bold",
+    image: {
+        width: 250,
+        height: 70,
+        marginRight: 15
     },
     title: {
         fontSize: "1.6rem",

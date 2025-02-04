@@ -44,7 +44,7 @@ const SelectAttraction: React.FC = () => {
       <div style={styles.card}>
         <div style={styles.topBar}>
           <IoMdArrowBack size={35} style={styles.icon} onClick={() => handleBack()} />
-          <h1 style={styles.logo}>Logo</h1>
+          <img src='/logo_StarPass.png' style={styles.image}/>
         </div>
         <h2 style={styles.subtitle}>Selecione uma Atração</h2>
         {attractions && attractions.length > 0 ? (
@@ -109,11 +109,11 @@ const styles = {
     backgroundColor: "white",
     borderRadius: 18,
   },
-  logo: {
-    fontSize: "2rem",
-    fontWeight: "bold" as "bold",
-    marginBottom: "12%"
-  },
+  image: {
+    width: 250,
+    height: 70,
+    marginRight: 15
+},
   subtitle: {
     fontSize: "1.2rem",
     textAlign: "center" as "center",

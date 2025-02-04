@@ -9,11 +9,10 @@ interface AttractionCardProps {
     description: string;
     minimumHeight: string;
     averageTime: number;
-    location: string;
     carouselImages: string[];
   }
 
-export default function AttractionCard({ id, image, title, subtitle, description, minimumHeight, averageTime, location, carouselImages }: AttractionCardProps) {
+export default function AttractionCard({ id, image, title, subtitle, description, minimumHeight, averageTime, carouselImages }: AttractionCardProps) {
   return (
     <Link href={{
       pathname: '/screens/attractionDetails',
@@ -24,7 +23,6 @@ export default function AttractionCard({ id, image, title, subtitle, description
         description,
         minimumHeight,
         averageTime,
-        location,
         carouselImages: JSON.stringify(carouselImages)
       }
       }} asChild>
@@ -53,7 +51,7 @@ const styles = StyleSheet.create({
   attractionCard: {
     width: '100%',
     height: 150,
-    backgroundColor: '#dcdcdc',
+    backgroundColor: '#e4e4e4',
     flexDirection: 'row',
     alignItems: 'center',
     padding: 13,

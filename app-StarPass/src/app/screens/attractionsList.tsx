@@ -62,7 +62,6 @@ export default function AttractionsList() {
                 description={attraction.description}
                 minimumHeight={attraction.minimumHeight}
                 averageTime={attraction.executionTime}
-                location={attraction.location}
                 carouselImages={attraction.images}
               />
             ))
@@ -112,15 +111,16 @@ const styles = StyleSheet.create({
   exitButton: {
     padding: 10,
     borderRadius: 10,
-    backgroundColor: 'red'
+    backgroundColor: '#f35d26'
   },
   queueButton: {
     padding: 10,
     borderRadius: 10,
-    backgroundColor: '#bdbdbd'
+    backgroundColor: '#2cc4f6'
   },
   bottomButtonText: {
     fontSize: 15,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    color: 'white'
   }
 });

@@ -43,7 +43,7 @@ const GateCodes: React.FC = () => {
             <div style={styles.card} >
                 <div style={styles.topBar}>
                     <IoMdArrowBack size={35} style={styles.icon} onClick={() => handleBack()} />
-                    <h1 style={styles.logo}>Logo</h1>
+                    <img src='/logo_StarPass.png' style={styles.image}/>
                 </div>
                 <h1>Guichê {gate}</h1>
                 {error && <p style={{ color: "red" }}>{error}</p>}
@@ -101,9 +101,10 @@ const styles = {
         width: "40%",
         minWidth: "250px"
     },
-    logo: {
-        fontSize: "2rem",
-        fontWeight: "bold" as "bold",
+    image: {
+        width: 250,
+        height: 70,
+        marginRight: 15
     },
     scrollContainer: {
         width: "100%",

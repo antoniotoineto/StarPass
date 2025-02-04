@@ -11,7 +11,7 @@ import LottieView from 'lottie-react-native';
 
 export default function AttractionDetailsScreen() {
 
-  const { id, title, subtitle, description, minimumHeight, averageTime, location, carouselImages } = useLocalSearchParams();
+  const { id, title, subtitle, description, minimumHeight, averageTime, carouselImages } = useLocalSearchParams();
   const parsedAverageTime = Number(averageTime);
   const { pin } = usePin()
   const router = useRouter();
@@ -21,7 +21,6 @@ export default function AttractionDetailsScreen() {
   const [queueData, setQueueData] = useState({ people: -1, waitTime: -1 });
   const [instantBoarding, setInstantBoarding] = useState(false);
   const [currentTimer, setCurrentTimer] = useState<number | null>(null);
-  const locationString = String(location);
   const parsedImages = carouselImages ? JSON.parse(carouselImages as string) : [];
   const iconName = subtitle === 'Insano' ? 'flash' :
     subtitle === 'Relaxante' ? 'cafe' :
@@ -139,7 +138,7 @@ export default function AttractionDetailsScreen() {
           <View style={{ marginTop: 35 }}>
             <Text style={{ fontSize: 30 }}>Localização</Text>
             <View style={styles.locContainer}>
-              <Image source={{ uri: locationString }} style={styles.image} />
+              <Image source={require('../../assets/location.png')} style={styles.image} />
             </View>
           </View>
 
