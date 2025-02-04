@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import { Link } from 'expo-router';
 import LottieView from 'lottie-react-native';
 
@@ -7,7 +7,8 @@ import LottieView from 'lottie-react-native';
 export default function Home() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Logo</Text>
+      <Image source={require('../assets/logo_StarPass_nome.png')} style={styles.image} />
+
       <View style={styles.infoContainer}>
         <Text style={{ fontSize: 28, textAlign: 'center' }}>
           Sua diversão garantida em apenas
@@ -38,10 +39,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 40
   },
-  text: {
-    fontSize: 60,
+  image: {
+    width: 350,
+    height: 250,
+    marginRight: 15
   },
   infoContainer: {
     width: '80%',
@@ -54,7 +56,7 @@ const styles = StyleSheet.create({
     height: 300,
   },
   startButton: {
-    backgroundColor: '#b0b0b0',
+    backgroundColor: '#2cc4f6',
     padding: 20,
     borderRadius: 15,
     width: '80%',
@@ -62,5 +64,6 @@ const styles = StyleSheet.create({
   },
   button: {
     fontSize: 40,
+    color: 'white'
   }
 });
