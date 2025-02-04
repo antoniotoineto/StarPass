@@ -46,7 +46,6 @@ export default function OnboardingScreen() {
                     <Ionicons name="arrow-back-outline" size={30} color="black" />
                 </Link>
                 <Image source={require('../../assets/logo_StarPass.png')} style={styles.image} />
-
             </View>
             <View style={styles.infoContainer}>
                 <View style={{ flex: 1, width: '100%' }}>

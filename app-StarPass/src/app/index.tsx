@@ -59,11 +59,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#2cc4f6',
     padding: 20,
     borderRadius: 15,
-    width: '80%',
+    width: '60%',
     alignItems: 'center'
   },
   button: {
-    fontSize: 40,
+    fontSize: 30,
     color: 'white'
   }
 });

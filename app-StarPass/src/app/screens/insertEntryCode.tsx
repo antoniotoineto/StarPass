@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { 
-        View, 
-        Text, 
-        StyleSheet, 
-        TouchableOpacity, 
-        TextInput, 
-        KeyboardAvoidingView, 
-        ScrollView,
-        Modal
-      } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  KeyboardAvoidingView,
+  ScrollView,
+  Modal,
+  Image
+} from 'react-native';
 import LottieView from 'lottie-react-native';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Link } from 'expo-router';
 import { usePin } from '../context/pinCodeContext';
@@ -53,14 +53,14 @@ export default function GetEntryCode() {
 
         }
 
-        
+
       } catch (error: any) {
 
         if (error.response) {
           console.error('Erro no servidor:', error.response.data);
           if (error.response.status === 400 || error.response.status === 401) {
             setModalType("fail");
-      
+
             setTimeout(() => {
               setModalType(null);
             }, 2500);
@@ -68,7 +68,7 @@ export default function GetEntryCode() {
           console.log("Erro: ", error.response.status)
         } else {
           console.error('Erro inesperado:', error.message);
-        }  
+        }
       }
     }
 
@@ -84,14 +84,12 @@ export default function GetEntryCode() {
           <Link href="/screens/getEntryCode" style={{ position: 'absolute', left: 0 }}>
             <Ionicons name="arrow-back-outline" size={30} color="black" />
           </Link>
-          <Text style={styles.logoText}>Logo</Text>
+          <Image source={require('../../assets/logo_StarPass_nome.png')} style={styles.image} />
         </View>
 
         <Text style={styles.infoText}>
-          Insira a senha apresentada no <Text style={{fontWeight: 'bold'}}>guichê {gate}</Text>.
-          </Text>
-
-        <AntDesign name="checksquare" size={50} color="black" />
+          Insira a senha apresentada no <Text style={{ fontWeight: 'bold' }}>guichê {gate}</Text>.
+        </Text>
 
         <Modal
           transparent={true}
@@ -107,7 +105,7 @@ export default function GetEntryCode() {
                     ? require("../../assets/Check.json")
                     : require("../../assets/Fail.json")
                 }
-                speed={modalType==="fail" ? 0.7 : 1}
+                speed={modalType === "fail" ? 0.7 : 1}
                 autoPlay
                 loop
                 style={styles.animation}
@@ -160,9 +158,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
   },
-  logoText: {
-    fontSize: 50,
-    fontWeight: 'bold',
+  image: {
+    width: 300,
+    height: 180,
   },
   infoText: {
     fontSize: 25,
@@ -184,14 +182,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   buttonContainer: {
-    width: 300,
-    backgroundColor: '#b0b0b0',
+    width: 250,
+    backgroundColor: '#2cc4f6',
     alignItems: 'center',
     padding: 15,
-    borderRadius: 15
+    borderRadius: 15,
   },
   buttonText: {
-    fontSize: 25
+    fontSize: 25,
+    color: 'white'
   },
   passwordInput: {
     width: 300,
