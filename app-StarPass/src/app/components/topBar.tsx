@@ -1,12 +1,12 @@
 import { Link } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 export default function TopBar() {
   return (
     <View style={styles.topBar}>
-        <Text style={{fontSize:45, fontWeight: 'bold'}}>Logo</Text>
+        <Image source={require('../../assets/logo_StarPass.png')} style={styles.image} />
         <Link href={'/screens/qrCode'} style={{}}>
             <Ionicons name="qr-code-sharp" size={30} color="black"/>
         </Link>
@@ -22,4 +22,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 50,
     justifyContent: 'space-between',
   }, 
+  image: {
+    width: 140,
+    height: 60,
+  },
 });
