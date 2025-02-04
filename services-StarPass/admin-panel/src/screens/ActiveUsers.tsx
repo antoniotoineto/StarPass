@@ -36,7 +36,7 @@ const ActiveUsers: React.FC = () => {
       <div style={styles.card}>
         <div style={styles.topBar}>
           <IoMdArrowBack size={35} style={styles.icon} onClick={() => handleBack()} />
-          <h1 style={styles.logo}>Logo</h1>
+          <img src='/logo_StarPass.png' style={styles.image}/>
         </div>
         <h2 style={styles.subtitle}>Usuários Ativos</h2>
         {error && <p style={styles.error}>{error}</p>}
@@ -87,10 +87,11 @@ const styles = {
     width: "80%",
     maxWidth: "500px",
   },
-  logo: {
-    fontSize: "2rem",
-    fontWeight: "bold" as "bold",
-  },
+  image: {
+    width: 250,
+    height: 70,
+    marginRight: 15
+},
   subtitle: {
     fontSize: "1.2rem",
     textAlign: "center" as "center",

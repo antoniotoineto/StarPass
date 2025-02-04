@@ -11,7 +11,7 @@ const AdminPanel: React.FC = () => {
     return (
         <div style={styles.container}>
             <div style={styles.card}>
-                <h1 style={styles.logo}>Logo</h1>
+                <img src='/logo_StarPass_nome.png' style={styles.image}/>
                 <h2 style={styles.subtitle}>Telas Administrativas - Star Pass</h2>
                 <div style={styles.button} onClick={() => handleNavigation('/codes')}>
                     Códigos de entrada
@@ -46,9 +46,10 @@ const styles = {
         backgroundColor: "white",
         borderRadius: 18,
     },
-    logo: {
-        fontSize: "2rem",
-        fontWeight: "bold" as "bold",
+    image: {
+        width: 350,
+        height: 150,
+        marginRight: 15
     },
     subtitle: {
         fontSize: "1.2rem",
