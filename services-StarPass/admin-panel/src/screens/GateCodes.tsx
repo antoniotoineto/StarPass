@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import { IoMdArrowBack } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 
@@ -19,7 +19,7 @@ const GateCodes: React.FC = () => {
     useEffect(() => {
         const fetchCodes = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/guiche/codigos-guiche/${gate}`);
+                const response = await api.get(`/guiche/codigos-guiche/${gate}`);
                 if (response.data && Array.isArray(response.data.codes)) {
                     setCodes(response.data.codes);
                 } else {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 import { IoMdArrowBack } from 'react-icons/io';
 
 const SelectAttraction: React.FC = () => {
@@ -12,7 +12,7 @@ const SelectAttraction: React.FC = () => {
   useEffect(() => {
     const fetchAttractions = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/brinquedos/lista-brinquedos');
+        const response = await api.get('/brinquedos/lista-brinquedos');
         setAttractions(response.data);
       } catch (err) {
         console.error('Erro ao buscar atrações:', err);

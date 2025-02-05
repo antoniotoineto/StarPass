@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 import { IoMdArrowBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,7 +16,7 @@ const ActiveUsers: React.FC = () => {
   useEffect(() => {
     const fetchCodes = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/usuarios/usuarios-ativos');
+        const response = await api.get('/usuarios/usuarios-ativos');
         setCodes(response.data.currentActiveUsers);
         setError('');
       } catch (err) {

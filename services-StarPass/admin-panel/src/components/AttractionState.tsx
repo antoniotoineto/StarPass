@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 
 const AttractionState: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,7 +16,7 @@ const AttractionState: React.FC = () => {
 
   const fetchState = async () => {
     try {
-      const response = await axios.get(`http://localhost:5000/brinquedos/consultar-estado/${id}`);
+      const response = await api.get(`/brinquedos/consultar-estado/${id}`);
       const { state: attractionState, currentExecutionTime, initialExecutionTime } = response.data;
       setState(attractionState);
       setTimer(currentExecutionTime);
@@ -48,7 +48,7 @@ const AttractionState: React.FC = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/filas/entrar-brinquedo", {
+      const response = await api.post("/filas/entrar-brinquedo", {
         attractionId: id,
         userCode: inputValue,
       });
@@ -112,7 +112,7 @@ const AttractionState: React.FC = () => {
   const handleStart = async () => {
     if (!state) {
       try {
-        const response = await axios.post(`http://localhost:5000/brinquedos/mudar-estado/${id}`);
+        const response = await api.post(`/brinquedos/mudar-estado/${id}`);
         setState(response.data.state);
         setTimer(timerCache.current);
         startTimer();

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../utils/api';
 
 const AttractionQueue: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -10,7 +10,7 @@ const AttractionQueue: React.FC = () => {
   useEffect(() => {
     const fetchQueue = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/filas/consultar-fila/${id}`);
+        const response = await api.get(`/filas/consultar-fila/${id}`);
         const attractionQueue = response.data.attractionQueue || {};
         setQueue(attractionQueue.queue || []);
         setError(null);
