@@ -27,7 +27,8 @@
     },
     "extra": {
       "eas": {
-        "projectId": "fa415694-6423-4485-a306-551484afcdc1"
+        "projectId": "fa415694-6423-4485-a306-551484afcdc1",
+        "expoPublicApiBaseUrl": "https://starpass-api-d78c37e87736.herokuapp.com"
       }
     },
     "runtimeVersion": {
