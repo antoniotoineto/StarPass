@@ -52,7 +52,7 @@ export default function GetEntryCode() {
     <View style={styles.container}>
       <Image source={require('../../assets/logo_StarPass_nome.png')} style={styles.image} />
 
-      <Text style={styles.infoText}>Você precisará de uma senha de entrada.</Text>
+      <Text style={styles.infoText}>Você precisará de uma senha de entrada para acessar o aplicativo.</Text>
 
       <View style={styles.pickerContainer}>
         <Text style={styles.pickerTitle}>Selecione o Guichê</Text>
