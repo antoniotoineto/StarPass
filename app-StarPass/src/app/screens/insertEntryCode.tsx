@@ -84,7 +84,7 @@ export default function GetEntryCode() {
         </View>
 
         <Text style={styles.infoText}>
-          Insira a senha apresentada no <Text style={{ fontWeight: 'bold' }}>guichê {gate}</Text>.
+          Copie a senha apresentada no <Text style={{ fontWeight: 'bold' }}>guichê {gate}</Text>.
         </Text>
 
         <Modal

@@ -25,7 +25,7 @@ export default function Home() {
       </View>
       <Link href={"/screens/onboarding"} asChild>
         <TouchableOpacity style={styles.startButton}>
-          <Text style={styles.button}>Iniciar</Text>
+          <Text style={styles.button}>Vamos lá!</Text>
         </TouchableOpacity>
       </Link>
       <StatusBar style="auto" />

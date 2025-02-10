@@ -121,6 +121,7 @@ export default function AttractionDetailsScreen() {
           </View>
 
           <View style={[styles.imagesContainer]}>
+            <Text style={{ fontSize: 30, marginBottom: 5 }}>Imagens</Text>
             <ImagesCarousel images={parsedImages} />
           </View>
 
@@ -259,7 +260,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   imagesContainer: {
-    width: '100%',
+    width: '85%',
     height: 300,
     marginTop: 20,
   },
