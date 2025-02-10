@@ -9,7 +9,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 export default function OnboardingScreen() {
     const router = useRouter();
 
-    const steps = [
+    const steps : { id: number; content: string; icon: "password" | "search" | "qr-code"; }[] = [
         { id: 1, content: 'Insira a senha de entrada apresentada no guichê que você selecionar na próxima tela.', icon: "password" },
         { id: 2, content: 'Acesse o brinquedo desejado na lista, entre na página de detalhes e ingresse na fila.', icon: "search" },
         { id: 3, content: 'Acompanhe o status da sua fila e, ao chegar sua vez, apresente o QR Code na entrada.', icon: "qr-code" },
