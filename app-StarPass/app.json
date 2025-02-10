@@ -39,6 +39,7 @@
     },
     "plugins": [
       "expo-router"
-    ]
+    ],
+    "owner": "star-pass-org"
   }
 }
