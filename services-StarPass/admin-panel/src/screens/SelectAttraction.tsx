@@ -4,7 +4,13 @@ import api from '../utils/api';
 import { IoMdArrowBack } from 'react-icons/io';
 
 const SelectAttraction: React.FC = () => {
-  const [attractions, setAttractions] = useState<{ id: string; name: string }[]>([]);
+  const [attractions, setAttractions] = useState<{
+    id: string;
+    name: string,
+    entryTime: number,
+    executionTime: number,
+    exitTime: number
+  }[]>([]);
   const [selectedAttraction, setSelectedAttraction] = useState<string>("0");
   const [error, setError] = useState(false);
   const navigate = useNavigate();
@@ -20,6 +26,8 @@ const SelectAttraction: React.FC = () => {
     };
 
     fetchAttractions();
+    console.log(attractions);
+
   }, []);
 
   const handleSelection = () => {
@@ -29,7 +37,12 @@ const SelectAttraction: React.FC = () => {
       const attraction = attractions.find(attraction => attraction.id === selectedAttraction);
       if (attraction) {
         navigate(`/attractions/${selectedAttraction}`, {
-          state: { name: attraction.name }
+          state: {
+            name: attraction.name,
+            entryTime: attraction.entryTime,
+            executionTime: attraction.executionTime,
+            exitTime: attraction.exitTime
+          }
         });
       }
     }
@@ -44,7 +57,7 @@ const SelectAttraction: React.FC = () => {
       <div style={styles.card}>
         <div style={styles.topBar}>
           <IoMdArrowBack size={35} style={styles.icon} onClick={() => handleBack()} />
-          <img src='/logo_StarPass.png' style={styles.image}/>
+          <img src='/logo_StarPass.png' style={styles.image} />
         </div>
         <h2 style={styles.subtitle}>Selecione uma Atração</h2>
         {attractions && attractions.length > 0 ? (
@@ -113,7 +126,7 @@ const styles = {
     width: 250,
     height: 70,
     marginRight: 15
-},
+  },
   subtitle: {
     fontSize: "1.2rem",
     textAlign: "center" as "center",

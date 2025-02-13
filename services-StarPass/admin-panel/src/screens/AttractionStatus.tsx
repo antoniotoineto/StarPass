@@ -8,7 +8,7 @@ import AttractionState from '../components/AttractionState';
 const AttractionStatus: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { name } = location.state || {};
+    const { name, entryTime, executionTime, exitTime } = location.state || {};
 
     const handleBack = () => {
         navigate(`/attractions`);
@@ -19,13 +19,18 @@ const AttractionStatus: React.FC = () => {
             <div style={styles.card}>
                 <div style={styles.topBar}>
                     <IoMdArrowBack size={35} style={styles.icon} onClick={() => handleBack()} />
-                    <img src='/logo_StarPass.png' style={styles.image}/>
+                    <img src='/logo_StarPass.png' style={styles.image} />
                 </div>
                 <h1 style={styles.title}>Consulta de Atração</h1>
                 <h3 style={styles.subtitle}>{name}</h3>
                 <div style={styles.dataContainer}>
                     <AttractionQueue />
-                    <AttractionState />
+                    <AttractionState
+                        entryTime={entryTime}
+                        executionTime={executionTime}
+                        exitTime={exitTime}
+                    />
+
                 </div>
             </div>
         </div>
@@ -86,7 +91,7 @@ const styles = {
         justifyContent: "center",
         gap: 100,
     },
-    
+
 };
 
 export default AttractionStatus;

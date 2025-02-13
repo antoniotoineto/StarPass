@@ -2,13 +2,20 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../utils/api';
 
-const AttractionState: React.FC = () => {
+interface AttractionStateProps {
+  entryTime: number;
+  executionTime: number;
+  exitTime: number;
+}
+
+const AttractionState: React.FC<AttractionStateProps> = ({ entryTime, executionTime, exitTime }) => {
   const { id } = useParams<{ id: string }>();
   const [state, setState] = useState<boolean | null>(null);
   const [timer, setTimer] = useState<number | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
+  const [attractionState, setAttactionState] = useState<string | null>("N/A");
   const [error, setError] = useState<string | null>(null);
   const timerCache = useRef<number | null>(null);
   const isTimerEnded = useRef(false);
@@ -24,6 +31,8 @@ const AttractionState: React.FC = () => {
 
       if (attractionState && currentExecutionTime > 0) {
         startTimer(currentExecutionTime);
+      } else {
+        setAttactionState("INATIVO");
       }
     } catch (err: any) {
       setError("Atração ainda não possui fila ou está indisponível.");
@@ -80,10 +89,11 @@ const AttractionState: React.FC = () => {
   const startTimer = (startValue?: number) => {
     if (intervalRef.current) clearInterval(intervalRef.current);
     setTimer((prev) => startValue ?? prev);
-    
+
     intervalRef.current = setInterval(() => {
       setTimer((prev) => {
         if (prev !== null && prev > 0) {
+          checkState(prev - 1);
           return prev - 1;
         } else {
           clearInterval(intervalRef.current!);
@@ -93,6 +103,17 @@ const AttractionState: React.FC = () => {
       });
     }, 1000);
   };
+
+
+  const checkState = (timer: any) => {
+    const boardingTimeLimit = executionTime + exitTime;
+    const operationalTimeLimit = exitTime;
+    if (timer > boardingTimeLimit) return setAttactionState("EMBARQUE")
+
+    if (timer > operationalTimeLimit) return setAttactionState("OPERACIONAL")
+
+    if (timer < operationalTimeLimit) return setAttactionState("DESEMBARQUE")
+  }
 
   const handleTimerEnd = async () => {
     if (isTimerEnded.current) return;
@@ -109,17 +130,35 @@ const AttractionState: React.FC = () => {
     }
   };
 
+  const toogleState = async () => {
+    clearInterval(intervalRef.current!); 
+
+    try {
+      const response = await api.post(`/brinquedos/mudar-estado/${id}`);
+      setState(response.data.state);
+      setTimer(timerCache.current);
+
+      if (!state) {
+        startTimer(); 
+      }
+
+      setError(null);
+    } catch (err) {
+      console.error("Erro ao iniciar o brinquedo:", err);
+      setError("Erro ao iniciar o brinquedo. Tente novamente.");
+    }
+  }
+
   const handleStart = async () => {
     if (!state) {
-      try {
-        const response = await api.post(`/brinquedos/mudar-estado/${id}`);
-        setState(response.data.state);
-        setTimer(timerCache.current);
-        startTimer();
-        setError(null);
-      } catch (err) {
-        console.error("Erro ao iniciar o brinquedo:", err);
-        setError("Erro ao iniciar o brinquedo. Tente novamente.");
+      toogleState();
+    } else {
+      const confirmStop = window.confirm("Tem certeza de que deseja parar esta atração?");
+      if (confirmStop) {
+        toogleState();
+        handleTimerEnd();
+      } else {
+        window.alert("Ação cancelada.");
       }
     }
   };
@@ -143,6 +182,9 @@ const AttractionState: React.FC = () => {
               {timer !== null
                 ? `${Math.floor(timer / 60)}m ${timer % 60}s`
                 : "Sem cronômetro disponível"}
+            </p>
+            <p style={styles.attractionState}>
+              {attractionState}
             </p>
           </p>
 
@@ -175,13 +217,11 @@ const AttractionState: React.FC = () => {
             <button
               style={{
                 ...styles.button,
-                backgroundColor: state ? "#d3d3d3" : "#4CAF50",
-                cursor: state ? "not-allowed" : "pointer",
+                backgroundColor: state ? "#f76157" : "#4CAF50",
               }}
               onClick={handleStart}
-              disabled={state || false}
             >
-              {state ? "Operando..." : "Iniciar"}
+              {state ? "Parar" : "Iniciar"}
             </button>
           </div>
         </div>
@@ -224,8 +264,12 @@ const styles = {
   timer: {
     fontSize: "1.2rem",
     color: "#555",
-    textAlign: "center" as "center",
     marginTop: 1
+  },
+  attractionState: {
+    backgroundColor: "#6f86e3",
+    borderRadius: 5,
+    color: 'white'
   },
   inputContainer: {
     display: "flex",
