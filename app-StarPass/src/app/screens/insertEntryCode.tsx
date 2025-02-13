@@ -20,7 +20,8 @@ import api from '../data/api';
 export default function GetEntryCode() {
 
   const [boardPin, setBoardPin] = useState('');
-  const [showWarning, setShowWarning] = useState(false);
+  const [showWarning, setShowWarning] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const [modalType, setModalType] = useState<"success" | "fail" | null>(null);
   const { setPin } = usePin();
   const router = useRouter();
@@ -28,45 +29,54 @@ export default function GetEntryCode() {
 
 
   const handleConfirmPin = async (code: string) => {
-    if (boardPin === null ||
-      boardPin === '' ||
-      boardPin.length !== 4 ||
-      !/^\d+$/.test(boardPin)) {
-      console.log("Código no formato inválido. Usuário não pode seguir.")
-      setShowWarning(true);
+    if (isLoading) {
+      setShowWarning("Aguarde");
     } else {
-      console.log('Senha digitada: ', boardPin)
-      setPin(boardPin);
-      setShowWarning(false);
+      setIsLoading(true);
+      setShowWarning("");
 
-      try {
-        const res = await api.post('guiche/validar-codigo', { gate: gate, code: code });
+      if (boardPin === null ||
+        boardPin === '' ||
+        boardPin.length !== 4 ||
+        !/^\d+$/.test(boardPin)) {
+        console.log("Código no formato inválido. Usuário não pode seguir.")
+        setShowWarning("Código inválido");
+      } else {
+        console.log('Senha digitada: ', boardPin)
+        setPin(boardPin);
+        setShowWarning("");
 
-        if (res.status === 200) {
-          setModalType("success");
+        try {
+          const res = await api.post('guiche/validar-codigo', { gate: gate, code: code });
 
-          setTimeout(() => {
-            setModalType(null);
-            router.push("/screens/attractionsList");
-          }, 1500);
-
-        }
-
-
-      } catch (error: any) {
-
-        if (error.response) {
-          console.error('Erro no servidor:', error.response.data);
-          if (error.response.status === 400 || error.response.status === 401) {
-            setModalType("fail");
+          if (res.status === 200) {
+            setModalType("success");
 
             setTimeout(() => {
               setModalType(null);
-            }, 2500);
+              router.push("/screens/attractionsList");
+            }, 1500);
+
           }
-          console.log("Erro: ", error.response.status)
-        } else {
-          console.error('Erro inesperado:', error.message);
+
+
+        } catch (error: any) {
+
+          if (error.response) {
+            console.error('Erro no servidor:', error.response.data);
+            if (error.response.status === 400 || error.response.status === 401) {
+              setModalType("fail");
+
+              setTimeout(() => {
+                setModalType(null);
+              }, 2500);
+            }
+            console.log("Erro: ", error.response.status)
+          } else {
+            console.error('Erro inesperado:', error.message);
+          }
+        } finally {
+          setIsLoading(false);
         }
       }
     }
@@ -123,7 +133,7 @@ export default function GetEntryCode() {
         </View>
 
         {showWarning && (
-          <Text style={styles.warningText}>Código inválido</Text>
+          <Text style={styles.warningText}>{showWarning}</Text>
         )}
 
         <View style={styles.buttonsContainer}>
@@ -131,7 +141,9 @@ export default function GetEntryCode() {
             <Text style={styles.backButtonText}>Voltar</Text>
           </Link>
           <TouchableOpacity style={styles.confirmButtonContainer} onPress={() => handleConfirmPin(boardPin)}>
-            <Text style={styles.buttonText}>Confirmar</Text>
+            <Text style={styles.buttonText} numberOfLines={1} adjustsFontSizeToFit={true}>
+              {isLoading ? "Carregando..." : "Confirmar"}
+            </Text>
           </TouchableOpacity>
 
         </View>
