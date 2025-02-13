@@ -21,6 +21,9 @@ export default function AttractionDetailsScreen() {
   const [queueData, setQueueData] = useState({ people: -1, waitTime: -1 });
   const [instantBoarding, setInstantBoarding] = useState(false);
   const [currentTimer, setCurrentTimer] = useState<number | null>(null);
+  const [showWarning, setShowWarning] = useState("");
+  const [showModalWarning, setShowModalWarning] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const parsedImages = carouselImages ? JSON.parse(carouselImages as string) : [];
   const iconName = subtitle === 'Insano' ? 'flash' :
     subtitle === 'Relaxante' ? 'cafe' :
@@ -28,15 +31,25 @@ export default function AttractionDetailsScreen() {
         'help-circle';
 
   const handleQueueModal = async () => {
-    try {
-      const res = await api.get(`/filas/status-fila-brinquedo/${id}/out`);
-      const { queueLength, estimatedTime, timeLeft } = res.data;
-      (estimatedTime === 0 && timeLeft) ? setInstantBoarding(true) : setInstantBoarding(false)
-      setQueueData({ people: queueLength, waitTime: estimatedTime });
-      setCurrentTimer(timeLeft);
-      setQueueModalVisible(true);
-    } catch (error) {
-      console.error('Erro ao buscar dados da fila:', error);
+    if (isLoading) {
+      setShowWarning("Aguarde");
+    } else {
+      setIsLoading(true);
+      setShowWarning("");
+      try {
+        const res = await api.get(`/filas/status-fila-brinquedo/${id}/out`);
+        const { queueLength, estimatedTime, timeLeft } = res.data;
+        (estimatedTime === 0 && timeLeft) ? setInstantBoarding(true) : setInstantBoarding(false)
+        setQueueData({ people: queueLength, waitTime: estimatedTime });
+        setCurrentTimer(timeLeft);
+        setQueueModalVisible(true);
+      } catch (error) {
+        console.error('Erro ao buscar dados da fila:', error);
+      } finally {
+        setIsLoading(false);
+        setShowWarning("");
+      }
+
     }
   };
 
@@ -47,7 +60,7 @@ export default function AttractionDetailsScreen() {
       timerInterval = setInterval(() => {
         setCurrentTimer((prev) => {
           if (prev && prev > 0) {
-            return prev - 1; 
+            return prev - 1;
           } else {
             if (timerInterval) clearInterval(timerInterval);
             setInstantBoarding(false);
@@ -63,36 +76,44 @@ export default function AttractionDetailsScreen() {
   }, [isQueueModalVisible, currentTimer]);
 
   const handleConfirm = async () => {
+    if (isLoading) {
+      setShowModalWarning("Aguarde");
+    } else {
+      setIsLoading(true);
+      setShowModalWarning("");
+      try {
+        const res = await api.post('/filas/entrar-fila', { id: id, attractionName: title, userCode: pin });
+        console.log(res.data.message);
 
-    try {
-      const res = await api.post('/filas/entrar-fila', { id: id, attractionName: title, userCode: pin });
-      console.log(res.data.message);
-
-      if (res.status === 200) {
-        setQueueModalVisible(false);
-        setModalType("success");
-
-        setTimeout(() => {
-          setModalType(null);
-          router.push("/screens/queueList");
-        }, 1500);
-      }
-
-    } catch (error: any) {
-      if (error.response) {
-        console.error('Erro ao entrar na fila:', error.response.data);
-
-        if (error.response.status === 400 || error.response.status === 401) {
-          if (error.response.data.message === "Usuário já está na fila deste brinquedo.") {
-            setErrorMessage("Usuário já está na fila!");
-          }
+        if (res.status === 200) {
           setQueueModalVisible(false);
-          setModalType("fail");
+          setModalType("success");
 
           setTimeout(() => {
             setModalType(null);
-          }, 2500);
+            router.push("/screens/queueList");
+          }, 1500);
         }
+
+      } catch (error: any) {
+        if (error.response) {
+          console.error('Erro ao entrar na fila:', error.response.data);
+
+          if (error.response.status === 400 || error.response.status === 401) {
+            if (error.response.data.message === "Usuário já está na fila deste brinquedo.") {
+              setErrorMessage("Usuário já está na fila!");
+            }
+            setQueueModalVisible(false);
+            setModalType("fail");
+
+            setTimeout(() => {
+              setModalType(null);
+            }, 2500);
+          }
+        }
+      } finally {
+        setIsLoading(false);
+        setShowModalWarning("");
       }
     }
 
@@ -143,8 +164,12 @@ export default function AttractionDetailsScreen() {
             </View>
           </View>
 
+          {showWarning && (
+            <Text style={styles.warningMessage}>{showWarning}</Text>
+          )}
+
           <TouchableOpacity onPress={() => handleQueueModal()} style={styles.entryQueueButton}>
-            <Text style={{ fontSize: 25 }}>Entrar na fila</Text>
+            <Text style={{ fontSize: 25, color: 'white' }}>{isLoading ? "Carregando..." : "Entrar na fila"}</Text>
           </TouchableOpacity>
         </ScrollView>
 
@@ -177,12 +202,15 @@ export default function AttractionDetailsScreen() {
                 </View>
               </>
             }
+            {showModalWarning && (
+            <Text style={styles.warningMessage}>{showModalWarning}</Text>
+          )}
             <View style={styles.buttonsContainer}>
               <TouchableOpacity onPress={() => setQueueModalVisible(false)} style={styles.cancelButton}>
                 <Text style={{ color: 'white' }}>Cancelar</Text>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => handleConfirm()} style={styles.confirmButton}>
-                <Text style={{ color: 'white' }}>Confirmar</Text>
+                <Text style={{ color: 'white' }}>{isLoading ? "Carregando..." : "Confirmar"}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -253,7 +281,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 33,
     fontWeight: 'bold',
-    textAlign: 'center'
+    textAlign: 'center',
+    borderColor: '#fed316',
+    borderWidth: 2,
+    padding: 10,
+    borderRadius: 15
   },
   subtitle: {
     fontSize: 28,
@@ -286,11 +318,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 10,
   },
+  warningMessage: {
+    color: 'red',
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 12
+  },
   entryQueueButton: {
     width: '80%',
     alignItems: 'center',
     marginTop: 35,
-    backgroundColor: '#cfd0d1',
+    backgroundColor: '#2cc4f6',
     borderRadius: 10,
   },
   modalContainer: {

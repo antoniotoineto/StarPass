@@ -1,8 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import api from '../data/api';
-import { usePin } from '../context/pinCodeContext';
-import { useUserQueues } from '../hooks/fetchUserQueues';
+import { StyleSheet, Text, View } from 'react-native';
 import { useEffect, useState } from 'react';
 
 interface QueueCardProps {
@@ -14,9 +10,7 @@ interface QueueCardProps {
   wave: number
 }
 
-export default function QueueCard({ number, id, title, queuePosition, estimatedTime, wave }: QueueCardProps) {
-  const { pin } = usePin();
-  const { fetchQueues } = useUserQueues();
+export default function QueueCard({ number, title, queuePosition, estimatedTime, wave }: QueueCardProps) {
   const [status, setStatus] = useState<{ message: string; color: string }>({
     message: "Calculando...",
     color: "#c4c4c4"
@@ -38,44 +32,12 @@ export default function QueueCard({ number, id, title, queuePosition, estimatedT
     setStatus(whichStatus(estimatedTime));
   }, [estimatedTime]);
 
-  const handleDeleteQueue = () => {
-    Alert.alert(
-      "Sair da fila",
-      "Tem certeza que deseja sair dessa fila?",
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Sair",
-          onPress: async () => {
-            try {
-              const res = await api.post(`/filas/sair-fila/${pin}/${id}`);
-              console.log(res.data.message);
-              fetchQueues();
-
-            } catch (error: any) {
-              if (error.response) {
-                console.error('Erro no servidor:', error.response.data);
-                console.log("Erro: ", error.response.status)
-              } else {
-                console.error('Erro inesperado:', error.message);
-              }
-            }
-          },
-        },
-      ]
-    );
-
-  };
-
   return (
     <View style={styles.mainContainer}>
       <Text style={styles.number}>{number}</Text>
       <View style={styles.cardContainer}>
         <View style={styles.firstLine}>
-          <View style={{ width: '60%' }}>
+          <View style={{ width: '70%', marginStart: 0 }}>
             <Text
               numberOfLines={1}
               adjustsFontSizeToFit={true}
@@ -103,10 +65,6 @@ export default function QueueCard({ number, id, title, queuePosition, estimatedT
           <Text style={{ color: 'grey' }}>Pos. geral: {queuePosition}º</Text>
         </View>
       </View>
-      <TouchableOpacity onPress={() => handleDeleteQueue()}>
-        <Ionicons name="trash-outline" size={23} color="black" style={{ marginLeft: 5 }} />
-      </TouchableOpacity>
-
     </View>
   );
 }
@@ -124,7 +82,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   cardContainer: {
-    width: '70%',
+    width: '90%',
     backgroundColor: '#e6e6e6',
     height: 70,
     alignItems: 'center',

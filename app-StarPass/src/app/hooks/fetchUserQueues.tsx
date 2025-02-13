@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAttractions } from "../context/attractionsContext";
 import { usePin } from "../context/pinCodeContext";
 import api from "../data/api";
@@ -17,7 +17,7 @@ export function useUserQueues() {
   const [userQueues, setUserQueues] = useState<Queue[]>([]);
   const [isEmpty, setIsEmpty] = useState(false);
 
-  const fetchQueues = async () => {
+  const fetchQueues = useCallback (async () => {
     try {
       const response = await api.get(`/filas/filas-usuario/${pin}`);
       const queues = response.data.userQueues;
@@ -44,13 +44,7 @@ export function useUserQueues() {
     } catch (error: any) {
       console.error("Erro ao buscar atrações:", error.message);
     }
-  };
-
-  useEffect(() => {
-    fetchQueues();
-    const interval = setInterval(fetchQueues, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  }, [userQueues]);
 
   return { userQueues, isEmpty, fetchQueues };
 }
