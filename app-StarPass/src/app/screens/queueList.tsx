@@ -1,15 +1,50 @@
 import { Link } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
-import { useEffect, useState } from 'react';
+import { ScrollView, StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native';
+import { useEffect } from 'react';
 import TopBar from '../components/topBar';
 import QueueCard from '../components/queueCard';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUserQueues } from '../hooks/fetchUserQueues';
+import api from '../data/api';
+import { usePin } from '../context/pinCodeContext';
 
 export default function QueueListScreen() {
   const { userQueues, isEmpty, fetchQueues } = useUserQueues();
+  const { pin } = usePin();
+
+  const handleDeleteQueue = (attractionId: string) => {
+    Alert.alert(
+      "Sair da fila",
+      "Tem certeza que deseja sair dessa fila?",
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Sair",
+          onPress: async () => {
+            try {
+              const res = await api.post(`/filas/sair-fila/${pin}/${attractionId}`);
+              console.log(res.data.message);
+              fetchQueues();
+
+            } catch (error: any) {
+              if (error.response) {
+                console.error('Erro no servidor:', error.response.data);
+                console.log("Erro: ", error.response.status)
+              } else {
+                console.error('Erro inesperado:', error.message);
+              }
+            }
+          },
+        },
+      ]
+    );
+
+  };
 
   useEffect(() => {
     fetchQueues();
@@ -34,15 +69,19 @@ export default function QueueListScreen() {
             <Text style={styles.warningText}>Você não está em nenhuma fila no momento.</Text>
           ) : (
             userQueues.map((queue, key) => (
-              <QueueCard
-                key={key}
-                number={key + 1}
-                id={queue.id}
-                title={queue.title}
-                queuePosition={queue.queuePosition}
-                estimatedTime={queue.estimatedTime}
-                wave={queue.wave}
-              />
+              <View key={queue.id}style={styles.cardContainer}>
+                <QueueCard
+                  number={key + 1}
+                  id={queue.id}
+                  title={queue.title}
+                  queuePosition={queue.queuePosition}
+                  estimatedTime={queue.estimatedTime}
+                  wave={queue.wave}
+                />
+                <TouchableOpacity onPress={() => handleDeleteQueue(queue.id)}>
+                  <Ionicons name="trash-outline" size={23} color="black" style={{ marginLeft: 5 }} />
+                </TouchableOpacity>
+              </View>
             ))
           )}
         </View>
@@ -69,6 +108,11 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     borderColor: '#a3a3a2',
     padding: 15,
+  },
+  cardContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '80%',
   },
   listContainer: {
     width: '100%',

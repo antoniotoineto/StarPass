@@ -1,8 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, Alert } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import api from '../data/api';
-import { usePin } from '../context/pinCodeContext';
-import { useUserQueues } from '../hooks/fetchUserQueues';
+import { StyleSheet, Text, View } from 'react-native';
 import { useEffect, useState } from 'react';
 
 interface QueueCardProps {
@@ -15,17 +11,15 @@ interface QueueCardProps {
 }
 
 export default function QueueCard({ number, id, title, queuePosition, estimatedTime, wave }: QueueCardProps) {
-  const { pin } = usePin();
-  const { fetchQueues } = useUserQueues();
   const [status, setStatus] = useState<{ message: string; color: string }>({
     message: "Calculando...",
     color: "#c4c4c4"
   });
 
   const whichStatus = (estimatedTime: number) => {
-    if (estimatedTime >= 300) return { message: "Aguarde sua vez", color: "#c4c4c4" }
+    if (estimatedTime >= 100) return { message: "Aguarde sua vez", color: "#c4c4c4" }
 
-    if (estimatedTime > 150) return { message: "Embarque próximo", color: "#f7df7c" }
+    if (estimatedTime > 70) return { message: "Embarque próximo", color: "#f7df7c" }
 
     if (estimatedTime > 1) return { message: "Dirija-se ao brinquedo", color: "#f7a520" }
 
@@ -37,38 +31,6 @@ export default function QueueCard({ number, id, title, queuePosition, estimatedT
   useEffect(() => {
     setStatus(whichStatus(estimatedTime));
   }, [estimatedTime]);
-
-  const handleDeleteQueue = () => {
-    Alert.alert(
-      "Sair da fila",
-      "Tem certeza que deseja sair dessa fila?",
-      [
-        {
-          text: "Cancelar",
-          style: "cancel",
-        },
-        {
-          text: "Sair",
-          onPress: async () => {
-            try {
-              const res = await api.post(`/filas/sair-fila/${pin}/${id}`);
-              console.log(res.data.message);
-              fetchQueues();
-
-            } catch (error: any) {
-              if (error.response) {
-                console.error('Erro no servidor:', error.response.data);
-                console.log("Erro: ", error.response.status)
-              } else {
-                console.error('Erro inesperado:', error.message);
-              }
-            }
-          },
-        },
-      ]
-    );
-
-  };
 
   return (
     <View style={styles.mainContainer}>
@@ -103,9 +65,6 @@ export default function QueueCard({ number, id, title, queuePosition, estimatedT
           <Text style={{ color: 'grey' }}>Pos. geral: {queuePosition}º</Text>
         </View>
       </View>
-      <TouchableOpacity onPress={() => handleDeleteQueue()}>
-        <Ionicons name="trash-outline" size={23} color="black" style={{ marginLeft: 5 }} />
-      </TouchableOpacity>
 
     </View>
   );
@@ -124,7 +83,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   cardContainer: {
-    width: '70%',
+    width: '90%',
     backgroundColor: '#e6e6e6',
     height: 70,
     alignItems: 'center',
