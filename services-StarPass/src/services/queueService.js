@@ -63,6 +63,7 @@ export const attractionQueue = (attractionId) => {
 export const attractionQueueStatus = (attractionId, attraction, userStatus) => {
 
     let currentExecutionTime = 0;
+    let auxCurrentExecutionTime = 0;
     const { executionTime, exitTime, maximumCapacity } = attraction;
 
     if (!attractionStates[attractionId]) {
@@ -70,11 +71,17 @@ export const attractionQueueStatus = (attractionId, attraction, userStatus) => {
     }
 
     const isAttractionOperant = attractionStates[attractionId].operant;
-    if (isAttractionOperant) {
-        currentExecutionTime = attractionStates[attractionId].timer;
+
+    if(isAttractionOperant) {
+        auxCurrentExecutionTime = attractionStates[attractionId].timer;
     }
 
-    const boarding = isBoardingInProgress(attractionId, currentExecutionTime, executionTime, exitTime, maximumCapacity);
+    const boarding = isBoardingInProgress(attractionId, auxCurrentExecutionTime, executionTime, exitTime, maximumCapacity);
+
+
+    if (isAttractionOperant && boarding.status === false) {
+        currentExecutionTime = attractionStates[attractionId].timer;
+    }
 
     const queue = queues[attractionId]?.queue;
     if (!queue) {
@@ -128,9 +135,10 @@ const isBoardingInProgress = (attractionId, timer, executionTime, exitTime, maxi
 
     if (timer > (executionTime + exitTime)) {
         return { status: true, timeLeft: timer - (executionTime + exitTime) };
+    } else {
+        return {status: false, message: "Embarque finalizado ou não iniciado."}
     }
 
-    return { status: false, message: "Embarque encerrado ou não iniciado." };
 };
 
 export const exitQueue = (userCode, attractionId) => {
