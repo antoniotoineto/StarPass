@@ -17,9 +17,9 @@ export default function QueueCard({ number, title, queuePosition, estimatedTime,
   });
 
   const whichStatus = (estimatedTime: number) => {
-    if (estimatedTime >= 300) return { message: "Aguarde sua vez", color: "#c4c4c4" }
+    if (estimatedTime >= 100) return { message: "Aguarde sua vez", color: "#c4c4c4" }
 
-    if (estimatedTime > 150) return { message: "Embarque próximo", color: "#f7df7c" }
+    if (estimatedTime > 70) return { message: "Embarque próximo", color: "#f7df7c" }
 
     if (estimatedTime > 1) return { message: "Dirija-se ao brinquedo", color: "#f7a520" }
 

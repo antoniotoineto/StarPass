@@ -78,9 +78,8 @@ export default function QueueListScreen() {
             <Text style={[styles.warningText, {color: '#f77474'}]}>Você não está em nenhuma fila no momento.</Text>
           ) : (
             userQueues.map((queue, key) => (
-              <View style={styles.cardContainer}>
+              <View key={queue.id}style={styles.cardContainer}>
                 <QueueCard
-                  key={key}
                   number={key + 1}
                   id={queue.id}
                   title={queue.title}
